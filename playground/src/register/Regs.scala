@@ -1,3 +1,5 @@
+package register
+
 import chisel3._
 
 class Regs extends Module {
