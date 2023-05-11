@@ -24,7 +24,7 @@ object playground extends ScalaModule with ScalafmtModule { m =>
   )
   object test extends Tests with Utest {
     override def ivyDeps = m.ivyDeps() ++ Agg(
-      ivy"com.lihaoyi::utest:0.7.10",
+      ivy"com.lihaoyi::utest:0.8.1",
       ivy"edu.berkeley.cs::chiseltest:0.5.4",
     )
   }
