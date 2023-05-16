@@ -12,6 +12,7 @@ VERILATOR_FLAGS = --cc --build -j 8 \
 
 BIN = $(BUILD_DIR)/$(TOPNAME)
 IMG ?=
+override ARGS ?= --log=$(BUILD_DIR)/npc.log
 
 VSRCS = $(shell find $(VERILOG_BUILD_DIR) -name "*.v")
 CSRCS = $(shell find $(WORK_DIR) -name "*.cpp")
@@ -29,6 +30,6 @@ $(BIN): $(CSRCS) $(VSRCS)
 
 run: $(BIN)
 	@echo simulating...
-	$^ $(IMG)
+	$^ $(ARGS) $(IMG)
 
 .PHONY: run

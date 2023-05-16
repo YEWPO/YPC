@@ -5,6 +5,7 @@
 
 #include "common.h"
 #include "simulate/simulator.h"
+#include "memory/vmem.h"
 
 VerilatedContext *context;
 VerilatedVcdC *vcd;
@@ -29,21 +30,25 @@ static void simulator_detroy() {
   delete context;
 }
 
-static void step_clock_round(uint64_t n = 1) {
-  while (n--) {
-    context->timeInc(1);
-    top->clock = 1;
-    top->eval();
-    vcd->dump(context->time());
+static void step_one() {
+  context->timeInc(1);
+  top->clock = 1;
+  top->eval();
+  vcd->dump(context->time());
 
-    context->timeInc(1);
-    top->clock = 0;
-    top->eval();
-    vcd->dump(context->time());
+  context->timeInc(1);
+  top->clock = 0;
+  top->eval();
+  vcd->dump(context->time());
+}
+
+void step_clock_round(uint64_t n = 1) {
+  while (n--) {
+    step_one();
   }
 }
 
-static void reset(uint64_t n = 5) {
+void reset(uint64_t n = 5) {
   top->reset = 1;
 
   step_clock_round(n);
@@ -57,9 +62,11 @@ void start_simulate() {
   reset();
 
   while (!context->gotFinish()) {
+    top->io_inst = vaddr_ifetch(top->io_pc, 4);
     step_clock_round();
+    Log("inst: 0x%08lx", top->io_out);
 
-    if (context->time() > 1000) {
+    if (context->time() > 30) {
       break;
     }
   }
