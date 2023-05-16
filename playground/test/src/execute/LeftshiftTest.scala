@@ -17,7 +17,7 @@ object LeftshiftTest extends ChiselUtestTester {
 
           dut.io.src1.poke("hf000000000000000".U)
           dut.io.src2.poke(3.U)
-          dut.io.word_op.poke(true.B)
+          dut.io.word_op.poke(false.B)
           dut.clock.step()
           dut.io.res.expect("h8000000000000000".U)
       }
@@ -27,7 +27,7 @@ object LeftshiftTest extends ChiselUtestTester {
         dut =>
           dut.io.src1.poke("b10110100".U)
           dut.io.src2.poke(3.U)
-          dut.io.word_op.poke(false.B)
+          dut.io.word_op.poke(true.B)
           dut.clock.step()
           dut.io.res.expect("b10110100000".U)
 
@@ -35,7 +35,7 @@ object LeftshiftTest extends ChiselUtestTester {
           dut.io.src2.poke(3.U)
           dut.io.word_op.poke(true.B)
           dut.clock.step()
-          dut.io.res.expect("h780000000".U)
+          dut.io.res.expect("hffffffff80000000".U)
       }
     }
   }
