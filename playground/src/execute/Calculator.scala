@@ -34,8 +34,8 @@ class Calculator extends Module {
   leftshift.io.src2 := io.src2
   leftshift.io.word_op := io.word_op
 
-  slt.io.src1 := io.src1.asSInt
-  slt.io.src2 := io.src2.asSInt
+  slt.io.src1 := io.src1
+  slt.io.src2 := io.src2
 
   sltu.io.src1 := io.src1
   sltu.io.src2 := io.src2

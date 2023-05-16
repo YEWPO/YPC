@@ -12,7 +12,7 @@ object EqualTest extends ChiselUtestTester {
           dut.io.src1.poke(22.U)
           dut.io.src2.poke(22.U)
           dut.clock.step()
-          dut.io.res.expect(true.B)
+          dut.io.res.expect(1.U)
       }
     }
     test("inequal") {
@@ -21,7 +21,7 @@ object EqualTest extends ChiselUtestTester {
           dut.io.src1.poke(22.U)
           dut.io.src2.poke(12.U)
           dut.clock.step()
-          dut.io.res.expect(false.B)
+          dut.io.res.expect(0.U)
       }
     }
   }
