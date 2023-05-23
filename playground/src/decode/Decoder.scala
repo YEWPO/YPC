@@ -15,10 +15,14 @@ class Decoder extends Module {
     val out_src2 = Output(UInt(64.W))
 
     val word_op = Output(Bool())
-    val J_type = Output(Bool())
-    val B_type = Output(Bool())
-    val S_type = Output(Bool())
     val sub_op = Output(Bool())
+
+    val R_type = Output(Bool())
+    val I_type = Output(Bool())
+    val S_type = Output(Bool())
+    val B_type = Output(Bool())
+    val U_type = Output(Bool())
+    val J_type = Output(Bool())
   })
 
   val op_type_decoder = Module(new OperationType)
@@ -53,7 +57,10 @@ class Decoder extends Module {
   io.word_op := op_type_decoder.io.word_op
   io.sub_op := sub_op_decoder.io.sub_op
 
-  io.J_type := type_oh.io.J_type
-  io.B_type := type_oh.io.B_type
+  io.R_type := type_oh.io.R_type
+  io.I_type := type_oh.io.I_type
   io.S_type := type_oh.io.S_type
+  io.B_type := type_oh.io.B_type
+  io.U_type := type_oh.io.U_type
+  io.J_type := type_oh.io.J_type
 }
