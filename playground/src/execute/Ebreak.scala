@@ -8,5 +8,5 @@ class Ebreak extends BlackBox with HasBlackBoxResource {
     val op_type = Input(UInt(3.W))
   })
 
-  addResource("./ebreak.v")
+  addResource("ebreak.v")
 }

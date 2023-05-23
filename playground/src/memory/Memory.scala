@@ -12,5 +12,5 @@ class Memory extends BlackBox with HasBlackBoxResource {
     val r_data = Output(UInt(64.W))
   })
 
-  addResource("./memory.v")
+  addResource("memory.v")
 }

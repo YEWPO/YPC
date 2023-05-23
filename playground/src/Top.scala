@@ -17,6 +17,8 @@ class Top extends Module {
   val regs_file = Module(new Regs)
   val decoder = Module(new Decoder)
 
+  io.pc := pc.io.pc
+
   decoder.io.inst := io.inst
   decoder.io.src1 := regs_file.io.r_data1
   decoder.io.src2 := regs_file.io.r_data2
