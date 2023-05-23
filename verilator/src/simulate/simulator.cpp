@@ -1,4 +1,7 @@
 #include "VTop.h"
+#include <svdpi.h>
+#include "VTop__Dpi.h"
+
 
 #include <verilated.h>
 #include <verilated_vcd_c.h>
@@ -10,6 +13,12 @@
 VerilatedContext *context;
 VerilatedVcdC *vcd;
 VTop *top;
+
+static bool halt = false;
+
+void ebreak() {
+  halt = true;
+}
 
 static void simulator_init() {
   context = new VerilatedContext;
@@ -66,7 +75,7 @@ void start_simulate() {
     step_clock_round();
     Log("inst: 0x%08lx", top->io_out);
 
-    if (context->time() > 30) {
+    if (halt) {
       break;
     }
   }
