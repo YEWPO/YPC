@@ -7,8 +7,10 @@ class OperationType extends Module {
   val io = IO(new Bundle {
     val operation = Input(UInt(7.W))
     val operation_type = Output(UInt(3.W))
+    val word_op = Output(Bool())
   })
 
+  io.word_op := (io.operation === "b0011011".U) || (io.operation === "b0111011".U)
 
   /*
    * 000 R-type
