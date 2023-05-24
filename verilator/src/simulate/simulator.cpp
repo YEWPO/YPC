@@ -42,8 +42,6 @@ static void simulator_detroy() {
 }
 
 static void step_one() {
-  Log("step one");
-
   context->timeInc(1);
   top->clock = 1;
   top->eval();

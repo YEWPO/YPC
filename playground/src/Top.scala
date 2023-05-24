@@ -61,7 +61,7 @@ class Top extends Module {
   regs_file.io.r_rs1 := io.inst(19, 15)
   regs_file.io.r_rs2 := io.inst(24, 20)
 
-  val pc_op = decoder.io.J_type || branch.io.res
+  val pc_op = snpc_op || branch.io.res 
 
   pc.io.next_pc := Mux(pc_op, dnpc, snpc)
 
@@ -74,4 +74,9 @@ class Top extends Module {
     (io.inst(13, 12) === "b10".U) -> 4.U(32.W),
     (io.inst(13, 12) === "b11".U) -> 8.U(32.W)
     ))
+  mem.io.m_en := (
+    decoder.io.S_type
+    || io.inst(6, 0) === "b0000011".U
+  )
+  mem.io.funct := io.inst(14, 12)
 }
