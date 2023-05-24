@@ -29,7 +29,7 @@ $(BIN): $(CSRCS) $(VSRCS)
 		--Mdir $(VERILATOR_BUILD_DIR) -exe -o $(BIN)
 
 run: $(BIN)
-	@echo simulating...
+	@echo running...
 	$^ $(ARGS) $(IMG)
 
 .PHONY: run

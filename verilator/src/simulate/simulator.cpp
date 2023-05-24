@@ -21,6 +21,8 @@ void ebreak() {
 }
 
 static void simulator_init() {
+  Log("Initializing simulator...");
+
   context = new VerilatedContext;
 
   Verilated::traceEverOn(true);
@@ -40,6 +42,8 @@ static void simulator_detroy() {
 }
 
 static void step_one() {
+  Log("step one");
+
   context->timeInc(1);
   top->clock = 1;
   top->eval();
@@ -58,6 +62,8 @@ void step_clock_round(uint64_t n = 1) {
 }
 
 void reset(uint64_t n = 5) {
+  Log("reseting...");
+  
   top->reset = 1;
 
   step_clock_round(n);
@@ -68,11 +74,15 @@ void reset(uint64_t n = 5) {
 void start_simulate() {
   simulator_init();
 
+  Log("Starting simulator...");
+
   reset();
 
   while (!context->gotFinish()) {
     top->io_inst = vaddr_ifetch(top->io_pc, 4);
     step_clock_round();
+
+    Log("A clock round");
 
     if (halt) {
       break;
