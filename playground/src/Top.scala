@@ -26,9 +26,16 @@ class Top extends Module {
 
   val alu = Module(new Calculator)
 
+  val funct_op = (
+    (io.inst(6, 0) === "b0010011".U)
+    || (io.inst(6, 0) === "b0110011".U)
+    || (io.inst(6, 0) === "b0011011".U)
+    || (io.inst(6, 0) === "b0111011".U)
+  )
+
   alu.io.src1 := decoder.io.out_src1
   alu.io.src2 := decoder.io.out_src2
-  alu.io.funct := io.inst(14, 12)
+  alu.io.funct := Mux(funct_op, io.inst(14, 12), 0.U(3.W))
   alu.io.subop_type := decoder.io.sub_op
   alu.io.word_op := decoder.io.word_op
 
