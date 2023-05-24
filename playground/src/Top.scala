@@ -67,4 +67,11 @@ class Top extends Module {
 
   mem.io.addr := alu_out
   mem.io.w_data := regs_file.io.r_data2
+  mem.io.op := decoder.io.S_type
+  mem.io.len := MuxCase(1.U(32.W), Array (
+    (io.inst(13, 12) === "b00".U) -> 1.U(32.W),
+    (io.inst(13, 12) === "b01".U) -> 2.U(32.W),
+    (io.inst(13, 12) === "b10".U) -> 4.U(32.W),
+    (io.inst(13, 12) === "b11".U) -> 8.U(32.W)
+    ))
 }

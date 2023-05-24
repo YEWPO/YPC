@@ -1,4 +1,4 @@
-module ebreak (
+module Ebreak (
   input [2:0] op_type
 );
 

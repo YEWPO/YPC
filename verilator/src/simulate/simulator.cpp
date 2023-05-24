@@ -73,7 +73,6 @@ void start_simulate() {
   while (!context->gotFinish()) {
     top->io_inst = vaddr_ifetch(top->io_pc, 4);
     step_clock_round();
-    Log("inst: 0x%08lx", top->io_out);
 
     if (halt) {
       break;

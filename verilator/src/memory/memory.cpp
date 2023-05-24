@@ -7,7 +7,7 @@
 #define WRITE true
 #define READ false
 
-word_t memory_io(vaddr_t addr, word_t w_data, bool op, int len) {
+long long memory_io(long long addr, long long w_data, svLogic op, int len) {
   if (op == WRITE) {
     vaddr_write(addr, len, w_data);
   }
