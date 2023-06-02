@@ -22,10 +22,13 @@ INCFLAGS = $(addprefix -I, $(INCLUDE_PATHS))
 CFLAGS += $(INCFLAGS)
 CFLAGS += -g3
 
+LDFLAGS += -lreadline
+
 $(BIN): $(CSRCS) $(VSRCS)
 	$(VERILATOR) $(VERILATOR_FLAGS) \
 		--top-module $(TOPNAME) $^ \
 		$(addprefix -CFLAGS , $(CFLAGS)) \
+		$(addprefix -LDFLAGS , $(LDFLAGS)) \
 		--Mdir $(VERILATOR_BUILD_DIR) -exe -o $(BIN)
 
 run: $(BIN)

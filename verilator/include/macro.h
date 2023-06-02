@@ -21,4 +21,6 @@
 
 #define ANSI_FMT(str, fmt) fmt str ANSI_NONE
 
+#define ARRLEN(arr) (int)(sizeof(arr) / sizeof(arr[0]))
+
 #endif

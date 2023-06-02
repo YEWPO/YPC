@@ -8,14 +8,16 @@
 #include "common.h"
 #include "simulate/simulator.h"
 #include "memory/vmem.h"
-#include "cpu.h"
+#include "utils/cpu.h"
 
 VerilatedContext *context;
 VerilatedVcdC *vcd;
 VTop *top;
 
+static void reset(uint64_t n = 5);
+
 void ebreak() {
-  state = NPC_END;
+  npc_state.state = NPC_END;
 }
 
 void simulator_init() {
@@ -33,7 +35,7 @@ void simulator_init() {
   reset();
 }
 
-void simulator_detroy() {
+void simulator_destroy() {
   vcd->close();
 
   delete top;
@@ -53,13 +55,41 @@ static void step_one() {
   vcd->dump(context->time());
 }
 
-void step_clock_round(uint64_t n) {
+static void step_clock_round(uint64_t n) {
   while (n--) {
     step_one();
   }
 }
 
-void reset(uint64_t n) {
+static void exec_inst(uint64_t n) {
+  while (n--) {
+    top->io_inst = vaddr_ifetch(top->io_pc, 4);
+
+    step_one();
+
+    if (npc_state.state != NPC_RUNNING) {
+      break;
+    }
+  }
+}
+
+void cpu_exec(uint64_t n) {
+  switch (npc_state.state) {
+    case NPC_END: case NPC_ABORT:
+      printf("Program execution has ended. To restart the program, exit NPC and run again.\n");
+      return;
+    default: npc_state.state = NPC_RUNNING;
+  }
+
+
+  exec_inst(n);
+
+  switch (npc_state.state) {
+    case NPC_RUNNING: npc_state.state = NPC_STOP; break;
+  }
+}
+
+static void reset(uint64_t n) {
   Log("reseting...");
   
   top->reset = 1;

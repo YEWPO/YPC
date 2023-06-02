@@ -2,6 +2,7 @@
 #include <getopt.h>
 #include "simulate/simulator.h"
 #include "memory/pmem.h"
+#include "sdb/sdb.h"
 
 static char *log_file;
 static char *img_file;
@@ -57,7 +58,11 @@ int main(int argc, char *argv[]) {
 
   simulator_init();
 
-  simulator_destory();
+  sdb_init();
+
+  sdb_mainloop();
+
+  simulator_destroy();
 
   return 0;
 }
