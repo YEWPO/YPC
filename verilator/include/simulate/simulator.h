@@ -3,8 +3,9 @@
 
 #include <stdint.h>
 
-void start_simulate();
-void reset(uint64_t n);
-void step_clock_round(uint64_t n);
+void simulator_init();
+void simulator_destory();
+void reset(uint64_t n = 5);
+void step_clock_round(uint64_t n = 1);
 
 #endif

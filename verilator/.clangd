@@ -1,0 +1,6 @@
+CompileFlags:
+  Add: [-I/usr/local/share/verilator/include,
+        -I/usr/local/share/verilator/include/vltstd,
+        -I/home/yewpo/Desktop/lab/ysyx-workbench/npc/verilator/include,
+        -I/home/yewpo/Desktop/lab/ysyx-workbench/npc/build/verilator_dir]
+  Compiler: g++

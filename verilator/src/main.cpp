@@ -55,7 +55,9 @@ int main(int argc, char *argv[]) {
 
   load_img();
 
-  start_simulate();
+  simulator_init();
+
+  simulator_destory();
 
   return 0;
 }

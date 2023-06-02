@@ -2,25 +2,23 @@
 #include <svdpi.h>
 #include "VTop__Dpi.h"
 
-
 #include <verilated.h>
 #include <verilated_vcd_c.h>
 
 #include "common.h"
 #include "simulate/simulator.h"
 #include "memory/vmem.h"
+#include "cpu.h"
 
 VerilatedContext *context;
 VerilatedVcdC *vcd;
 VTop *top;
 
-static bool halt = false;
-
 void ebreak() {
-  halt = true;
+  state = NPC_END;
 }
 
-static void simulator_init() {
+void simulator_init() {
   Log("Initializing simulator...");
 
   context = new VerilatedContext;
@@ -31,9 +29,11 @@ static void simulator_init() {
 
   top->trace(vcd, 99);
   vcd->open("../build/sim.vcd");
+
+  reset();
 }
 
-static void simulator_detroy() {
+void simulator_detroy() {
   vcd->close();
 
   delete top;
@@ -53,13 +53,13 @@ static void step_one() {
   vcd->dump(context->time());
 }
 
-void step_clock_round(uint64_t n = 1) {
+void step_clock_round(uint64_t n) {
   while (n--) {
     step_one();
   }
 }
 
-void reset(uint64_t n = 5) {
+void reset(uint64_t n) {
   Log("reseting...");
   
   top->reset = 1;
@@ -67,25 +67,4 @@ void reset(uint64_t n = 5) {
   step_clock_round(n);
 
   top->reset = 0;
-}
-
-void start_simulate() {
-  simulator_init();
-
-  Log("Starting simulator...");
-
-  reset();
-
-  while (!context->gotFinish()) {
-    top->io_inst = vaddr_ifetch(top->io_pc, 4);
-    step_clock_round();
-
-    Log("A clock round");
-
-    if (halt) {
-      break;
-    }
-  }
-
-  simulator_detroy();
 }
