@@ -31,10 +31,11 @@ checkformat:
 	mill -i __.checkFormat
 
 IMG ?=
+ARGS ?=
 
 sim: verilog
 	$(call git_commit, "sim RTL")
-	$(MAKE) -C $(VERILATOR_DIR) IMG=$(IMG) run
+	$(MAKE) -C $(VERILATOR_DIR) ARGS="$(ARGS)" IMG=$(IMG) run
 
 GTKWAVE = gtkwave
 VCD_FILE = $(BUILD_DIR)/sim.vcd
