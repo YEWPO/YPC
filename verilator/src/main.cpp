@@ -6,6 +6,7 @@
 
 static char *log_file;
 static char *img_file;
+long img_size;
 
 static void parse_args(int argc, char *argv[]) {
   const struct option table[] = {
@@ -57,7 +58,7 @@ int main(int argc, char *argv[]) {
 
   init_log(log_file);
 
-  load_img();
+  img_size = load_img();
 
   simulator_init();
 
