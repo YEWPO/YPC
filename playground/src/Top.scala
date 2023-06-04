@@ -56,11 +56,11 @@ class Top extends Module {
     || (io.inst(6, 0) === "b1100111".U)
   )
 
-  val reg_op = decoder.io.S_type
+  val mem_op = io.inst(6, 0) === "b0000011".U
 
   regs_file.io.w_en := decoder.io.R_type || decoder.io.I_type || decoder.io.U_type || decoder.io.J_type
   regs_file.io.w_data := Mux(
-    reg_op,
+    mem_op,
     mem.io.r_data,
     Mux(snpc_op, snpc, alu_out)
   )
