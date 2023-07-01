@@ -24,6 +24,8 @@ VTop *top;
 static void reset(uint64_t n = 5);
 
 void ebreak() {
+  npc_state.halt_pc = riscv64_pc;
+  npc_state.halt_ret = riscv64_regs[10];
   npc_state.state = NPC_END;
 }
 
@@ -100,6 +102,13 @@ void cpu_exec(uint64_t n) {
 
   switch (npc_state.state) {
     case NPC_RUNNING: npc_state.state = NPC_STOP; break;
+
+    case NPC_END: case NPC_ABORT:
+      Log("npc: %s at pc = " "%016lx",
+          (npc_state.state == NPC_ABORT ? ANSI_FMT("ABORT", ANSI_FG_RED) :
+           (npc_state.halt_ret == 0 ? ANSI_FMT("HIT GOOD TRAP", ANSI_FG_GREEN) :
+            ANSI_FMT("HIT BAD TRAP", ANSI_FG_RED))),
+          npc_state.halt_pc);
   }
 }
 
