@@ -10,6 +10,12 @@
 #include "simulate/simulator.h"
 #include "memory/vmem.h"
 #include "utils/cpu.h"
+#include "utils/timer.h"
+
+static uint64_t g_timer;
+
+extern uint64_t riscv64_regs[32];
+extern uint64_t riscv64_pc;
 
 VerilatedContext *context;
 VerilatedVcdC *vcd;
@@ -84,8 +90,13 @@ void cpu_exec(uint64_t n) {
     default: npc_state.state = NPC_RUNNING;
   }
 
+  uint64_t start_time = get_time();
 
   exec_inst(n);
+
+  uint64_t end_time = get_time();
+
+  g_timer += end_time - start_time;
 
   switch (npc_state.state) {
     case NPC_RUNNING: npc_state.state = NPC_STOP; break;
