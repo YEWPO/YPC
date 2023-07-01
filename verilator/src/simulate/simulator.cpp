@@ -6,6 +6,7 @@
 #include <verilated_vcd_c.h>
 
 #include "common.h"
+#include "isa/isa.h"
 #include "simulate/simulator.h"
 #include "memory/vmem.h"
 #include "utils/cpu.h"
@@ -53,6 +54,8 @@ static void step_one() {
   top->clock = 0;
   top->eval();
   vcd->dump(context->time());
+
+  dump_isa();
 }
 
 static void step_clock_round(uint64_t n) {
