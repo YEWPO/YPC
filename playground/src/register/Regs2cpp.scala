@@ -5,7 +5,7 @@ import chisel3.util.HasBlackBoxResource
 
 class Regs2cpp extends BlackBox with HasBlackBoxResource {
   val io = IO(new Bundle {
-    val regs = Input(Vec(32, UInt(64.W)))
+    val inbits = Input(UInt((64*32).W))
   })
 
   addResource("Regs2cpp.v")

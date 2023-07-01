@@ -17,7 +17,7 @@ class Regs extends Module {
   val regFile = RegInit(VecInit(Seq.fill(32)(0.U(64.W))))
   val regs2cpp = Module(new Regs2cpp)
 
-  regs2cpp.io.regs := regFile
+  regs2cpp.io.inbits := regFile.asUInt()
 
   for (i <- 1 to 31) {
     regFile(i) := Mux((io.w_rd === i.asUInt) && io.w_en, io.w_data, regFile(i))
