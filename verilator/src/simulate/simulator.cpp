@@ -13,6 +13,7 @@
 #include "utils/timer.h"
 
 static uint64_t g_timer;
+static uint64_t g_nr_guest_inst;
 
 extern uint64_t riscv64_regs[32];
 extern uint64_t riscv64_pc;
@@ -62,8 +63,6 @@ static void step_one() {
   top->clock = 0;
   top->eval();
   vcd->dump(context->time());
-
-  dump_isa();
 }
 
 static void step_clock_round(uint64_t n) {
@@ -77,11 +76,20 @@ static void exec_inst(uint64_t n) {
     top->io_inst = vaddr_ifetch(top->io_pc, 4);
 
     step_one();
+    g_nr_guest_inst++;
 
     if (npc_state.state != NPC_RUNNING) {
       break;
     }
   }
+}
+
+
+static void statistic() {
+  Log("host time spent = %ld us", g_timer);
+  Log("total guest instructions = %ld" , g_nr_guest_inst);
+  if (g_timer > 0) Log("simulation frequency = %ld inst/s", g_nr_guest_inst * 1000000 / g_timer);
+  else Log("Finish running in less than 1 us and can not calculate the simulation frequency");
 }
 
 void cpu_exec(uint64_t n) {
@@ -109,6 +117,8 @@ void cpu_exec(uint64_t n) {
            (npc_state.halt_ret == 0 ? ANSI_FMT("HIT GOOD TRAP", ANSI_FG_GREEN) :
             ANSI_FMT("HIT BAD TRAP", ANSI_FG_RED))),
           npc_state.halt_pc);
+    case NPC_QUIT:
+      statistic();
   }
 }
 
