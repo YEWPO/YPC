@@ -37,6 +37,9 @@ sim: verilog
 	$(call git_commit, "sim RTL")
 	$(MAKE) -C $(VERILATOR_DIR) ARGS="$(ARGS)" IMG=$(IMG) run
 
+gdb: verilog
+	$(MAKE) -C $(VERILATOR_DIR) ARGS="$(ARGS)" IMG=$(IMG) gdb
+
 GTKWAVE = gtkwave
 VCD_FILE = $(BUILD_DIR)/sim.vcd
 

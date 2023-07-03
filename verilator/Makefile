@@ -6,6 +6,7 @@ VERILOG_BUILD_DIR = $(BUILD_DIR)/verilog_dir
 TOPNAME = Top
 
 VERILATOR = verilator
+GDB = gdb
 
 VERILATOR_FLAGS = --cc --build -j 8 \
 									--trace
@@ -34,5 +35,8 @@ $(BIN): $(CSRCS) $(VSRCS)
 run: $(BIN)
 	@echo running...
 	$^ $(ARGS) $(IMG)
+
+gdb: $(BIN)
+	$(GDB) -ex 'set args $(ARGS) $(IMG)' $^
 
 .PHONY: run
