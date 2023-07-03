@@ -1,7 +1,12 @@
 #include "memory/host.h"
 #include "memory/pmem.h"
 
-static uint8_t __attribute__(( aligned(4096) )) pmem[CONFIG_MSIZE];
+static uint8_t __attribute__(( aligned(4096) )) pmem[CONFIG_MSIZE] = {
+  // 0x97, 0x02, 0x00, 0x00,
+  // 0x23, 0xb8, 0x02, 0x00,
+  // 0x03, 0xb5, 0x02, 0x01,
+  0x73, 0x00, 0x10, 0x00,
+};
 
 uint8_t* guest_to_host(paddr_t paddr) { return pmem + paddr - CONFIG_MBASE; }
 paddr_t host_to_guest(uint8_t *haddr) { return haddr - pmem + CONFIG_MBASE; }

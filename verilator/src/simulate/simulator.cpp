@@ -25,6 +25,7 @@ VTop *top;
 static void reset(uint64_t n = 5);
 
 void ebreak() {
+  Log(ANSI_FMT("EBREAK", ANSI_FG_RED));
   npc_state.halt_pc = riscv64_pc;
   npc_state.halt_ret = riscv64_regs[10];
   npc_state.state = NPC_END;
