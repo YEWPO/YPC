@@ -68,5 +68,11 @@ class Top extends Module {
   mem_op_mask.io.funct := Mux(sel_sigs.io.funct_en, io.inst(14, 12), 0.U)
 
   // memory part
-  val mem = Module(new Pmem)
+  val pmem = Module(new Pmem)
+  pmem.io.mem_en := sel_sigs.io.mem_en
+  pmem.io.w_en := sel_sigs.io.mem_w_en
+  pmem.io.signed_en := mem_op_mask.io.signed
+  pmem.io.addr := alu.io.res
+  pmem.io.w_data := reg_file.io.r_data2
+  pmem.io.r_mask := mem_op_mask.io.mask
 }
