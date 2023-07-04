@@ -11,8 +11,12 @@ class Top extends Module {
   })
 
   val program_counter = Module(new PC)
+  val reg_file = Module(new Regs)
 
   io.pc := program_counter.io.pc
+  // reg src id
+  reg_file.io.r_rs1 := io.inst(19, 15)
+  reg_file.io.r_rs2 := io.inst(24, 20)
 
   // parse op type
   val parse_optype = Module(new OperationType)
