@@ -20,6 +20,9 @@ object DecodeSignalTest extends ChiselUtestTester {
           dut.io.word_en.expect(false.B)
           dut.io.branch_en.expect(false.B)
           dut.io.mem_w_en.expect(false.B)
+          dut.io.a_sel_0.expect(false.B)
+          dut.io.a_sel_pc.expect(false.B)
+          dut.io.b_sel_imm.expect(true.B)
         }
       }
       test("store") {
@@ -35,6 +38,9 @@ object DecodeSignalTest extends ChiselUtestTester {
           dut.io.word_en.expect(false.B)
           dut.io.branch_en.expect(false.B)
           dut.io.mem_w_en.expect(true.B)
+          dut.io.a_sel_0.expect(false.B)
+          dut.io.a_sel_pc.expect(false.B)
+          dut.io.b_sel_imm.expect(true.B)
         }
       }
       test("addiw") {
@@ -50,6 +56,9 @@ object DecodeSignalTest extends ChiselUtestTester {
           dut.io.word_en.expect(true.B)
           dut.io.branch_en.expect(false.B)
           dut.io.mem_w_en.expect(false.B)
+          dut.io.a_sel_0.expect(false.B)
+          dut.io.a_sel_pc.expect(false.B)
+          dut.io.b_sel_imm.expect(true.B)
         }
       }
       test("jal") {
