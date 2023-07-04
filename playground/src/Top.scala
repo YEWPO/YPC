@@ -46,4 +46,11 @@ class Top extends Module {
   selector_b.io.imm_val := parse_imm.io.imm_out
   selector_b.io.src2 := reg_file.io.r_data2
   selector_b.io.sel_sig_imm := sel_sigs.io.b_sel_imm
+
+  // Branch selector
+  val branch = Module(new Branch)
+  branch.io.src1 := reg_file.io.r_data1
+  branch.io.src2 := reg_file.io.r_data2
+  branch.io.funct := io.inst(14, 12)
+  branch.io.branch_en := sel_sigs.io.branch_en
 }
