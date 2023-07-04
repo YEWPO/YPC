@@ -22,8 +22,11 @@ class DecodeSignal extends Module {
     val branch_en = Output(Bool())
   })
 
+  // lui
   io.a_sel_0 := io.opcode === "b0110111".U
-  io.a_sel_pc := (io.opcode === "b0010111".U) || (io.optype === "b011".U)
+  // auipc, B, J
+  io.a_sel_pc := (io.opcode === "b0010111".U) || (io.optype === "b011".U) || (io.optype === "b101".U)
+  // !R
   io.b_sel_imm := io.optype =/= "b000".U
 
   // !B, !S

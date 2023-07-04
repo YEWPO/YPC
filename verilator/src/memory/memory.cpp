@@ -9,8 +9,6 @@
 #define WRITE 1
 #define READ 0
 
-#define SIGNED(sig) (sig == 1)
-
 extern VTop *top;
 static bool pre_clock;
 
@@ -32,7 +30,7 @@ void mem(const svLogic mem_en, const svLogic w_en, const svLogic signed_en,
     return;
   }
 
-  Log(ANSI_FMT("MEM", ANSI_FG_RED));
+  Log(ANSI_FMT("MEM, %016llx, %016llx", ANSI_FG_RED), addr, r_mask);
 
   uint64_t mask = r_mask;
 

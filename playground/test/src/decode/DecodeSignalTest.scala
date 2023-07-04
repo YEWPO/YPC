@@ -52,6 +52,24 @@ object DecodeSignalTest extends ChiselUtestTester {
           dut.io.mem_w_en.expect(false.B)
         }
       }
+      test("jal") {
+        testCircuit(new DecodeSignal) { dut =>
+          dut.io.opcode.poke("b1101111".U)
+          dut.io.optype.poke("b101".U)
+          dut.io.opfunct.poke("b000".U)
+          dut.clock.step()
+          dut.io.reg_en.expect(true.B)
+          dut.io.op30_en.expect(false.B)
+          dut.io.mem_en.expect(false.B)
+          dut.io.funct_en.expect(false.B)
+          dut.io.word_en.expect(false.B)
+          dut.io.branch_en.expect(false.B)
+          dut.io.mem_w_en.expect(false.B)
+          dut.io.a_sel_0.expect(false.B)
+          dut.io.a_sel_pc.expect(true.B)
+          dut.io.b_sel_imm.expect(true.B)
+        }
+      }
     }
   }
 }
