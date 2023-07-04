@@ -40,16 +40,16 @@ void mem(const svLogic mem_en, const svLogic w_en, const svLogic signed_en,
     uint64_t data = *((uint64_t *)w_data);
 
     switch (mask) {
-      case 0xff:
+      case 0x0ffl:
         vaddr_write(*((uint64_t *)addr), 1, data);
         break;
-      case 0xffff:
+      case 0x0ffffl:
         vaddr_write(*((uint64_t *)addr), 2, data);
         break;
-      case 0xffffffff:
+      case 0x0ffffffffl:
         vaddr_write(*((uint64_t *)addr), 4, data);
         break;
-      case 0xffffffffffffffff:
+      case 0xffffffffffffffffl:
         vaddr_write(*((uint64_t *)addr), 8, data);
         break;
       default:
@@ -59,19 +59,19 @@ void mem(const svLogic mem_en, const svLogic w_en, const svLogic signed_en,
     uint64_t data;
 
     switch (mask) {
-      case 0xff:
+      case 0x0ffl:
         data = vaddr_read(*((uint64_t *)addr), 1);
         if (signed_en == 1) data = (int8_t)data;
         break;
-      case 0xffff:
+      case 0x0ffffl:
         data = vaddr_read(*((uint64_t *)addr), 2);
         if (signed_en == 1) data = (int16_t)data;
         break;
-      case 0xffffffff:
+      case 0x0ffffffffl:
         data = vaddr_read(*((uint64_t *)addr), 4);
         if (signed_en == 1) data = (int32_t)data;
         break;
-      case 0xffffffffffffffff:
+      case 0xffffffffffffffffl:
         data = vaddr_read(*((uint64_t *)addr), 8);
         break;
       default:
