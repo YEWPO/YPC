@@ -4,6 +4,7 @@ import chisel3.util._
 import register._
 import decode._
 import execute._
+import memory._
 
 class Top extends Module {
   val io = IO(new Bundle{
@@ -61,4 +62,8 @@ class Top extends Module {
   alu.io.funct := io.inst(14, 12)
   alu.io.word_op := sel_sigs.io.word_en
   alu.io.subop_type := sel_sigs.io.op30_en
+
+  // MemOpMask
+  val mem_op_mask = Module(new MemOpMask)
+  mem_op_mask.io.funct := io.inst(14, 12)
 }
