@@ -12,9 +12,9 @@ class MemOpMask extends Module {
   })
 
   io.mask := MuxCase(0.U(64.W), Array(
-    (io.funct(1, 0) === "b00".U) -> "h0000_0000_0000_ffff".U,
-    (io.funct(1, 0) === "b01".U) -> "h0000_0000_ffff_ffff".U,
-    (io.funct(1, 0) === "b10".U) -> "h0000_ffff_ffff_ffff".U,
+    (io.funct(1, 0) === "b00".U) -> "h0000_0000_0000_00ff".U,
+    (io.funct(1, 0) === "b01".U) -> "h0000_0000_0000_ffff".U,
+    (io.funct(1, 0) === "b10".U) -> "h0000_0000_ffff_ffff".U,
     (io.funct(1, 0) === "b11".U) -> "hffff_ffff_ffff_ffff".U
     ))
 

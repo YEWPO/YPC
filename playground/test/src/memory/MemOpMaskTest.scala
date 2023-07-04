@@ -11,7 +11,7 @@ object MemOpMaskTest extends ChiselUtestTester {
         dut.io.funct.poke("b100".U)
         dut.clock.step()
         dut.io.signed.expect(false.B)
-        dut.io.mask.expect("h0000_0000_0000_ffff".U)
+        dut.io.mask.expect("h0000_0000_0000_00ff".U)
       }
     }
   }
