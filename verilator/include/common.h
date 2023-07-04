@@ -9,6 +9,7 @@
 
 #include "debug.h"
 #include "utils/log.h"
+#include "generated/autoconf.h"
 
 typedef uint64_t word_t;
 typedef int64_t sword_t;
