@@ -57,7 +57,7 @@ class Top extends Module {
   val branch = Module(new Branch)
   branch.io.src1 := reg_file.io.r_data1
   branch.io.src2 := reg_file.io.r_data2
-  branch.io.funct := Mux(sel_sigs.io.funct_en, io.inst(14, 12), 0.U)
+  branch.io.funct := io.inst(14, 12)
   branch.io.branch_en := sel_sigs.io.branch_en
 
   // ALU
@@ -70,7 +70,7 @@ class Top extends Module {
 
   // MemOpMask
   val mem_op_mask = Module(new MemOpMask)
-  mem_op_mask.io.funct := Mux(sel_sigs.io.funct_en, io.inst(14, 12), 0.U)
+  mem_op_mask.io.funct := io.inst(14, 12)
 
   // memory part
   val pmem = Module(new Pmem)

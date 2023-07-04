@@ -30,7 +30,7 @@ void mem(const svLogic mem_en, const svLogic w_en, const svLogic signed_en,
     return;
   }
 
-  Log(ANSI_FMT("MEM, %016llx, %016llx", ANSI_FG_RED), addr, r_mask);
+  Log(ANSI_FMT("MEM", ANSI_FG_RED));
 
   uint64_t mask = r_mask;
 

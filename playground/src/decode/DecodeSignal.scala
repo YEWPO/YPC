@@ -31,8 +31,8 @@ class DecodeSignal extends Module {
 
   // !B, !S
   io.reg_en := (io.optype =/= "b011".U) && (io.optype =/= "b010".U)
-  // !J, !U
-  io.funct_en := (io.optype =/= "b101".U) && (io.optype =/= "b100".U)
+  // add, addi, addiw, addw
+  io.funct_en := (io.opcode === "b0010011".U) || (io.opcode === "b0110011".U) || (io.opcode === "b0011011".U) || (io.opcode === "b0111011".U)
   // word
   io.word_en := (io.opcode === "b0011011".U) || (io.opcode === "b0111011".U)
   // sd, ld
