@@ -14,8 +14,10 @@ class Top extends Module {
 
   val program_counter = Module(new PC)
   val reg_file = Module(new Regs)
+  val snpc_gen = Module(new Snpc)
 
-  io.pc := program_counter.io.pc
+  snpc_gen.io.opcode := io.inst(1, 0)
+  snpc_gen.io.pc := program_counter.io.pc
   // reg src id
   reg_file.io.r_rs1 := io.inst(19, 15)
   reg_file.io.r_rs2 := io.inst(24, 20)
@@ -37,7 +39,7 @@ class Top extends Module {
 
   // selector A
   val selector_a = Module(new SelectorA)
-  selector_a.io.pc_val := io.pc
+  selector_a.io.pc_val := program_counter.io.pc
   selector_a.io.src1 := reg_file.io.r_data1
   selector_a.io.sel_sig_0 := sel_sigs.io.a_sel_0
   selector_a.io.sel_sig_pc := sel_sigs.io.a_sel_pc
@@ -75,4 +77,23 @@ class Top extends Module {
   pmem.io.addr := alu.io.res
   pmem.io.w_data := reg_file.io.r_data2
   pmem.io.r_mask := mem_op_mask.io.mask
+
+  // write register
+  val sel_reg = Module(new SelectorRegs)
+  sel_reg.io.opcode := io.inst(6, 0)
+  sel_reg.io.snpc := snpc_gen.io.snpc
+  sel_reg.io.alu_out := pmem.io.r_data
+  reg_file.io.w_en := sel_sigs.io.reg_en
+  reg_file.io.w_rd := io.inst(11, 7)
+  reg_file.io.w_data := sel_reg.io.data_out
+
+  // update program_counter
+  val sel_pc = Module(new SelectorPC)
+  sel_pc.io.opcode := io.inst(6, 0)
+  sel_pc.io.branch_out := branch.io.res
+  sel_pc.io.snpc := snpc_gen.io.snpc
+  sel_pc.io.alu_out := pmem.io.r_data
+  program_counter.io.next_pc := sel_pc.io.next_pc
+
+  io.pc := sel_pc.io.next_pc
 }
