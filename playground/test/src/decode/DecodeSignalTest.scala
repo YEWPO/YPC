@@ -16,6 +16,7 @@ object DecodeSignalTest extends ChiselUtestTester {
         dut.io.mem_en.expect(true.B)
         dut.io.funct_en.expect(true.B)
         dut.io.word_en.expect(false.B)
+        dut.io.branch_en.expect(false.B)
       }
     }
   }
