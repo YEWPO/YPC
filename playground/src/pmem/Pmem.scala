@@ -1,9 +1,9 @@
-package memory
+package pmem
 
 import chisel3._
 import chisel3.util.HasBlackBoxResource
 
-class Mem extends BlackBox with HasBlackBoxResource {
+class Pmem extends BlackBox with HasBlackBoxResource {
   val io = IO(new Bundle {
     val mem_en = Input(Bool())
     val w_en = Input(Bool())
@@ -14,5 +14,5 @@ class Mem extends BlackBox with HasBlackBoxResource {
     val r_data = Output(UInt(64.W))
   })
 
-  addResource("Mem.v")
+  addResource("Pmem.v")
 }

@@ -4,7 +4,7 @@ import chisel3.util._
 import register._
 import decode._
 import execute._
-import memory._
+import pmem._
 
 class Top extends Module {
   val io = IO(new Bundle{
@@ -66,4 +66,7 @@ class Top extends Module {
   // MemOpMask
   val mem_op_mask = Module(new MemOpMask)
   mem_op_mask.io.funct := Mux(sel_sigs.io.funct_en, io.inst(14, 12), 0.U)
+
+  // memory part
+  val mem = Module(new Pmem)
 }

@@ -1,4 +1,4 @@
-module Mem(
+module Pmem(
   input mem_en,
   input w_en,
   input signed_en,
