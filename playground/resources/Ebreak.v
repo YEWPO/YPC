@@ -1,11 +1,11 @@
 module Ebreak (
-  input [2:0] op_type
+  input [31:0] inst
 );
 
   import "DPI-C" function void ebreak();
 
   always @(*) begin
-    if (op_type == 3'b110) begin
+    if (inst == 32'h00100073) begin
       ebreak();
     end
   end

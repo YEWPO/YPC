@@ -12,6 +12,9 @@ class Top extends Module {
     val pc = Output(UInt(64.W))
   })
 
+  val ebreak = Module(new Ebreak)
+  ebreak.io.inst := io.inst
+
   val program_counter = Module(new PC)
   val reg_file = Module(new Regs)
   val snpc_gen = Module(new Snpc)
@@ -95,5 +98,5 @@ class Top extends Module {
   sel_pc.io.alu_out := pmem.io.r_data
   program_counter.io.next_pc := sel_pc.io.next_pc
 
-  io.pc := sel_pc.io.next_pc
+  io.pc := program_counter.io.pc
 }

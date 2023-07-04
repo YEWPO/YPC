@@ -1,11 +1,11 @@
-package execute
+package decode
 
 import chisel3._
 import chisel3.util.HasBlackBoxResource
 
 class Ebreak extends BlackBox with HasBlackBoxResource {
   val io = IO(new Bundle {
-    val op_type = Input(UInt(3.W))
+    val inst = Input(UInt(32.W))
   })
 
   addResource("Ebreak.v")

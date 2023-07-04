@@ -25,6 +25,18 @@ VTop *top;
 static void reset(uint64_t n = 5);
 
 void ebreak() {
+  static bool pre_clock;
+
+  if (top->clock == 1) {
+    if (pre_clock == 1) {
+      return;
+    }
+    pre_clock = top->clock;
+  } else {
+    pre_clock = top->clock;
+    return;
+  }
+
   Log(ANSI_FMT("EBREAK", ANSI_FG_RED));
   npc_state.halt_pc = riscv64_pc;
   npc_state.halt_ret = riscv64_regs[10];
