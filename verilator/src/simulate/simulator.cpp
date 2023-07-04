@@ -89,6 +89,7 @@ static void exec_inst(uint64_t n) {
     top->io_inst = vaddr_ifetch(top->io_pc, 4);
 
     step_one();
+    dump_isa();
     g_nr_guest_inst++;
 
     if (npc_state.state != NPC_RUNNING) {
