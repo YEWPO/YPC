@@ -3,6 +3,7 @@ import chisel3.util._
 
 import register._
 import decode._
+import execute._
 
 class Top extends Module {
   val io = IO(new Bundle{
@@ -32,4 +33,17 @@ class Top extends Module {
   sel_sigs.io.opcode := io.inst(6, 0)
   sel_sigs.io.optype := parse_optype.io.operation_type
   sel_sigs.io.opfunct := io.inst(14, 12)
+
+  // selector A
+  val selector_a = Module(new SelectorA)
+  selector_a.io.pc_val := io.pc
+  selector_a.io.src1 := reg_file.io.r_data1
+  selector_a.io.sel_sig_0 := sel_sigs.io.a_sel_0
+  selector_a.io.sel_sig_pc := sel_sigs.io.a_sel_pc
+
+  // selector B
+  val selector_b = Module(new SelectorB)
+  selector_b.io.imm_val := parse_imm.io.imm_out
+  selector_b.io.src2 := reg_file.io.r_data2
+  selector_b.io.sel_sig_imm := sel_sigs.io.b_sel_imm
 }
