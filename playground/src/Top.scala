@@ -53,4 +53,12 @@ class Top extends Module {
   branch.io.src2 := reg_file.io.r_data2
   branch.io.funct := io.inst(14, 12)
   branch.io.branch_en := sel_sigs.io.branch_en
+
+  // ALU
+  val alu = Module(new Calculator)
+  alu.io.src1 := selector_a.io.sel_out
+  alu.io.src2 := selector_b.io.sel_out
+  alu.io.funct := io.inst(14, 12)
+  alu.io.word_op := sel_sigs.io.word_en
+  alu.io.subop_type := sel_sigs.io.op30_en
 }
