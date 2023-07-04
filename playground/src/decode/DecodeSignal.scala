@@ -17,6 +17,7 @@ class DecodeSignal extends Module {
     val funct_en = Output(Bool())
     val word_en = Output(Bool())
     val mem_en = Output(Bool())
+    val mem_w_en = Output(Bool())
     val op30_en = Output(Bool())
     val branch_en = Output(Bool())
   })
@@ -25,9 +26,9 @@ class DecodeSignal extends Module {
   io.a_sel_pc := (io.opcode === "b0010111".U) || (io.optype === "b011".U)
   io.b_sel_imm := io.optype =/= "b000".U
 
-  // B, S
+  // !B, !S
   io.reg_en := (io.optype =/= "b011".U) && (io.optype =/= "b010".U)
-  // J, U
+  // !J, !U
   io.funct_en := (io.optype =/= "b101".U) && (io.optype =/= "b100".U)
   // word
   io.word_en := (io.opcode === "b0011011".U) || (io.opcode === "b0111011".U)
@@ -37,4 +38,6 @@ class DecodeSignal extends Module {
   io.op30_en := (io.optype === "b000".U) || (io.optype === "b001".U && io.opcode =/= "b0000011".U && io.opfunct === "b101".U)
   // B
   io.branch_en := io.optype === "b011".U
+  // S
+  io.mem_w_en := io.optype === "b010".U
 }

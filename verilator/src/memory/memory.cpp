@@ -17,6 +17,8 @@ static bool pre_clock;
 void mem(const svLogic mem_en, const svLogic w_en, const svLogic signed_en,
          const svLogicVecVal *addr, const svLogicVecVal *w_data,
          const svLogicVecVal *r_mask, svLogicVecVal *r_data) {
+  Log(ANSI_FMT("MEM", ANSI_FG_RED));
+
   if (top->clock == 1) {
     if (top->clock == pre_clock) {
       return;
