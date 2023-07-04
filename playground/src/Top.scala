@@ -65,8 +65,8 @@ class Top extends Module {
   alu.io.src1 := selector_a.io.sel_out
   alu.io.src2 := selector_b.io.sel_out
   alu.io.funct := Mux(sel_sigs.io.funct_en, io.inst(14, 12), 0.U)
+  alu.io.subop_type := Mux(sel_sigs.io.op30_en, io.inst(30), 0.U)
   alu.io.word_op := sel_sigs.io.word_en
-  alu.io.subop_type := sel_sigs.io.op30_en
 
   // MemOpMask
   val mem_op_mask = Module(new MemOpMask)
