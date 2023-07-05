@@ -7,6 +7,7 @@
 #include "macro.h"
 #include "simulate/simulator.h"
 #include "utils/cpu.h"
+#include "memory/pmem.h"
 
 static int is_batch_mode = false;
 
@@ -119,6 +120,43 @@ static int cmd_info(char *args) {
   return 0;
 }
 
+static int cmd_x(char *args) {
+  /* extract tow arguments */
+  char *arg1 = strtok(NULL, " ");
+  char *arg2 = strtok(NULL, " ");
+
+  if (arg1 == NULL || arg2 == NULL) {
+    /* lack of argument */
+    printf("Lack of arguments\n");
+  } else {
+    /* get step time value */
+    uint64_t xsize;
+    char *endptr;
+    xsize = strtoull(arg1, &endptr, 10);
+
+    if (*endptr == '\0') {
+      /* valid value of N*/
+      word_t paddr = strtoull(arg2, &endptr, 16);
+
+      if (*endptr == '\0') {
+        /* valid value of EXPR */
+        int i;
+
+        for (i = 0; i < xsize; i++) {
+          word_t xaddr = paddr + i * 4;
+          printf(ANSI_FMT(FMT_WORD, ANSI_FG_BLUE) ":  0x%08lx\n", xaddr, paddr_read(xaddr, 4));
+        }
+      } else {
+        printf("invalid address: %s\n", arg2);
+      }
+    } else {
+      printf("invalid value of N: %s\n", arg1);
+    }
+  }
+
+  return 0;
+}
+
 static int cmd_help(char *args);
 
 static struct {
@@ -131,6 +169,7 @@ static struct {
     {"q", "Exit NPC", cmd_q},
     {"si", "Step one or [N] instruction exactly.", cmd_si},
     {"info", "Generic command for showing things about the program being debugged.", cmd_info},
+    {"x", "Examine memory: x/FMT ADDRESS.", cmd_x},
 
     /* TODO: Add more commands */
 
