@@ -88,7 +88,44 @@ static void step_clock_round(uint64_t n) {
   }
 }
 
+// ========== itrace ===============
+
+typedef struct Iring {
+  char log[128];
+} Iring;
+
+#define IRING_SIZE 36
+#define IRING_NEXT(p) ((p + 1) % IRING_SIZE)
+#define IRING_PREV(p) ((p - 1 + IRING_SIZE) % IRING_SIZE)
+static Iring iring[IRING_SIZE] = {};
+static int iring_head = 0;
+
+static void iring_print() {
+  printf("instruct execute info:\n");
+
+  int ptr = iring_head;
+  while (ptr != IRING_PREV(iring_head)) {
+    if (strlen(iring[ptr].log) > 0) {
+      printf("    ");
+      puts(iring[ptr].log);
+    }
+    ptr = IRING_NEXT(ptr);
+  }
+
+  printf("--> ");
+  puts(iring[ptr].log);
+}
+
+static void add2iring(Decode *_this) {
+  strcpy(iring[iring_head].log, _this->logbuf);
+  iring_head = IRING_NEXT(iring_head);
+}
+
+// ============ itrace ============
+
 static void trace_and_difftest(Decode *_this) {
+  add2iring(_this);
+
 #ifdef CONFIG_ITRACE_COND
   log_write("%s\n", _this->logbuf);
 #endif
@@ -154,6 +191,11 @@ static void statistic() {
   else Log("Finish running in less than 1 us and can not calculate the simulation frequency");
 }
 
+void assert_fail_msg() {
+  dump_isa();
+  statistic();
+}
+
 void cpu_exec(uint64_t n) {
   g_print_step = (n < MAX_INST_TO_PRINT);
 
@@ -181,6 +223,12 @@ void cpu_exec(uint64_t n) {
            (npc_state.halt_ret == 0 ? ANSI_FMT("HIT GOOD TRAP", ANSI_FG_GREEN) :
             ANSI_FMT("HIT BAD TRAP", ANSI_FG_RED))),
           npc_state.halt_pc);
+
+    if (npc_state.state == NPC_ABORT || npc_state.halt_ret != 0) {
+      iring_print();
+      // ftrace_print();
+    }
+
     case NPC_QUIT:
       statistic();
   }

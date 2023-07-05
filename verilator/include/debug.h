@@ -11,7 +11,9 @@
   if (!(cond)) { \
     printf(ANSI_FMT("Failed on [%s:%d %s], reason: " format, ANSI_FG_RED) "\n", \
     __FILE__, __LINE__, __func__, ## __VA_ARGS__); \
-    assert(0); \
+    extern void assert_fail_msg(); \
+    assert_fail_msg(); \
+    assert(cond); \
   } \
 } while (0)
 
