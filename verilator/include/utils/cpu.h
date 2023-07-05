@@ -14,5 +14,6 @@ typedef struct {
 extern NPCState npc_state;
 
 void dump_isa();
+word_t isa_reg_str2val(const char *s, bool *success);
 
 #endif

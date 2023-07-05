@@ -30,10 +30,31 @@ const char *regs[] = {
   "s8", "s9", "s10", "s11", "t3", "t4", "t5", "t6"
 };
 
+#define NR_REG ARRLEN(regs)
+
 void dump_isa() {
   for (int i = 0; i < 32; ++i) {
     printf("%s: \t%016lx\n", regs[i], riscv64_regs[i]);
   }
 
   printf("pc: \t%016lx\n", riscv64_pc);
+}
+
+word_t isa_reg_str2val(const char *s, bool *success) {
+  int i;
+
+  for (i = 0; i < NR_REG; i++) {
+    if (strcmp(s, regs[i]) == 0) {
+      *success = true;
+      return riscv64_regs[i];
+    }
+  }
+
+  if (strcmp(s, "pc") == 0) {
+    *success = true;
+    return riscv64_pc;
+  }
+
+  *success = false;
+  return 0;
 }
