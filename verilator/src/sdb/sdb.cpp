@@ -8,6 +8,7 @@
 #include "simulate/simulator.h"
 #include "utils/cpu.h"
 #include "sdb/expr.h"
+#include "sdb/watchpoint.h"
 #include "memory/pmem.h"
 
 static int is_batch_mode = false;
@@ -74,12 +75,17 @@ static void info_r(char *args) {
   dump_isa();
 }
 
+static void info_w(char *args) {
+  print_watchpoints();
+}
+
 static struct {
   const char *name;
   const char *description;
   void (*handler) (char *);
 } info_opt_table[] = {
   {"r", "List of integer registers and their contents, for selected stack frame.", info_r},
+  {"w", "Status of specified watchpoints (all watchpoints if no argument).", info_w},
 
   /* TODO: Add more options */
 
@@ -179,6 +185,40 @@ static int cmd_p(char *args) {
   return 0;
 }
 
+static int cmd_w(char *args) {
+  if (args == NULL) {
+    /* not provide EXPR */
+    printf("no expression\n");
+  } else {
+    /* provide EXPR */
+    new_wp(args);
+  }
+
+  return 0;
+}
+
+static int cmd_d(char *args) {
+  /* extract first argument */
+  char *arg = strtok(NULL, " ");
+
+  if (arg == NULL) {
+    printf("Lack of argument.\n");
+  } else {
+    uint32_t no;
+    char *endptr;
+    no = strtoul(arg, &endptr, 10);
+
+    if (*endptr == '\0') {
+      /* valid value */
+      free_wp(no);
+    } else {
+      printf("invalid argument.\n");
+    }
+  }
+
+  return 0;
+}
+
 static int cmd_help(char *args);
 
 static struct {
@@ -186,15 +226,17 @@ static struct {
   const char *description;
   int (*handler)(char *);
 } cmd_table[] = {
-    {"help", "Display information about all supported commands", cmd_help},
-    {"c", "Continue the execution of the program", cmd_c},
-    {"q", "Exit NPC", cmd_q},
-    {"si", "Step one or [N] instruction exactly.", cmd_si},
-    {"info", "Generic command for showing things about the program being debugged.", cmd_info},
-    {"x", "Examine memory: x/FMT ADDRESS.", cmd_x},
-    {"p", "Print value of expression EXP.", cmd_p},
+  {"help", "Display information about all supported commands", cmd_help},
+  {"c", "Continue the execution of the program", cmd_c},
+  {"q", "Exit NPC", cmd_q},
+  {"si", "Step one or [N] instruction exactly.", cmd_si},
+  {"info", "Generic command for showing things about the program being debugged.", cmd_info},
+  {"x", "Examine memory: x/FMT ADDRESS.", cmd_x},
+  {"p", "Print value of expression EXP.", cmd_p},
+  {"w", "Set a watchpoint for EXPRESSION.", cmd_w},
+  {"d", "Delete a watchpoint.", cmd_d},
 
-    /* TODO: Add more commands */
+  /* TODO: Add more commands */
 
 };
 
@@ -265,4 +307,5 @@ void sdb_mainloop() {
 
 void sdb_init() {
   init_regex();
+  init_wp_pool();
 }

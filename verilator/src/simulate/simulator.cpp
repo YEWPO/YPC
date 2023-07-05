@@ -10,6 +10,7 @@
 #include "memory/vmem.h"
 #include "utils/cpu.h"
 #include "utils/timer.h"
+#include "sdb/watchpoint.h"
 
 static uint64_t g_timer;
 static uint64_t g_nr_guest_inst;
@@ -83,6 +84,16 @@ static void step_clock_round(uint64_t n) {
   }
 }
 
+static void trace_and_difftest() {
+#ifdef CONFIG_WATCHPOINT
+  bool newtag;
+  check_watchpoints(&newtag);
+  if (newtag == true) {
+    npc_state.state = NPC_STOP;
+  }
+#endif
+}
+
 static void exec_inst(uint64_t n) {
   while (n--) {
     top->io_inst = vaddr_ifetch(top->io_pc, 4);
@@ -90,13 +101,13 @@ static void exec_inst(uint64_t n) {
     step_one();
     // dump_isa();
     g_nr_guest_inst++;
+    trace_and_difftest();
 
     if (npc_state.state != NPC_RUNNING) {
       break;
     }
   }
 }
-
 
 static void statistic() {
   Log("host time spent = %ld us", g_timer);
@@ -136,7 +147,7 @@ void cpu_exec(uint64_t n) {
 }
 
 static void reset(uint64_t n) {
-  Log("reseting...");
+  Log("reseting the NPC");
   
   top->reset = 1;
 
