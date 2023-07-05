@@ -12,12 +12,9 @@ word_t vaddr_ifetch(vaddr_t addr, int len) {
 }
 
 word_t vaddr_read(vaddr_t addr, int len) {
-  word_t data = paddr_read(addr, len);
-  Log("read: 0x%016lx 0x%016lx %d", addr, data, len);
   return paddr_read(addr, len);
 }
 
 void vaddr_write(vaddr_t addr, int len, word_t data) {
-  Log("write: 0x%016lx 0x%016lx %d", addr, data, len);
   paddr_write(addr, len, data);
 }

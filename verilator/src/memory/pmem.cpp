@@ -12,21 +12,32 @@ uint8_t* guest_to_host(paddr_t paddr) { return pmem + paddr - CONFIG_MBASE; }
 paddr_t host_to_guest(uint8_t *haddr) { return haddr - pmem + CONFIG_MBASE; }
 
 static word_t pmem_read(paddr_t addr, int len) {
-  Assert(addr >= CONFIG_MBASE, "Invalid address: 0x%016lx", addr);
-  word_t ret = host_read(guest_to_host(addr), len);
-  return ret;
+  word_t data = host_read(guest_to_host(addr), len);
+#ifdef CONFIG_MTRACE_COND
+  Log("read: 0x%016lx 0x%016lx %d", addr, data, len);
+#endif
+  return data;
 }
 
 static void pmem_write(paddr_t addr, int len, word_t data) {
-  Assert(addr >= CONFIG_MBASE, "Invalid address: 0x%016lx", addr);
+#ifdef CONFIG_MTRACE_COND
+  Log("write: 0x%016lx 0x%016lx %d", addr, data, len);
+#endif
   host_write(guest_to_host(addr), len, data);
 }
 
 word_t paddr_read(paddr_t addr, int len) {
-  return pmem_read(addr, len);
+  if (likely(in_pmem(addr))) {
+    return pmem_read(addr, len);
+  }
+  Assert(0, "address = " FMT_PADDR "is out of bound", addr);
+  return 0;
 }
 
 void paddr_write(paddr_t addr, int len, word_t data) {
-  pmem_write(addr, len, data);
-  return;
+  if (likely(in_pmem(addr))) {
+    pmem_write(addr, len, data);
+    return;
+  }
+  Assert(0, "address = " FMT_PADDR "is out of bound", addr);
 }

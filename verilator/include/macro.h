@@ -95,6 +95,11 @@
 
 #define PG_ALIGN __attribute((aligned(4096)))
 
+#if !defined(likely)
+#define likely(cond)   __builtin_expect(cond, 1)
+#define unlikely(cond) __builtin_expect(cond, 0)
+#endif
+
 // for AM IOE
 #define io_read(reg) \
   ({ reg##_T __io_param; \
