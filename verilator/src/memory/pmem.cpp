@@ -1,7 +1,7 @@
 #include "memory/host.h"
 #include "memory/pmem.h"
 
-static uint8_t __attribute__(( aligned(4096) )) pmem[CONFIG_MSIZE] = {
+static uint8_t PG_ALIGN pmem[CONFIG_MSIZE] = {
   0x97, 0x02, 0x00, 0x00,
   0x23, 0xb8, 0x02, 0x00,
   0x03, 0xb5, 0x02, 0x01,
@@ -15,6 +15,7 @@ static word_t pmem_read(paddr_t addr, int len) {
   word_t data = host_read(guest_to_host(addr), len);
 #ifdef CONFIG_MTRACE_COND
   Log("read: 0x%016lx 0x%016lx %d", addr, data, len);
+  log_write("read: 0x%016lx 0x%016lx %d\n", addr, data, len);
 #endif
   return data;
 }
@@ -22,6 +23,7 @@ static word_t pmem_read(paddr_t addr, int len) {
 static void pmem_write(paddr_t addr, int len, word_t data) {
 #ifdef CONFIG_MTRACE_COND
   Log("write: 0x%016lx 0x%016lx %d", addr, data, len);
+  log_write("write: 0x%016lx 0x%016lx %d\n", addr, data, len);
 #endif
   host_write(guest_to_host(addr), len, data);
 }
