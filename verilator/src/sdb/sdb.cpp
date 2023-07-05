@@ -10,8 +10,7 @@
 
 static int is_batch_mode = false;
 
-/* We use the `readline' library to provide more flexibility to read from stdin.
- */
+/* We use the `readline' library to provide more flexibility to read from stdin. */
 static char *rl_gets() {
   static char *line_read = NULL;
 
@@ -69,6 +68,57 @@ static int cmd_si(char *args) {
   return 0;
 }
 
+static void info_r(char *args) {
+  dump_isa();
+}
+
+static struct {
+  const char *name;
+  const char *description;
+  void (*handler) (char *);
+} info_opt_table[] = {
+  {"r", "List of integer registers and their contents, for selected stack frame.", info_r},
+
+  /* TODO: Add more options */
+
+};
+
+#define NR_INFO_OPT ARRLEN(info_opt_table)
+
+static int cmd_info(char *args) {
+  /* extract the first argument */
+  char *arg = strtok(NULL, " ");
+  int i;
+
+  if (arg == NULL) {
+    /*
+     * no argument given
+     * output help
+     */
+ 
+    for (i = 0; i < NR_INFO_OPT; i++) {
+      printf("%s - %s\n", info_opt_table[i].name, info_opt_table[i].description);
+    }
+  } else {
+    /*
+     * check arg
+     * and execute
+     */
+    for (i = 0; i < NR_INFO_OPT; i++) {
+      if (strcmp(info_opt_table[i].name, arg) == 0) {
+        info_opt_table[i].handler(args);
+        break;
+      }
+    } 
+
+    if (i == NR_INFO_OPT) {
+      printf("Unknown option '%s'\n", arg);
+    }
+  }
+
+  return 0;
+}
+
 static int cmd_help(char *args);
 
 static struct {
@@ -78,8 +128,9 @@ static struct {
 } cmd_table[] = {
     {"help", "Display information about all supported commands", cmd_help},
     {"c", "Continue the execution of the program", cmd_c},
-    {"q", "Exit NEMU", cmd_q},
-    {"si", "Step one or [N] instruction exactly.\n", cmd_si},
+    {"q", "Exit NPC", cmd_q},
+    {"si", "Step one or [N] instruction exactly.", cmd_si},
+    {"info", "Generic command for showing things about the program being debugged.", cmd_info},
 
     /* TODO: Add more commands */
 

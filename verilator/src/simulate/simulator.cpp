@@ -6,7 +6,6 @@
 #include <verilated_vcd_c.h>
 
 #include "common.h"
-#include "isa/isa.h"
 #include "simulate/simulator.h"
 #include "memory/vmem.h"
 #include "utils/cpu.h"

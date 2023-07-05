@@ -13,4 +13,6 @@ typedef struct {
 
 extern NPCState npc_state;
 
+void dump_isa();
+
 #endif
