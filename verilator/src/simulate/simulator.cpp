@@ -122,9 +122,12 @@ static void add2iring(Decode *_this) {
 }
 
 // ============ itrace ============
+void ftrace_inst(Decode *_this);
+void ftrace_print();
 
 static void trace_and_difftest(Decode *_this) {
   add2iring(_this);
+  ftrace_inst(_this);
 
 #ifdef CONFIG_ITRACE_COND
   log_write("%s\n", _this->logbuf);
@@ -173,6 +176,7 @@ static void exec_inst(uint64_t n) {
     s.snpc = s.pc + 4;
 
     step_one();
+    s.dnpc = top->io_pc;
     inst_itrace(&s);
 
     g_nr_guest_inst++;
@@ -226,7 +230,7 @@ void cpu_exec(uint64_t n) {
 
     if (npc_state.state == NPC_ABORT || npc_state.halt_ret != 0) {
       iring_print();
-      // ftrace_print();
+      ftrace_print();
     }
 
     case NPC_QUIT:

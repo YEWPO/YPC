@@ -8,24 +8,28 @@ static char *log_file;
 static char *img_file;
 long img_size;
 void init_disasm(const char *triple);
+void func_sym_init(char *filename);
 
 static void parse_args(int argc, char *argv[]) {
   const struct option table[] = {
     {"batch"    , no_argument      , NULL, 'b'},
     {"log"      , required_argument, NULL, 'l'},
     {"help"     , no_argument      , NULL, 'h'},
+    {"elf"      , required_argument, NULL, 'e'},
     {0          , 0                , NULL,  0 },
   };
   int o;
-  while ( (o = getopt_long(argc, argv, "-hbl:", table, NULL)) != -1) {
+  while ( (o = getopt_long(argc, argv, "-hbl:e:", table, NULL)) != -1) {
     switch (o) {
       case 'b': sdb_set_batch_mode(); break;
       case 'l': log_file = optarg; break;
+      case 'e': func_sym_init(optarg); break;
       case 1: img_file = optarg; return;
       default:
         printf("Usage: %s [OPTION...] IMAGE [args]\n\n", argv[0]);
         printf("\t-b,--batch              run with batch mode\n");
         printf("\t-l,--log=FILE           output log to FILE\n");
+        printf("\t-e,--elf=ELFFILE        elf file of program\n");
         printf("\n");
         exit(0);
     }
