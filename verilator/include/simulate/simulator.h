@@ -1,7 +1,15 @@
 #ifndef _SIMULATOR_H
 #define _SIMULATOR_H
 
-#include <cstdint>
+#include "common.h"
+
+typedef struct Decode {
+  vaddr_t pc;
+  vaddr_t snpc;
+  vaddr_t dnpc;
+  uint32_t inst;
+  IFDEF(CONFIG_ITRACE, char logbuf[128]);
+} Decode;
 
 void simulator_init();
 void simulator_destroy();

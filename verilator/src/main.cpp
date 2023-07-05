@@ -7,6 +7,7 @@
 static char *log_file;
 static char *img_file;
 long img_size;
+void init_disasm(const char *triple);
 
 static void parse_args(int argc, char *argv[]) {
   const struct option table[] = {
@@ -63,6 +64,13 @@ int main(int argc, char *argv[]) {
   simulator_init();
 
   sdb_init();
+
+  IFDEF(CONFIG_ITRACE, init_disasm(
+    MUXDEF(CONFIG_ISA_x86,     "i686",
+    MUXDEF(CONFIG_ISA_mips32,  "mipsel",
+    MUXDEF(CONFIG_ISA_riscv32, "riscv32",
+    MUXDEF(CONFIG_ISA_riscv64, "riscv64", "bad")))) "-pc-linux-gnu"
+  ));
 
   sdb_mainloop();
 
