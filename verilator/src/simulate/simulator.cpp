@@ -17,8 +17,7 @@
 static uint64_t g_timer;
 static uint64_t g_nr_guest_inst;
 
-extern uint64_t riscv64_regs[32];
-extern uint64_t riscv64_pc;
+extern CPU_state cpu;
 
 static bool g_print_step = false;
 
@@ -42,8 +41,8 @@ void ebreak() {
   }
 
   Log(ANSI_FMT("EBREAK", ANSI_FG_RED));
-  npc_state.halt_pc = riscv64_pc;
-  npc_state.halt_ret = riscv64_regs[10];
+  npc_state.halt_pc = cpu.pc;
+  npc_state.halt_ret = cpu.gpr[10];
   npc_state.state = NPC_END;
 }
 

@@ -11,6 +11,11 @@ typedef struct {
   uint32_t halt_ret;
 } NPCState;
 
+typedef struct {
+  uint64_t gpr[32];
+  uint64_t pc;
+} CPU_state;
+
 extern NPCState npc_state;
 
 void dump_isa();
