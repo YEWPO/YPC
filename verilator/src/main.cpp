@@ -3,6 +3,7 @@
 #include "simulate/simulator.h"
 #include "memory/pmem.h"
 #include "sdb/sdb.h"
+#include "difftest.h"
 
 static char *log_file;
 static char *img_file;
@@ -64,6 +65,8 @@ int main(int argc, char *argv[]) {
   init_log(log_file);
 
   img_size = load_img();
+
+  IFDEF(CONFIG_DIFFTEST, difftest_memcpy(CONFIG_MBASE, guest_to_host(CONFIG_MBASE), img_size));
 
   simulator_init();
 

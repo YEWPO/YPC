@@ -156,6 +156,16 @@ config MTRACE_COND
   string "Only trace memory when the condition is true"
   default "true"
 
+config FTRACE
+  depends on TRACE && TARGET_NATIVE_ELF && ENGINE_INTERPRETER
+  bool "Enable frame tracer"
+  default y
+
+config FTRACE_COND
+  depends on FTRACE
+  string "Only trace frame when the condition is true"
+  default "true"
+
 
 config DIFFTEST
   depends on TARGET_NATIVE_ELF

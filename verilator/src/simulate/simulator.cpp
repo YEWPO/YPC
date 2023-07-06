@@ -12,6 +12,8 @@
 #include "utils/timer.h"
 #include "sdb/watchpoint.h"
 
+#include "difftest.h"
+
 #define MAX_INST_TO_PRINT 10
 
 static uint64_t g_timer;
@@ -89,6 +91,8 @@ static void step_clock_round(uint64_t n) {
 
 // ========== itrace ===============
 
+#ifdef CONFIG_ITRACE_COND
+
 typedef struct Iring {
   char log[128];
 } Iring;
@@ -120,18 +124,30 @@ static void add2iring(Decode *_this) {
   iring_head = IRING_NEXT(iring_head);
 }
 
+#endif
+
 // ============ itrace ============
+
+#ifdef CONFIG_FTRACE_COND
+
 void ftrace_inst(Decode *_this);
 void ftrace_print();
 
+#endif
+
 static void trace_and_difftest(Decode *_this) {
+#ifdef CONFIG_ITRACE_COND
   add2iring(_this);
+#endif
+#ifdef CONFIG_FTRACE_COND
   ftrace_inst(_this);
+#endif
 
 #ifdef CONFIG_ITRACE_COND
   log_write("%s\n", _this->logbuf);
 #endif
   if (g_print_step) { IFDEF(CONFIG_ITRACE, puts(_this->logbuf)); }
+  IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc));
 
 #ifdef CONFIG_WATCHPOINT
   bool newtag;
@@ -228,8 +244,12 @@ void cpu_exec(uint64_t n) {
           npc_state.halt_pc);
 
     if (npc_state.state == NPC_ABORT || npc_state.halt_ret != 0) {
+#ifdef CONFIG_ITRACE_COND
       iring_print();
+#endif
+#ifdef CONFIG_FTRACE_COND
       ftrace_print();
+#endif
     }
 
     case NPC_QUIT:
