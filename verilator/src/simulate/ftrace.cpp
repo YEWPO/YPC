@@ -33,10 +33,10 @@ static void add_func(uint32_t name, uint64_t addr, uint64_t size) {
   func_list = node;
 }
 
-void func_sym_init(char *filename) {
-  Log("filename: %s", filename);
+void func_sym_init(const char *elf_file) {
+  Log("filename: %s", elf_file);
 
-  FILE *fp = fopen(filename, "r");
+  FILE *fp = fopen(elf_file, "r");
   assert(fp != 0);
 
   // read ELF header and got segment header offset and number

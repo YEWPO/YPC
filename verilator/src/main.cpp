@@ -11,7 +11,8 @@ static char *elf_file;
 static char *dl_file;
 long img_size;
 void init_disasm(const char *triple);
-void func_sym_init(char *filename);
+void func_sym_init(const char *elf_file);
+void dl_init(const char *dl_file);
 
 static void parse_args(int argc, char *argv[]) {
   const struct option table[] = {
@@ -59,6 +60,8 @@ static long load_img() {
   int ret = fread(guest_to_host(CONFIG_MBASE), size, 1, fp);
   assert(ret == 1);
 
+  IFDEF(CONFIG_DIFFTEST, difftest_memcpy(CONFIG_MBASE, guest_to_host(CONFIG_MBASE), size, DIFFTEST_TO_REF));
+
   fclose(fp);
   return size;
 }
@@ -69,10 +72,9 @@ int main(int argc, char *argv[]) {
   init_log(log_file);
 
   IFDEF(CONFIG_MTRACE, func_sym_init(elf_file));
+  IFDEF(CONFIG_DIFFTEST, dl_init(dl_file));
 
   img_size = load_img();
-
-  IFDEF(CONFIG_DIFFTEST, difftest_memcpy(CONFIG_MBASE, guest_to_host(CONFIG_MBASE), img_size));
 
   simulator_init();
 

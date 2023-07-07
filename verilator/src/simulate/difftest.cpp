@@ -1,7 +1,44 @@
 #include "difftest.h"
 #include "utils/cpu.h"
 
+#include <dlfcn.h>
+
 extern CPU_state cpu;
+
+void (*difftest_exec)(uint64_t n);
+void (*difftest_memcpy)(paddr_t addr, void *buf, size_t n, bool direction);
+void (*difftest_regcpy)(void *dut, bool direction);
+void *dl_handle;
+
+void dl_init(const char *dl_file) {
+  dl_handle = dlopen(dl_file, RTLD_LAZY);
+  if (!dl_handle) {
+    fprintf(stderr, "%s: %s\n",dl_file, dlerror());
+    exit(EXIT_FAILURE);
+  }
+  dlerror();
+
+  char *error;
+
+  difftest_exec = (void (*)(uint64_t))dlsym(dl_handle, "difftest_exec");
+  error = dlerror();
+  if (error) {
+    fprintf(stderr, "%s: %s\n",dl_file, dlerror());
+    exit(EXIT_FAILURE);
+  }
+  difftest_memcpy = (void (*)(paddr_t, void *, size_t, bool))dlsym(dl_handle, "difftest_memcpy");
+  error = dlerror();
+  if (error) {
+    fprintf(stderr, "%s: %s\n",dl_file, dlerror());
+    exit(EXIT_FAILURE);
+  }
+  difftest_regcpy = (void (*)(void *, bool))dlsym(dl_handle, "difftest_regcpy");
+  error = dlerror();
+  if (error) {
+    fprintf(stderr, "%s: %s\n",dl_file, dlerror());
+    exit(EXIT_FAILURE);
+  }
+}
 
 static bool isa_difftest_checkregs(CPU_state *ref_r, vaddr_t pc) {
   bool flag = true;
@@ -37,4 +74,6 @@ void difftest_step(uint64_t pc) {
 
   difftest_exec(1);
   difftest_regcpy(&ref, DIFFTEST_TO_DUT);
+
+  checkregs(&ref, pc);
 }

@@ -135,6 +135,8 @@ void ftrace_print();
 
 #endif
 
+void difftest_step(uint64_t pc);
+
 static void trace_and_difftest(Decode *_this) {
 #ifdef CONFIG_ITRACE_COND
   add2iring(_this);
@@ -265,4 +267,6 @@ static void reset(uint64_t n) {
   step_clock_round(n);
 
   top->reset = 0;
+
+  IFDEF(CONFIG_DIFFTEST, difftest_regcpy(&cpu, DIFFTEST_TO_REF));
 }

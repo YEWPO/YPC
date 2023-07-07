@@ -22,7 +22,7 @@ INCFLAGS = $(addprefix -I, $(INCLUDE_PATHS))
 CFLAGS += $(INCFLAGS)
 CFLAGS += -g3
 
-LDFLAGS += -lreadline $(LIBS)
+LDFLAGS += -lreadline $(LIBS) -ldl
 
 $(BIN): $(VSRCS) $(CSRCS)
 	$(VERILATOR) $(VERILATOR_FLAGS) \
