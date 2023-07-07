@@ -4,6 +4,7 @@
 #include "memory/pmem.h"
 #include "sdb/sdb.h"
 #include "difftest.h"
+#include "utils/state.h"
 
 static char *log_file;
 static char *img_file;
@@ -91,5 +92,5 @@ int main(int argc, char *argv[]) {
 
   simulator_destroy();
 
-  return 0;
+  return is_exit_status_bad();
 }

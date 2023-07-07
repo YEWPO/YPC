@@ -16,28 +16,10 @@ void dl_init(const char *dl_file) {
     fprintf(stderr, "%s: %s\n",dl_file, dlerror());
     exit(EXIT_FAILURE);
   }
-  dlerror();
-
-  char *error;
 
   difftest_exec = (void (*)(uint64_t))dlsym(dl_handle, "difftest_exec");
-  error = dlerror();
-  if (error) {
-    fprintf(stderr, "%s: %s\n",dl_file, dlerror());
-    exit(EXIT_FAILURE);
-  }
   difftest_memcpy = (void (*)(paddr_t, void *, size_t, bool))dlsym(dl_handle, "difftest_memcpy");
-  error = dlerror();
-  if (error) {
-    fprintf(stderr, "%s: %s\n",dl_file, dlerror());
-    exit(EXIT_FAILURE);
-  }
   difftest_regcpy = (void (*)(void *, bool))dlsym(dl_handle, "difftest_regcpy");
-  error = dlerror();
-  if (error) {
-    fprintf(stderr, "%s: %s\n",dl_file, dlerror());
-    exit(EXIT_FAILURE);
-  }
 }
 
 static bool isa_difftest_checkregs(CPU_state *ref_r, vaddr_t pc) {
