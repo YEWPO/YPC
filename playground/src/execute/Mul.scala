@@ -85,11 +85,16 @@ class Divop extends Module {
     val res = Output(UInt(64.W))
   })
 
-  val res_32 = MuxCase((io.src1(31, 0).asSInt / io.src2(31, 0).asSInt).asUInt, Array(
+  val div = Module(new Div)
+
+  div.io.src1 := io.src1
+  div.io.src2 := io.src2
+
+  val res_32 = MuxCase(div.io.res_32, Array(
     (io.src2(31, 0) === 0.U) -> "hffff_ffff".U(32.W),
     ((io.src1(31, 0) === "h8000_0000".U) && (io.src2(31, 0) === "hffff_ffff".U)) -> "h8000_0000".U(32.W)
     ))
-  val res_64 = MuxCase((io.src1.asSInt / io.src2.asSInt).asUInt, Array(
+  val res_64 = MuxCase(div.io.res_64, Array(
     (io.src2 === 0.U) -> "hffff_ffff_ffff_ffff".U(64.W),
     ((io.src1 === "h8000_0000_0000_0000".U) && (io.src2 === "hffff_ffff_ffff_ffff".U)) -> "h8000_0000_0000_0000".U(64.W)
     ))
