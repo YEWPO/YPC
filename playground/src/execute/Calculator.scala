@@ -14,6 +14,8 @@ class Calculator extends Module {
 
     val subop_type = Input(Bool())
 
+    val mul_en = Input(Bool())
+
     val res = Output(UInt(64.W))
   })
 
@@ -25,6 +27,12 @@ class Calculator extends Module {
   val rightshift = Module(new Rightshift)
   val or = Module(new Or)
   val and = Module(new And)
+  val mul = Module(new Mul)
+
+  mul.io.src1 := io.src1
+  mul.io.src2 := io.src2
+  mul.io.funct := io.funct
+  mul.io.word_op := io.word_op
 
   add.io.src1 := io.src1
   add.io.src2 := io.src2
@@ -67,5 +75,5 @@ class Calculator extends Module {
 
   val w_res = Cat(Fill(32, res(31)), res(31, 0))
 
-  io.res := Mux(io.word_op, w_res, res)
+  io.res := Mux(io.mul_en, mul.io.res, Mux(io.word_op, w_res, res))
 }
