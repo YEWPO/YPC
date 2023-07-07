@@ -58,7 +58,7 @@ static bool isa_difftest_checkregs(CPU_state *ref_r, vaddr_t pc) {
     printf(ANSI_FMT("Something wrong at pc " FMT_WORD, ANSI_FG_YELLOW) "\n", pc);
   }
 
-  return true;
+  return flag;
 }
 
 static void checkregs(CPU_state *ref, vaddr_t pc) {
