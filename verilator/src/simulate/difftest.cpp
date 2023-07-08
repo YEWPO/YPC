@@ -45,6 +45,11 @@ static bool isa_difftest_checkregs(CPU_state *ref_r, vaddr_t pc) {
 
 static void checkregs(CPU_state *ref, vaddr_t pc) {
   if (!isa_difftest_checkregs(ref, pc)) {
+    for (int i = 0; i < 32; ++i) {
+      printf("ref %d\t0x%016lx\n", i, ref->gpr[i]);
+    }
+    printf("ref pc \t0x%016lx\n", ref->pc);
+
     npc_state.state = NPC_ABORT;
     npc_state.halt_pc = pc;
     dump_isa();
