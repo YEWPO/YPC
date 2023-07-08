@@ -3,7 +3,7 @@ NPC
 
 New process core
 
-Only support RISCV64I instructions.
+Only support RISCV64IM instructions.
 
 ## Getting Started
 
@@ -49,11 +49,13 @@ This process core is a single circle process core. We have decoder, algorithm lo
 
 The Decoder part:
 
-![IMG_20230522_225541](https://raw.githubusercontent.com/YEWPO/yewpoblogonlinePic/main/IMG_20230522_225541.jpg)
+Decode part has been changed since second version. We will add the data path draw round the corner.
 
 The Algorithm Logic Unit part:
 
 ![IMG_20230508_215438](https://raw.githubusercontent.com/YEWPO/yewpoblogonlinePic/main/IMG_20230508_215438.jpg)
+
+We add the multiplication part to support the RISCV64M instructions. Not show in the data path.
 
 The Branch Unit part:
 
