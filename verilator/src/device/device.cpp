@@ -3,6 +3,7 @@
 #include <SDL2/SDL.h>
 #include "utils/timer.h"
 #include "utils/cpu.h"
+#include "device/vga.h"
 
 #ifdef CONFIG_HAS_TIMER
 #include "device/rtc.h"
@@ -26,7 +27,7 @@ void device_update() {
   }
   last = now;
 
-  // IFDEF(CONFIG_HAS_VGA, vga_update_screen());
+  IFDEF(CONFIG_HAS_VGA, vga_update_screen());
 
   SDL_Event event;
   while (SDL_PollEvent(&event)) {
@@ -60,4 +61,5 @@ void init_device() {
   IFDEF(CONFIG_HAS_TIMER, init_rtc());
   IFDEF(CONFIG_HAS_SERIAL, init_serial());
   IFDEF(CONFIG_HAS_KEYBOARD, init_i8042());
+  IFDEF(CONFIG_HAS_VGA, init_vga());
 }
