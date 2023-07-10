@@ -3,7 +3,6 @@ BUILD_DIR = $(NPC_HOME)/build
 
 VERILATOR_BUILD_DIR = $(BUILD_DIR)/verilator_dir
 VERILOG_BUILD_DIR = $(BUILD_DIR)/verilog_dir
-OBJECT_BUILD_DIR = $(BUILD_DIR)/obj_dir
 
 -include $(WORK_DIR)/include/config/auto.conf
 -include $(WORK_DIR)/include/config/auto.conf.cmd

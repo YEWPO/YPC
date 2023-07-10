@@ -35,7 +35,7 @@ ARGS ?=
 
 sim: verilog
 	$(call git_commit, "sim RTL")
-	$(MAKE) -C $(VERILATOR_DIR) ARGS="$(ARGS)" IMG=$(IMG) run
+	$(MAKE) -C $(VERILATOR_DIR) run
 
 gdb: verilog
 	$(MAKE) -C $(VERILATOR_DIR) ARGS="$(ARGS)" IMG=$(IMG) gdb

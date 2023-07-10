@@ -8,7 +8,6 @@
 
 static char *log_file;
 static char *img_file;
-static char *elf_file;
 static char *dl_file;
 long img_size;
 void init_disasm(const char *triple);
@@ -21,6 +20,7 @@ static void parse_args(int argc, char *argv[]) {
     {"log"      , required_argument, NULL, 'l'},
     {"help"     , no_argument      , NULL, 'h'},
     {"elf"      , required_argument, NULL, 'e'},
+    {"dl"       , required_argument, NULL, 'd'},
     {0          , 0                , NULL,  0 },
   };
   int o;
@@ -28,7 +28,7 @@ static void parse_args(int argc, char *argv[]) {
     switch (o) {
       case 'b': sdb_set_batch_mode(); break;
       case 'l': log_file = optarg; break;
-      case 'e': elf_file = optarg; break;
+      case 'e': func_sym_init(optarg); break;
       case 'd': dl_file = optarg; break;
       case 1: img_file = optarg; return;
       default:
@@ -46,6 +46,7 @@ static void parse_args(int argc, char *argv[]) {
 static long load_img() {
   if (img_file == NULL) {
     Log("No image is given. Use the default build-in image.");
+    IFDEF(CONFIG_DIFFTEST, difftest_memcpy(CONFIG_MBASE, guest_to_host(CONFIG_MBASE), 4096, DIFFTEST_TO_REF));
     return 4096; // built-in image size
   }
 
@@ -72,7 +73,6 @@ int main(int argc, char *argv[]) {
 
   init_log(log_file);
 
-  IFDEF(CONFIG_MTRACE, func_sym_init(elf_file));
   IFDEF(CONFIG_DIFFTEST, dl_init(dl_file));
 
   img_size = load_img();

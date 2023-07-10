@@ -10,6 +10,9 @@ BIN = $(BUILD_DIR)/$(TOPNAME)
 
 IMG ?=
 override ARGS ?= --log=$(BUILD_DIR)/npc.log
+ifdef CONFIG_DIFFTEST
+override ARGS += --dl=$(NEMU_HOME)/build/riscv64-nemu-interpreter-so
+endif
 
 VSRCS = $(shell find $(VERILOG_BUILD_DIR) -name "*.v")
 CSRCS = $(shell find $(WORK_DIR) -name "*.cpp")
