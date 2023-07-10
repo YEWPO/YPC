@@ -196,7 +196,7 @@ endmenu
 
 if MODE_SYSTEM
 source "src/memory/Kconfig"
-# source "src/device/Kconfig"
+source "src/device/Kconfig"
 endif
 
 

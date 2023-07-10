@@ -81,12 +81,7 @@ int main(int argc, char *argv[]) {
 
   sdb_init();
 
-  IFDEF(CONFIG_ITRACE, init_disasm(
-    MUXDEF(CONFIG_ISA_x86,     "i686",
-    MUXDEF(CONFIG_ISA_mips32,  "mipsel",
-    MUXDEF(CONFIG_ISA_riscv32, "riscv32",
-    MUXDEF(CONFIG_ISA_riscv64, "riscv64", "bad")))) "-pc-linux-gnu"
-  ));
+  IFDEF(CONFIG_ITRACE, init_disasm("riscv64" "-pc-linux-gnu"));
 
   sdb_mainloop();
 
