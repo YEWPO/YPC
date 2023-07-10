@@ -166,6 +166,26 @@ config FTRACE_COND
   string "Only trace frame when the condition is true"
   default "true"
 
+config DTRACE
+  depends on TRACE && TARGET_NATIVE_ELF && ENGINE_INTERPRETER
+  bool "Enable device tracer"
+  default y
+
+config DTRACE_COND
+  depends on DTRACE
+  string "Only trace device when the condition is true"
+  default "true"
+
+config WTRACE
+  depends on TRACE && TARGET_NATIVE_ELF && ENGINE_INTERPRETER
+  bool "Enable wave tracer"
+  default y
+
+config WTRACE_COND
+  depends on WTRACE
+  string "Only trace wave when the condition is true"
+  default "true"
+
 
 config DIFFTEST
   depends on TARGET_NATIVE_ELF

@@ -60,8 +60,10 @@ void simulator_init() {
   vcd = new VerilatedVcdC;
   top = new VTop;
 
+#ifdef CONFIG_WTARCE_COND
   top->trace(vcd, 99);
   vcd->open("../build/sim.vcd");
+#endif
 
   reset();
 }
@@ -78,12 +80,16 @@ static void step_one() {
   context->timeInc(1);
   top->clock = 1;
   top->eval();
+#ifdef CONFIG_WTARCE_COND
   vcd->dump(context->time());
+#endif
 
   context->timeInc(1);
   top->clock = 0;
   top->eval();
+#ifdef CONFIG_WTARCE_COND
   vcd->dump(context->time());
+#endif
 }
 
 // ========== itrace ===============
