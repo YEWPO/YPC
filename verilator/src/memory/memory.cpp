@@ -30,7 +30,9 @@ void mem(const svLogic mem_en, const svLogic w_en, const svLogic signed_en,
     return;
   }
 
+#ifdef CONFIG_TRACE
   Log(ANSI_FMT("MEM", ANSI_FG_RED));
+#endif
 
   uint64_t mask = r_mask;
 

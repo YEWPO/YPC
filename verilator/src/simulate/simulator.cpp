@@ -42,7 +42,9 @@ void ebreak() {
     return;
   }
 
+#ifdef CONFIG_TRACE
   Log(ANSI_FMT("EBREAK", ANSI_FG_RED));
+#endif
   npc_state.halt_pc = cpu.pc;
   npc_state.halt_ret = cpu.gpr[10];
   npc_state.state = NPC_END;
