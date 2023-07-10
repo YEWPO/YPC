@@ -18,12 +18,6 @@ NAME    = $(GUEST_ISA)-nemu-$(ENGINE)
 FILELIST_MK = $(shell find ./src -name "filelist.mk")
 include $(FILELIST_MK)
 
-# Filter out directories and files in blacklist to obtain the final set of source files
-DIRS-BLACKLIST-y += $(DIRS-BLACKLIST)
-SRCS-BLACKLIST-y += $(SRCS-BLACKLIST) $(shell find $(DIRS-BLACKLIST-y) -name "*.c")
-SRCS-y += $(shell find $(DIRS-y) -name "*.cpp")
-SRCS = $(filter-out $(SRCS-BLACKLIST-y),$(SRCS-y))
-
 # Extract compiler and options from menuconfig
 CC = $(call remove_quote,$(CONFIG_CC))
 CFLAGS_BUILD += $(call remove_quote,$(CONFIG_CC_OPT))

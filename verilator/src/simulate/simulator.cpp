@@ -11,6 +11,7 @@
 #include "utils/cpu.h"
 #include "utils/timer.h"
 #include "sdb/watchpoint.h"
+#include "device/device.h"
 
 #include "simulate/difftest.h"
 
@@ -198,6 +199,8 @@ static void exec_inst(uint64_t n) {
     if (npc_state.state != NPC_RUNNING) {
       break;
     }
+
+    IFDEF(CONFIG_DEVICE, device_update());
   }
 }
 
