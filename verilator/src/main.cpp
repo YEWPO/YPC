@@ -3,7 +3,7 @@
 #include "simulate/simulator.h"
 #include "memory/pmem.h"
 #include "sdb/sdb.h"
-#include "difftest.h"
+#include "simulate/difftest.h"
 #include "utils/state.h"
 
 static char *log_file;

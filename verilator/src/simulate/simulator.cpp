@@ -12,7 +12,7 @@
 #include "utils/timer.h"
 #include "sdb/watchpoint.h"
 
-#include "difftest.h"
+#include "simulate/difftest.h"
 
 #define MAX_INST_TO_PRINT 10
 

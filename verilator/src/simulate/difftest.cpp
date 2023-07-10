@@ -1,4 +1,4 @@
-#include "difftest.h"
+#include "simulate/difftest.h"
 #include "utils/cpu.h"
 
 #include <dlfcn.h>
