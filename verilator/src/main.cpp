@@ -12,7 +12,7 @@ static char *dl_file;
 long img_size;
 void init_disasm(const char *triple);
 void func_sym_init(const char *elf_file);
-void dl_init(const char *dl_file);
+void dl_init(const char *dl_file, long size);
 
 static void parse_args(int argc, char *argv[]) {
   const struct option table[] = {
@@ -46,7 +46,6 @@ static void parse_args(int argc, char *argv[]) {
 static long load_img() {
   if (img_file == NULL) {
     Log("No image is given. Use the default build-in image.");
-    IFDEF(CONFIG_DIFFTEST, difftest_memcpy(CONFIG_MBASE, guest_to_host(CONFIG_MBASE), 4096, DIFFTEST_TO_REF));
     return 4096; // built-in image size
   }
 
@@ -62,8 +61,6 @@ static long load_img() {
   int ret = fread(guest_to_host(CONFIG_MBASE), size, 1, fp);
   assert(ret == 1);
 
-  IFDEF(CONFIG_DIFFTEST, difftest_memcpy(CONFIG_MBASE, guest_to_host(CONFIG_MBASE), size, DIFFTEST_TO_REF));
-
   fclose(fp);
   return size;
 }
@@ -73,11 +70,11 @@ int main(int argc, char *argv[]) {
 
   init_log(log_file);
 
-  IFDEF(CONFIG_DIFFTEST, dl_init(dl_file));
-
   img_size = load_img();
 
   simulator_init();
+
+  IFDEF(CONFIG_DIFFTEST, dl_init(dl_file, img_size));
 
   sdb_init();
 

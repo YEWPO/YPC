@@ -85,12 +85,6 @@ static void step_one() {
   vcd->dump(context->time());
 }
 
-static void step_clock_round(uint64_t n) {
-  while (n--) {
-    step_one();
-  }
-}
-
 // ========== itrace ===============
 
 #ifdef CONFIG_ITRACE_COND
@@ -266,9 +260,9 @@ static void reset(uint64_t n) {
   
   top->reset = 1;
 
-  step_clock_round(n);
+  while (n--) {
+    step_one();
+  }
 
   top->reset = 0;
-
-  IFDEF(CONFIG_DIFFTEST, difftest_regcpy(&cpu, DIFFTEST_TO_REF));
 }
