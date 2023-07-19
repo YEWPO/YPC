@@ -11,7 +11,8 @@
 !.gitignore
 !.scalafmt.conf
 !build.sc
-!README.md
+!*.md
+!*.drawio
 !.clangd
 build/
 !Kconfig
