@@ -1,7 +1,6 @@
 menuconfig DEVICE
-  depends on !TARGET_SHARE
   bool "Devices"
-  default n
+  default y
   help
     Provide device support for NEMU.
 

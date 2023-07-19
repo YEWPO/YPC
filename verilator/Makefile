@@ -10,16 +10,14 @@ VERILOG_BUILD_DIR = $(BUILD_DIR)/verilog_dir
 remove_quote = $(patsubst "%",%,$(1))
 
 # Extract variabls from menuconfig
-GUEST_ISA ?= $(call remove_quote,$(CONFIG_ISA))
-ENGINE ?= $(call remove_quote,$(CONFIG_ENGINE))
-NAME    = $(GUEST_ISA)-nemu-$(ENGINE)
+GUEST_ISA ?= riscv64
 
 # Include all filelist.mk to merge file lists
 FILELIST_MK = $(shell find ./src -name "filelist.mk")
 include $(FILELIST_MK)
 
 # Extract compiler and options from menuconfig
-CC = $(call remove_quote,$(CONFIG_CC))
+CC = gcc
 CFLAGS_BUILD += $(call remove_quote,$(CONFIG_CC_OPT))
 CFLAGS_BUILD += $(if $(CONFIG_CC_LTO),-flto,)
 CFLAGS_BUILD += $(if $(CONFIG_CC_DEBUG),-Og -ggdb3,)
