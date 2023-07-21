@@ -28,8 +28,6 @@ VerilatedContext *context;
 VerilatedVcdC *vcd;
 VTop *top;
 
-static void reset(uint64_t n = 5);
-
 void ebreak() {
   static bool pre_clock;
 
@@ -49,6 +47,24 @@ void ebreak() {
   npc_state.halt_pc = cpu.pc;
   npc_state.halt_ret = cpu.gpr[10];
   npc_state.state = NPC_END;
+}
+
+static void reset(uint64_t n = 5) {
+  Log("reseting the NPC");
+
+  top->reset = 1;
+
+  while (n--) {
+    context->timeInc(1);
+    top->clock = 1;
+    top->eval();
+
+    context->timeInc(1);
+    top->clock = 0;
+    top->eval();
+  }
+
+  top->reset = 0;
 }
 
 void simulator_init() {
@@ -211,9 +227,10 @@ static void exec_inst(uint64_t n) {
 }
 
 static void statistic() {
-  Log("host time spent = %ld us", g_timer);
-  Log("total guest instructions = %ld" , g_nr_guest_inst);
-  if (g_timer > 0) Log("simulation frequency = %ld inst/s", g_nr_guest_inst * 1000000 / g_timer);
+#define NUMBERIC_FMT "%'" PRIu64
+  Log("host time spent = " NUMBERIC_FMT " us", g_timer);
+  Log("total guest instructions = " NUMBERIC_FMT, g_nr_guest_inst);
+  if (g_timer > 0) Log("simulation frequency = " NUMBERIC_FMT " inst/s", g_nr_guest_inst * 1000000 / g_timer);
   else Log("Finish running in less than 1 us and can not calculate the simulation frequency");
 }
 
@@ -262,16 +279,4 @@ void cpu_exec(uint64_t n) {
     case NPC_QUIT:
       statistic();
   }
-}
-
-static void reset(uint64_t n) {
-  Log("reseting the NPC");
-  
-  top->reset = 1;
-
-  while (n--) {
-    step_one();
-  }
-
-  top->reset = 0;
 }
