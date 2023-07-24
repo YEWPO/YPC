@@ -22,7 +22,7 @@ compile:
 	mill -i __.compile
 
 bsp:
-	mill -i mill.bsp.BSP/install
+	mill -i mill.bsp.BSP/install --jobs 8
 
 reformat:
 	mill -i __.reformat
@@ -48,6 +48,7 @@ wv:
 
 clean:
 	-rm -rf $(BUILD_DIR)
+	-mill clean
 
 include ../Makefile
 

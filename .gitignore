@@ -4,8 +4,7 @@
 !Makefile
 !*.mk
 !*.scala
-!*.[cSh]
-!*.v
+!*.[cShv]
 !*.cpp
 !*.cc
 !.gitignore
@@ -13,9 +12,13 @@
 !build.sc
 !*.md
 !*.drawio
+!*.csv
+!*.png
 !.clangd
-build/
 !Kconfig
+
+# verilator
+build/
 verilator/include/config
 verilator/include/generated
 

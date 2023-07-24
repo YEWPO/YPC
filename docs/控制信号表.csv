@@ -1,0 +1,2 @@
+指令,指令码,imm_type,a_ctl,b_ctl,dnpc_ctl,alu_ctl,mem_w_en,mem_mask,wb_ctl,reg_w_en,jump_op,invalid_op,ebreak_op
+lui,???????_?????_?????_???_?????_01101_11,IMM_TYPE_U,A_CTL_DEFAULT,B_CTL_IMM,DNPC_CTL_PC,ALU_CTL_ADD,MEM_W_DISABLE,MEM_MASK_DEFAULT,WB_CTL_ALU,REG_W_ENABLE,JUMP_OP_DEFAULT,INVALID_OP_NO,EBREAK_OP_NO

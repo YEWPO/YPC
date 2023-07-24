@@ -65,9 +65,7 @@ make clean
 
 ### 微架构设计图
 
-[微架构设计图](./docs/微架构设计.drawio)
-
-需要使用`draw.io`软件查看，你可以在[这里](https://draw.io)中查看。
+![微架构设计图](./docs/微架构设计.png)
 
 在整个微架构设计当中，整个设计分为三个层面：数据通路层面，控制层面以及冒险层面。
 
@@ -77,22 +75,30 @@ make clean
 
 - 冒险层面：通过冒泡，转发，冲刷等手段，防止流水线发生结构冒险，数据冒险和控制冒险。
 
-  数据冒险部分使用两份码图表示寄存器的使用情况，假设第一份码图为$A$，第二份码图为$B$。若两份码图中比特位均为0，则表示对应寄存器的值可以使用。若$A$中的比特位为1，则表示对应寄存器值需要被执行单元的运算结果更新。若$B$中的比特位为1，则表示对应寄存器值需要被内存读写单元更新。
-
-  第一阶段数据冒险的解决方案：暂停流水线的执行。
+  数据冒险部分使用两份码图表示寄存器的使用情况，假设第一份码图为$A$，第二份码图为$B$。若两份码图中比特位均为0，则表示对应寄存器的值可以使用。若$A$中的比特位为1，则表示对应寄存器值需要被执行单元的运算结果更新。若$B$中的比特位为1，则表示对应寄存器值需要被内存读写单元更新。第一阶段数据冒险的解决方案：暂停流水线的执行。
 
   控制冒险，即无条件跳转和分支跳转指令的下一条指令的地址判断冒险。由于分支结果最早在执行阶段得出，所以我们第一阶段的解决方案是译码阶段暂停两个时钟周期。
 
+### 控制信号
+
+[控制信号文档](./docs/控制信号.md)，在该文档中详细介绍了各个信号的具体设计含义以及它们的作用。
+
 ### 控制信号表
 
-[控制信号文档](./docs/控制信号.md)
+[控制信号表](./docs/控制信号表.csv)，记录了每个指令具体产生的信号。
+
+预计将编写`python`脚本使之能通过该表自动生成`chisel`代码。
 
 ## 测试
 
+### 测试目的
+
+通过单元测试和集成测试，尽最大可能保证局部模板的正确性，进而使整个设计正确，满足设计功能需求和产品的使用需求。
+
+### 测试用例
+
 `TODO`
 
-## Change FIRRTL Compiler
+## FIRRTL编译器
 
-You can change the FIRRTL compiler between SFC (Scala-based FIRRTL compiler) and
-MFC (MLIR-based FIRRTL compiler) by modifying the `useMFC` variable in `playground/src/Elaborate.scala`.
-The latter one requires `firtool`, which is included under `utils/`.
+你可以通过在`playground/src/Elaborate.scala`代码中的`useMFC`变量设置使用`SFC(scala-based FIRRTL compiler)`还是使用`MFC(MLIR-based FIRRTL compiler)`编译器。后者需要在`utils/`目录下的`firtool`工具。
