@@ -26,6 +26,8 @@ int main() {
   immB();
   immJ();
 
+  printf("inst input: 0x%x\n", i >> 7);
+
   printf("I-type: 0x%lx %ld\n", outI, outI);
   printf("U-type: 0x%lx %ld\n", outU, outU);
   printf("S-type: 0x%lx %ld\n", outS, outS);
