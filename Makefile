@@ -47,7 +47,7 @@ wv:
 	$(GTKWAVE) $(VCD_FILE)
 
 clean:
-	-rm -rf $(BUILD_DIR)
+	-rm -rf $(BUILD_DIR) test_run_dir
 	-mill clean
 
 include ../Makefile

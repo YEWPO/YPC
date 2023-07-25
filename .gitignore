@@ -10,12 +10,11 @@
 !.gitignore
 !.scalafmt.conf
 !build.sc
-!*.md
-!*.drawio
-!*.csv
-!*.png
 !.clangd
 !Kconfig
+
+#docs
+!docs
 
 # verilator
 build/

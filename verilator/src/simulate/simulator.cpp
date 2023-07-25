@@ -1,6 +1,6 @@
 #include "VTop.h"
 #include <svdpi.h>
-// #include "VTop__Dpi.h"
+#include "VTop__Dpi.h"
 
 #include <verilated.h>
 #include <verilated_vcd_c.h>

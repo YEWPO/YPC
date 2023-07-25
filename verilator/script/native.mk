@@ -14,7 +14,7 @@ ifdef CONFIG_DIFFTEST
 override ARGS += --dl=$(NEMU_HOME)/build/riscv64-nemu-interpreter-so
 endif
 
-VSRCS = $(shell find $(VERILOG_BUILD_DIR) -name "*.v")
+VSRCS = $(shell find $(VERILOG_BUILD_DIR) -name "*.v" -or -name "*.sv")
 CSRCS = $(shell find $(WORK_DIR) -name "*.cpp")
 
 INCLUDE_PATHS ?= $(WORK_DIR)/include
