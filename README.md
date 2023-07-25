@@ -91,14 +91,4 @@ make clean
 
 ## 测试
 
-### 测试目的
-
-通过单元测试和集成测试，尽最大可能保证局部模板的正确性，进而使整个设计正确，满足设计功能需求和产品的使用需求。
-
-### 测试用例
-
-`TODO`
-
-## FIRRTL编译器
-
-你可以通过在`playground/src/Elaborate.scala`代码中的`useMFC`变量设置使用`SFC(scala-based FIRRTL compiler)`还是使用`MFC(MLIR-based FIRRTL compiler)`编译器。后者需要在`utils/`目录下的`firtool`工具。
+[测试大纲](./docs/测试大纲.md)

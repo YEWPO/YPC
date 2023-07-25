@@ -1,20 +1,25 @@
 *.*
 *
 !*/
+!.gitignore
+
+#project
 !Makefile
 !*.mk
 !*.scala
-!*.[cShv]
+!*.[chv]
 !*.cpp
 !*.cc
-!.gitignore
 !.scalafmt.conf
 !build.sc
 !.clangd
 !Kconfig
 
 #docs
-!docs
+!*.png
+!*.md
+!*.drawio
+!*.csv
 
 # verilator
 build/
