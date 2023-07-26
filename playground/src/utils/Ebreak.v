@@ -1,4 +1,4 @@
-module Ebreak(
+module Ebreak (
   input clock,
   input in
 );

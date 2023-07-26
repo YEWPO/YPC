@@ -1,4 +1,4 @@
-module RegsInfo(
+module RegsInfo (
   input clock,
   input [64*32-1:0] inbits
 );
