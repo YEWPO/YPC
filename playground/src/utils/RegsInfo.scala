@@ -8,7 +8,6 @@ import chisel3.util._
   */
 class RegsInfo extends BlackBox with HasBlackBoxPath {
   val io = IO(new Bundle {
-    val clock = Input(Clock())
     val inbits = Input(UInt((64*32).W))
   })
 

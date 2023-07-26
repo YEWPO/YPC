@@ -17,8 +17,8 @@ void set_gpr_ptr(const svOpenArrayHandle regs) {
   }
 }
 
-void set_pc_val(const svLogicVecVal* pc_val) {
-  cpu.pc = *((uint64_t *)pc_val);
+void set_pc_val(const long long pc_val) {
+  cpu.pc = pc_val;
 }
 
 const char *regs[] = {
