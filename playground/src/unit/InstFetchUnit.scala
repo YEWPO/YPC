@@ -20,7 +20,7 @@ class InstFetchUnit extends Module {
   /**
     * pc = npc
     */
-  val program_counter = RegEnable(io.npc, "h8000_0000".U, io.enable)
+  val program_counter = RegEnable(io.npc, "h8000_0000".U(64.W), io.enable)
   val inst_mem = Module(new InstMem())
 
   inst_mem.io.addr := program_counter
