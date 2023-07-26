@@ -2,8 +2,11 @@ package unit
 
 import chisel3._
 import utils._
+import chisel3.util._
 
 class InstFetchUnitIO extends Bundle {
+  val enable = Input(Bool())
+
   val npc = Input(UInt(64.W))
 
   val pc_f = Output(UInt(64.W))
@@ -14,13 +17,11 @@ class InstFetchUnitIO extends Bundle {
 class InstFetchUnit extends Module {
   val io = IO(new InstFetchUnitIO())
 
-  val program_counter = RegInit("h8000_0000".U)
-  val inst_mem = Module(new InstMem())
-
   /**
     * pc = npc
     */
-  program_counter := io.npc
+  val program_counter = RegEnable(io.npc, "h8000_0000".U, io.enable)
+  val inst_mem = Module(new InstMem())
 
   inst_mem.io.addr := program_counter
 

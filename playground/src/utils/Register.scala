@@ -41,6 +41,5 @@ class Register extends Module {
 
   // deliver registers info to the verilator
   val regs_info = Module(new RegsInfo())
-  regs_info.io.clock := clock
   regs_info.io.inbits := reg_files.asUInt
 }
