@@ -43,6 +43,8 @@ object ControlMacro {
   val ALU_CTL_SRLW    = "b11100".U
   val ALU_CTL_SRA     = "b01101".U
   val ALU_CTL_SRAW    = "b11101".U
+  val ALU_CTL_MOVA    = "b01110".U
+  val ALU_CTL_MOVB    = "b01111".U
 
   val JUMP_OP_DEFAULT = "b00".U
   val JUMP_OP_JAL     = "b01".U
