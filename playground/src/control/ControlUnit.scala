@@ -8,8 +8,19 @@ class ControlUnitIO extends Bundle {
   val imm_type = Output(UInt(3.W))
 }
 
+object DecodeTableInfo {
+  val IMM_TYPE = 0
+  val A_CTL = 1
+  val B_CTL = 2
+  val DNPC_CTL = 3
+  val ALU_CTL = 4
+  val MEM_W_EN = 5
+  val MEM_MASK = 6
+  val WB_CTL = 7
+  val REG_W_EN = 8
+  val JUMP_OP = 9
+}
+
 class ControlUnit extends Module {
   val io = IO(new ControlUnitIO)
-
-  io.imm_type := io.inst(2, 0)
 }
