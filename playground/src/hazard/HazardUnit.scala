@@ -15,5 +15,5 @@ class HazardUnit extends Module {
   io.enable_f := true.B
 
   io.enable_d := true.B
-  io.reset_d  := true.B
+  io.reset_d  := false.B
 }

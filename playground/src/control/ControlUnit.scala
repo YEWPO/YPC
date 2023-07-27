@@ -4,7 +4,7 @@ import chisel3._
 import chisel3.util._
 
 class ControlUnitIO extends Bundle {
-  val inst = Input(UInt(64.W))
+  val inst = Input(UInt(32.W))
 
   val imm_type   = Output(UInt(3.W))
   val a_ctl      = Output(Bool())
