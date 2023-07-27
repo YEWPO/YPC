@@ -15,6 +15,7 @@
 !.clangd
 !Kconfig
 !firtool*
+!*.py
 
 #docs
 !*.png

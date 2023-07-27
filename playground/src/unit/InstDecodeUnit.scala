@@ -88,12 +88,12 @@ class InstDecodeUnit extends Module {
     /**
       * ebreak
       */
-    ebreak_part.io.in    := control_unit.io.ebreak_op
+    ebreak_part.io.in := control_unit.io.ebreak_op
 
     /**
       * invalid
       */
-    invalid_part.io.in    := control_unit.io.invalid_op
+    invalid_part.io.in := control_unit.io.invalid_op
 
     /**
       * control signals
