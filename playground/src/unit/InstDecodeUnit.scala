@@ -88,13 +88,11 @@ class InstDecodeUnit extends Module {
     /**
       * ebreak
       */
-    ebreak_part.io.clock := clock
     ebreak_part.io.in    := control_unit.io.ebreak_op
 
     /**
       * invalid
       */
-    invalid_part.io.clock := clock
     invalid_part.io.in    := control_unit.io.invalid_op
 
     /**

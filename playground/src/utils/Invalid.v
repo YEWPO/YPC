@@ -1,11 +1,10 @@
 module Invalid (
-  input clock,
   input in
 );
 
   import "DPI-C" function void invalid();
 
-  always @(posedge clock) begin
+  always @(*) begin
     if (in) begin
       invalid();
     end

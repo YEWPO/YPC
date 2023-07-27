@@ -1,11 +1,10 @@
 module Ebreak (
-  input clock,
   input in
 );
 
   import "DPI-C" function void ebreak();
 
-  always @(posedge clock) begin
+  always @(*) begin
     if (in) begin
       ebreak();
     end
