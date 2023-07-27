@@ -1,6 +1,5 @@
 #include "memory/host.h"
 #include "memory/pmem.h"
-#include "device/mmio.h"
 
 static uint8_t PG_ALIGN pmem[CONFIG_MSIZE] = {
   0x97, 0x02, 0x00, 0x00,
@@ -34,7 +33,6 @@ word_t paddr_read(paddr_t addr, int len) {
   if (likely(in_pmem(addr))) {
     return pmem_read(addr, len);
   }
-  IFDEF(CONFIG_DEVICE, return mmio_read(addr, len));
   Assert(0, "address = " FMT_PADDR " is out of bound", addr);
   return 0;
 }
@@ -44,6 +42,5 @@ void paddr_write(paddr_t addr, int len, word_t data) {
     pmem_write(addr, len, data);
     return;
   }
-  IFDEF(CONFIG_DEVICE, mmio_write(addr, len, data); return);
   Assert(0, "address = " FMT_PADDR " is out of bound", addr);
 }

@@ -13,7 +13,6 @@ long img_size;
 void init_disasm(const char *triple);
 void func_sym_init(const char *elf_file);
 void dl_init(const char *dl_file, long size);
-void init_device();
 
 static void parse_args(int argc, char *argv[]) {
   const struct option table[] = {
@@ -70,8 +69,6 @@ int main(int argc, char *argv[]) {
   parse_args(argc, argv);
 
   init_log(log_file);
-
-  IFDEF(CONFIG_DEVICE, init_device());
 
   img_size = load_img();
 

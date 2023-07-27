@@ -106,7 +106,6 @@ config DIFFTEST_REF_NAME
 endmenu
 
 source "src/memory/Kconfig"
-source "src/device/Kconfig"
 
 menu "Miscellaneous"
 choice
