@@ -53,7 +53,7 @@ class InstDecodeUnit extends Module {
   val invalid_part = Module(new Invalid)
 
   withReset(io.reset) {
-    val inst_f = RegEnable(io.inst_f, 0.U(32.W), io.enable)
+    val inst_f = RegEnable(io.inst_f, "h13".U(32.W), io.enable)
     val pc_f   = RegEnable(io.pc_f, "h8000_0000".U(64.W), io.enable)
     val snpc_f = RegEnable(io.snpc_f, "h8000_0000".U(64.W), io.enable)
 
