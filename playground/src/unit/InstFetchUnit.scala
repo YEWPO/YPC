@@ -4,6 +4,13 @@ import chisel3._
 import utils._
 import chisel3.util._
 
+/**
+  * input:
+  * npc
+  *
+  * output:
+  * inst, snpc, pc
+  */
 class InstFetchUnitIO extends Bundle {
   val enable = Input(Bool())
 
@@ -23,6 +30,9 @@ class InstFetchUnit extends Module {
   val program_counter = RegEnable(Cat(io.npc(63, 1), 0.U(1.W)), "h8000_0000".U(64.W), io.enable)
   val inst_mem        = Module(new InstMem)
 
+  /**
+    * instruction memory
+    */
   inst_mem.io.addr := program_counter
 
   /**
