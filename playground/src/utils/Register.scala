@@ -28,7 +28,7 @@ class RegisterIO extends Bundle {
 }
 
 class Register extends Module {
-  val io = IO(new RegisterIO())
+  val io = IO(new RegisterIO)
 
   val reg_files = RegInit(VecInit(Seq.fill(32)(0.U(64.W))))
 

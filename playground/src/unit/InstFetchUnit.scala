@@ -15,7 +15,7 @@ class InstFetchUnitIO extends Bundle {
 }
 
 class InstFetchUnit extends Module {
-  val io = IO(new InstFetchUnitIO())
+  val io = IO(new InstFetchUnitIO)
 
   /**
     * pc = npc

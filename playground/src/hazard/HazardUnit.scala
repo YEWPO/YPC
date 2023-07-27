@@ -10,7 +10,7 @@ class HazardUnitIO extends Bundle {
 }
 
 class HazardUnit extends Module {
-  val io = IO(new HazardUnitIO())
+  val io = IO(new HazardUnitIO)
 
   io.enable_f := true.B
 

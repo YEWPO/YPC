@@ -9,7 +9,7 @@ class ControlUnitIO extends Bundle {
 }
 
 class ControlUnit extends Module {
-  val io = IO(new ControlUnitIO())
+  val io = IO(new ControlUnitIO)
 
   io.imm_type := io.inst(2, 0)
 }

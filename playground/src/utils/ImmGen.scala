@@ -23,7 +23,7 @@ class ImmGenIO extends Bundle {
 }
 
 class ImmGen extends Module {
-  val io = IO(new ImmGenIO())
+  val io = IO(new ImmGenIO)
 
   def instSlice(high: Int, low: Int): UInt = io.in(high - 7, low - 7)
 

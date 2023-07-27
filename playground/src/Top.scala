@@ -15,16 +15,16 @@ class Top extends Module {
     val snpc = Output(UInt(64.W))
   })
 
-  val hazard_unit = Module(new HazardUnit())
+  val hazard_unit = Module(new HazardUnit)
 
   // ========== Instruction Fetch Unit ============
-  val inst_fetch_unit = Module(new InstFetchUnit())
+  val inst_fetch_unit = Module(new InstFetchUnit)
   inst_fetch_unit.io.enable := hazard_unit.io.enable_f
 
   inst_fetch_unit.io.npc := inst_fetch_unit.io.snpc_f
 
   // ========== Instruction Decode Unit ============
-  val inst_decode_unit = Module(new InstDecodeUnit())
+  val inst_decode_unit = Module(new InstDecodeUnit)
   inst_decode_unit.io.enable := hazard_unit.io.enable_d
   inst_decode_unit.io.reset := hazard_unit.io.reset_d
 

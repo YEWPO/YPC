@@ -35,7 +35,7 @@ class InstDecodeUnitIO extends Bundle {
   *
   */
 class InstDecodeUnit extends Module {
-  val io = IO(new InstDecodeUnitIO())
+  val io = IO(new InstDecodeUnitIO)
 
   val control_unit = Module(new ControlUnit())
   val imm_gen = Module(new ImmGen())
