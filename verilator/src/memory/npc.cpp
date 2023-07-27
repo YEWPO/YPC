@@ -7,5 +7,5 @@
 #include "memory/pmem.h"
 
 void npc_mem_ifetch(const long long addr, int *inst) {
-  *inst = paddr_read(addr, 4);
+  *inst = addr >= CONFIG_MBASE ? paddr_read(addr, 4) : 0x13;
 }

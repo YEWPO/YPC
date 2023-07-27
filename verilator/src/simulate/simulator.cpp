@@ -49,24 +49,15 @@ void ebreak() {
 
 void invalid() {
   Log(ANSI_FMT("INVALID", ANSI_FG_RED));
-  npc_state.state = NPC_ABORT;
 }
+
+static void step_one();
 
 static void reset(uint64_t n = 5) {
   Log("reseting the NPC");
 
   top->reset = 1;
-
-  while (n--) {
-    context->timeInc(1);
-    top->clock = 1;
-    top->eval();
-
-    context->timeInc(1);
-    top->clock = 0;
-    top->eval();
-  }
-
+  while (n--) step_one();
   top->reset = 0;
 }
 
@@ -79,7 +70,7 @@ void simulator_init() {
   vcd = new VerilatedVcdC;
   top = new VTop;
 
-#ifdef CONFIG_WTARCE_COND
+#ifdef CONFIG_WTRACE_COND
   top->trace(vcd, 99);
   vcd->open("../build/sim.vcd");
 #endif
@@ -99,14 +90,14 @@ static void step_one() {
   context->timeInc(1);
   top->clock = 1;
   top->eval();
-#ifdef CONFIG_WTARCE_COND
+#ifdef CONFIG_WTRACE_COND
   vcd->dump(context->time());
 #endif
 
   context->timeInc(1);
   top->clock = 0;
   top->eval();
-#ifdef CONFIG_WTARCE_COND
+#ifdef CONFIG_WTRACE_COND
   vcd->dump(context->time());
 #endif
 }
