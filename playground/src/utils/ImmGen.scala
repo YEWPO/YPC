@@ -2,18 +2,7 @@ package utils
 
 import chisel3._
 import chisel3.util._
-
-/**
-  * immediate type macros
-  */
-object ImmType {
-  val IMM_TYPE_R = "b000".U(3.W)
-  val IMM_TYPE_I = "b001".U(3.W)
-  val IMM_TYPE_S = "b010".U(3.W)
-  val IMM_TYPE_B = "b011".U(3.W)
-  val IMM_TYPE_U = "b100".U(3.W)
-  val IMM_TYPE_J = "b101".U(3.W)
-}
+import control._
 
 class ImmGenIO extends Bundle {
   val in       = Input(UInt(25.W))
@@ -61,11 +50,11 @@ class ImmGen extends Module {
   )
 
   val imm_out_map = Seq(
-    ImmType.IMM_TYPE_I -> immI,
-    ImmType.IMM_TYPE_S -> immS,
-    ImmType.IMM_TYPE_B -> immB,
-    ImmType.IMM_TYPE_U -> immU,
-    ImmType.IMM_TYPE_J -> immJ
+    ControlMacro.IMM_TYPE_I -> immI,
+    ControlMacro.IMM_TYPE_S -> immS,
+    ControlMacro.IMM_TYPE_B -> immB,
+    ControlMacro.IMM_TYPE_U -> immU,
+    ControlMacro.IMM_TYPE_J -> immJ
   )
 
   io.imm_out := MuxLookup(io.imm_type, 0.U(64.W))(imm_out_map)

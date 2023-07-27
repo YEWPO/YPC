@@ -17,6 +17,16 @@ class InstDecodeUnitIO extends Bundle {
   val w_data_w = Input(UInt(64.W))
   val rd_w     = Input(UInt(5.W))
 
+  val a_ctl_d    = Output(Bool())
+  val b_ctl_d    = Output(Bool())
+  val dnpc_ctl_d = Output(Bool())
+  val alu_ctl_d  = Output(UInt(5.W))
+  val mem_w_en_d = Output(Bool())
+  val mem_mask_d = Output(UInt(64.W))
+  val wb_ctl_d   = Output(UInt(2.W))
+  val reg_w_en_d = Output(Bool())
+  val jump_op_d  = Output(UInt(2.W))
+
   val imm_d     = Output(UInt(64.W))
   val rd_d      = Output(UInt(64.W))
   val r_data1_d = Output(UInt(64.W))
@@ -36,9 +46,10 @@ class InstDecodeUnitIO extends Bundle {
 class InstDecodeUnit extends Module {
   val io = IO(new InstDecodeUnitIO)
 
-  val control_unit = Module(new ControlUnit())
-  val imm_gen      = Module(new ImmGen())
-  val reg_files    = Module(new Register())
+  val control_unit = Module(new ControlUnit)
+  val imm_gen      = Module(new ImmGen)
+  val reg_files    = Module(new Register)
+  val ebreak_part  = Module(new Ebreak)
 
   withReset(io.reset) {
     val inst_f = RegEnable(io.inst_f, 0.U(32.W), io.enable)
@@ -72,5 +83,24 @@ class InstDecodeUnit extends Module {
     io.r_data2_d := reg_files.io.r_data2
     io.pc_d      := pc_f
     io.snpc_d    := snpc_f
+
+    /**
+      * ebreak
+      */
+    ebreak_part.io.clock := clock
+    ebreak_part.io.in    := control_unit.io.ebreak_op
+
+    /**
+      * control signals
+      */
+    io.a_ctl_d    := control_unit.io.a_ctl
+    io.b_ctl_d    := control_unit.io.b_ctl
+    io.dnpc_ctl_d := control_unit.io.dnpc_ctl
+    io.alu_ctl_d  := control_unit.io.alu_ctl
+    io.mem_w_en_d := control_unit.io.mem_w_en
+    io.mem_mask_d := control_unit.io.mem_mask
+    io.wb_ctl_d   := control_unit.io.wb_ctl
+    io.reg_w_en_d := control_unit.io.reg_w_en
+    io.jump_op_d  := control_unit.io.jump_op
   }
 }
