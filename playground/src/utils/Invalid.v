@@ -1,13 +1,13 @@
-module Ebreak (
+module Invalid (
   input clock,
   input in
 );
 
-  import "DPI-C" function void ebreak();
+  import "DPI-C" function void invalid();
 
   always @(posedge clock) begin
     if (in) begin
-      ebreak();
+      invalid();
     end
   end
 

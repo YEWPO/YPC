@@ -1,7 +1,7 @@
 #include "utils/cpu.h"
 #include <svdpi.h>
 #include <verilated_dpi.h>
-// #include "VTop__Dpi.h"
+#include "VTop__Dpi.h"
 
 NPCState npc_state;
 

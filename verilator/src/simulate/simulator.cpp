@@ -41,12 +41,15 @@ void ebreak() {
     return;
   }
 
-#ifdef CONFIG_TRACE
   Log(ANSI_FMT("EBREAK", ANSI_FG_RED));
-#endif
   npc_state.halt_pc = cpu.pc;
   npc_state.halt_ret = cpu.gpr[10];
   npc_state.state = NPC_END;
+}
+
+void invalid() {
+  Log(ANSI_FMT("INVALID", ANSI_FG_RED));
+  npc_state.state = NPC_ABORT;
 }
 
 static void reset(uint64_t n = 5) {
@@ -206,13 +209,13 @@ static void exec_inst(uint64_t n) {
   Decode s;
 
   while (n--) {
-    top->io_inst = vaddr_ifetch(top->io_pc, 4);
-    s.inst = top->io_inst;
-    s.pc = top->io_pc;
-    s.snpc = s.pc + 4;
+    // top->io_inst = vaddr_ifetch(top->io_pc, 4);
+    // s.inst = top->io_inst;
+    // s.pc = top->io_pc;
+    // s.snpc = s.pc + 4;
 
     step_one();
-    s.dnpc = top->io_pc;
+    // s.dnpc = top->io_pc;
     inst_itrace(&s);
 
     g_nr_guest_inst++;

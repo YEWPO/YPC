@@ -50,6 +50,7 @@ class InstDecodeUnit extends Module {
   val imm_gen      = Module(new ImmGen)
   val reg_files    = Module(new Register)
   val ebreak_part  = Module(new Ebreak)
+  val invalid_part = Module(new Invalid)
 
   withReset(io.reset) {
     val inst_f = RegEnable(io.inst_f, 0.U(32.W), io.enable)
@@ -89,6 +90,12 @@ class InstDecodeUnit extends Module {
       */
     ebreak_part.io.clock := clock
     ebreak_part.io.in    := control_unit.io.ebreak_op
+
+    /**
+      * invalid
+      */
+    invalid_part.io.clock := clock
+    invalid_part.io.in    := control_unit.io.invalid_op
 
     /**
       * control signals
