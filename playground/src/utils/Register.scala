@@ -13,14 +13,13 @@ import chisel3._
   *
   * r_data1: the read data 1
   * r_data2: the read data 2
-  *
   */
 class RegisterIO extends Bundle {
   val rs1 = Input(UInt(5.W))
   val rs2 = Input(UInt(5.W))
-  val rd = Input(UInt(5.W))
+  val rd  = Input(UInt(5.W))
 
-  val w_en = Input(Bool())
+  val w_en   = Input(Bool())
   val w_data = Input(UInt(64.W))
 
   val r_data1 = Output(UInt(64.W))
