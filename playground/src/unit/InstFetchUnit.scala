@@ -10,8 +10,8 @@ class InstFetchUnitIO extends Bundle {
 }
 
 class InstFetchUnit extends Module {
-  val npc = IO(Input(UInt(64.W)))
-  val inst_fetch_data = IO(new InstFetchData)
+  val npc               = IO(Input(UInt(64.W)))
+  val inst_fetch_data   = IO(new InstFetchData)
   val inst_fetch_hazard = IO(new InstFetchHazard)
 
   /**
