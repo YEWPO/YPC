@@ -4,13 +4,6 @@ import chisel3._
 import utils._
 import chisel3.util._
 
-/**
-  * input:
-  * npc
-  *
-  * output:
-  * inst, snpc, pc
-  */
 class InstFetchUnitIO extends Bundle {
   val enable = Input(Bool())
 

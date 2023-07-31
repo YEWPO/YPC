@@ -7,6 +7,7 @@ class InstMem extends BlackBox with HasBlackBoxPath {
   val io = IO(new Bundle {
     val addr = Input(UInt(64.W))
     val inst = Output(UInt(32.W))
+    val en = Input(Bool())
   })
 
   addPath("playground/src/utils/InstMem.v")

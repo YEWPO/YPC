@@ -5,15 +5,6 @@ import control._
 import utils._
 import chisel3.util._
 
-/**
-  * input:
-  * inst, pc, snpc from F
-  * rd, reg_w_en, reg_w_data from W
-  *
-  * output:
-  * all control signals except imm_type
-  * imm, rd, r_data1, r_data2, pc, snpc, inst
-  */
 class InstDecodeUnitIO extends Bundle {
   val enable = Input(Bool())
   val reset  = Input(Bool())
