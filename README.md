@@ -129,16 +129,16 @@ make clean
   
   控制冒险，即无条件跳转和分支跳转指令的下一条指令的地址判断冒险。我们采取先继续执行，待跳转结果得出之后，再考虑是否冲刷执行过的指令。冲刷方法是重置相应阶段的寄存器。重置控制如下：
   $$
-  enable\_F = (wb\_ctl\_E \neq WB\_CTL\_MEM) \or \\ ((rs1 \neq rd\_E \or rs1 = 0) \and (rs2 \neq rd\_E \or rs2 = 0))
+  enable\_F = (wb\_ctl\_E \neq WB\_CTL\_MEM) \\ \or ((rs1 \neq rd\_E \or rs1 = 0) \and (rs2 \neq rd\_E \or rs2 = 0))
   $$
 
 $$
-enable\_D = (wb\_ctl\_E \neq WB\_CTL\_MEM) \or \\ ((rs1 \neq rd\_E \or rs1 = 0) \and (rs2 \neq rd\_E \or rs2 = 0))
+enable\_D = enable\_F
 $$
 
 $$
 reset\_D = jump\_sig \\
-reset\_E = jump\_sig \or (wb\_ctl\_E \neq WB\_CTL\_MEM) \or \\ ((rs1 \neq rd\_E \or rs1 = 0) \and (rs2 \neq rd\_E \or rs2 = 0))
+reset\_E = jump\_sig \or \overline{enable\_F}
 $$
 
 ### 控制信号
