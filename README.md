@@ -90,21 +90,50 @@ make clean
   
   结构冒险，该设计本身就避免了结构冒险。
   
-  数据冒险部分使用转发来实现。我们保存了每个阶段的`rd`信息，所以我们直接通过比较译码阶段的两个源数据的地址是否与在执行阶段或者是访存阶段的`rd`冲突。若冲突，则选择合适阶段的转发值。具体的转发选择如下：
+  数据冒险部分使用转发来实现。我们保存了每个阶段的`rd`信息，所以我们直接通过比较译码阶段的两个源数据的地址是否与在执行阶段或者是访存阶段甚至是写回阶段的`rd`冲突。可能的冲突情况如下：
+  
+  ![image-20230731100439670](https://raw.githubusercontent.com/YEWPO/yewpoblogonlinePic/main/image-20230731100439670.png)
+  
+  若冲突，则选择合适阶段的转发值。具体的转发选择如下：
   
   ```
   fw_a = [
-  TODO
+  	default: r_data1
+  	rs1 == rd_E: [
+  		wb_ctl_E == WB_CTL_ALU: alu_out_E
+  		wb_ctl_E == WB_CTL_MEM: reset E, disable F,D
+  		wb_ctl_E == WB_CTL_SNPC: snpc_E
+  	]
+  	rs1 == rd_M: [
+  		wb_ctl_M == WB_CTL_ALU: alu_out_M
+  		wb_ctl_M == WB_CTL_MEM: mem_out_M
+  		wb_ctl_M == WB_CTL_SNPC: snpc_M
+  	]
+  	rs1 == rd_W: wb_data
   ]
   fw_b = [
-  TODO
+  	default: r_data2
+  	rs2 == rd_E: [
+  		wb_ctl_E == WB_CTL_ALU: alu_out_E
+  		wb_ctl_E == WB_CTL_MEM: reset E, disable F,D
+  		wb_ctl_E == WB_CTL_SNPC: snpc_E
+  	]
+  	rs1 == rd_M: [
+  		wb_ctl_M == WB_CTL_ALU: alu_out_M
+  		wb_ctl_M == WB_CTL_MEM: mem_out_M
+  		wb_ctl_M == WB_CTL_SNPC: snpc_M
+  	]
+  	rs1 == rd_W: wb_data
   ]
   ```
   
   控制冒险，即无条件跳转和分支跳转指令的下一条指令的地址判断冒险。我们采取先继续执行，待跳转结果得出之后，再考虑是否冲刷执行过的指令。冲刷方法是重置相应阶段的寄存器。重置控制如下：
   
   ```
-  TODO
+  enable_F = (wb_ctl_E != WB_CTL_MEM) || (rs1 != rd_E && rs2 != rd_E)
+  enable_D = (wb_ctl_E != WB_CTL_MEM) || (rs1 != rd_E && rs2 != rd_E)
+  reset_D = jump_sig == true.B
+  reset_E = (jump_sig == true.B) || (wb_ctl_E != WB_CTL_MEM) || (rs1 != rd_E && rs2 != rd_E)
   ```
 
 ### 控制信号
