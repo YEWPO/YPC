@@ -4,39 +4,7 @@ import chisel3._
 import control._
 import utils._
 import chisel3.util._
-
-class InstDecodeUnitIO extends Bundle {
-  val enable = Input(Bool())
-  val reset  = Input(Bool())
-
-  val inst_f = Input(UInt(32.W))
-  val pc_f   = Input(UInt(64.W))
-  val snpc_f = Input(UInt(64.W))
-
-  val reg_w_en_w   = Input(Bool())
-  val reg_w_data_w = Input(UInt(64.W))
-  val rd_w         = Input(UInt(5.W))
-
-  val a_ctl_d      = Output(Bool())
-  val b_ctl_d      = Output(Bool())
-  val dnpc_ctl_d   = Output(Bool())
-  val alu_ctl_d    = Output(UInt(5.W))
-  val mem_w_en_d   = Output(Bool())
-  val mem_mask_d   = Output(UInt(64.W))
-  val wb_ctl_d     = Output(UInt(2.W))
-  val reg_w_en_d   = Output(Bool())
-  val jump_op_d    = Output(UInt(2.W))
-  val ebreak_op_d  = Output(Bool())
-  val invalid_op_d = Output(Bool())
-
-  val imm_d     = Output(UInt(64.W))
-  val rd_d      = Output(UInt(64.W))
-  val r_data1_d = Output(UInt(64.W))
-  val r_data2_d = Output(UInt(64.W))
-  val pc_d      = Output(UInt(64.W))
-  val snpc_d    = Output(UInt(64.W))
-  val inst_d    = Output(UInt(32.W))
-}
+import entity._
 
 /**
   * instruction bit map
@@ -47,16 +15,21 @@ class InstDecodeUnitIO extends Bundle {
   * +--------+-----+-----+--------+----+--------+
   */
 class InstDecodeUnit extends Module {
-  val io = IO(new InstDecodeUnitIO)
+  val inst_decode_hazard = IO(new InstDecodeHazard)
+  val inst_fetch_data = Flipped(IO(new InstFetchData))
+  val inst_decode_control = IO(new InstDecodeControl)
+  val inst_decode_data = IO(new InstDecodeData)
+  val write_back_control = Flipped(IO(new WriteBackControl))
+  val write_back_data = Flipped(IO(new WriteBackData))
 
   val control_unit = Module(new ControlUnit)
   val imm_gen      = Module(new ImmGen)
   val reg_files    = Module(new Register)
 
-  withReset(io.reset || reset.asBool) {
-    val inst_f = RegEnable(io.inst_f, CommonMacro.INST_RESET_VAL, io.enable)
-    val pc_f   = RegEnable(io.pc_f, CommonMacro.PC_RESET_VAL, io.enable)
-    val snpc_f = RegEnable(io.snpc_f, CommonMacro.PC_RESET_VAL, io.enable)
+  withReset(inst_decode_hazard.reset || reset.asBool) {
+    val inst_f = RegEnable(inst_fetch_data.inst, CommonMacro.INST_RESET_VAL, inst_decode_hazard.enable)
+    val pc_f   = RegEnable(inst_fetch_data.pc, CommonMacro.PC_RESET_VAL, inst_decode_hazard.enable)
+    val snpc_f = RegEnable(inst_fetch_data.snpc, CommonMacro.PC_RESET_VAL, inst_decode_hazard.enable)
 
     /**
       * control unit
@@ -78,9 +51,9 @@ class InstDecodeUnit extends Module {
     /**
       * w_en, w_data and rd will be valid at write back stage
       */
-    reg_files.io.rd     := io.rd_w
-    reg_files.io.w_en   := io.reg_w_en_w
-    reg_files.io.w_data := io.reg_w_data_w
+    reg_files.io.rd     := write_back_data.rd
+    reg_files.io.w_en   := write_back_control.reg_w_en
+    reg_files.io.w_data := write_back_data.wb_data
 
     /**
       * imm = imm_gen(inst)
@@ -88,27 +61,27 @@ class InstDecodeUnit extends Module {
       * r_data1 = reg[rs1]
       * r_data2 = reg[rs2]
       */
-    io.imm_d     := imm_gen.io.imm_out
-    io.rd_d      := inst_f(11, 7)
-    io.r_data1_d := reg_files.io.r_data1
-    io.r_data2_d := reg_files.io.r_data2
-    io.pc_d      := pc_f
-    io.snpc_d    := snpc_f
-    io.inst_d    := inst_f
+    inst_decode_data.imm     := imm_gen.io.imm_out
+    inst_decode_data.rd      := inst_f(11, 7)
+    inst_decode_data.r_data1 := reg_files.io.r_data1
+    inst_decode_data.r_data2 := reg_files.io.r_data2
+    inst_decode_data.pc      := pc_f
+    inst_decode_data.snpc   := snpc_f
+    inst_decode_data.inst    := inst_f
 
     /**
       * control signals
       */
-    io.a_ctl_d      := control_unit.io.a_ctl
-    io.b_ctl_d      := control_unit.io.b_ctl
-    io.dnpc_ctl_d   := control_unit.io.dnpc_ctl
-    io.alu_ctl_d    := control_unit.io.alu_ctl
-    io.mem_w_en_d   := control_unit.io.mem_w_en
-    io.mem_mask_d   := control_unit.io.mem_mask
-    io.wb_ctl_d     := control_unit.io.wb_ctl
-    io.reg_w_en_d   := control_unit.io.reg_w_en
-    io.jump_op_d    := control_unit.io.jump_op
-    io.ebreak_op_d  := control_unit.io.ebreak_op
-    io.invalid_op_d := control_unit.io.invalid_op
+    inst_decode_control.a_ctl      := control_unit.io.a_ctl
+    inst_decode_control.b_ctl      := control_unit.io.b_ctl
+    inst_decode_control.dnpc_ctl   := control_unit.io.dnpc_ctl
+    inst_decode_control.alu_ctl    := control_unit.io.alu_ctl
+    inst_decode_control.mem_w_en   := control_unit.io.mem_w_en
+    inst_decode_control.mem_mask   := control_unit.io.mem_mask
+    inst_decode_control.wb_ctl     := control_unit.io.wb_ctl
+    inst_decode_control.reg_w_en   := control_unit.io.reg_w_en
+    inst_decode_control.jump_op    := control_unit.io.jump_op
+    inst_decode_control.ebreak_op  := control_unit.io.ebreak_op
+    inst_decode_control.invalid_op := control_unit.io.invalid_op
   }
 }
