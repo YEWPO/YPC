@@ -99,42 +99,47 @@ make clean
   ```
   fw_a = [
   	default: r_data1
-  	rs1 == rd_E: [
+  	rs1 == rd_E && rs1 != 0: [
   		wb_ctl_E == WB_CTL_ALU: alu_out_E
   		wb_ctl_E == WB_CTL_MEM: reset E, disable F,D
   		wb_ctl_E == WB_CTL_SNPC: snpc_E
   	]
-  	rs1 == rd_M: [
+  	rs1 == rd_M && rs1 != 0: [
   		wb_ctl_M == WB_CTL_ALU: alu_out_M
   		wb_ctl_M == WB_CTL_MEM: mem_out_M
   		wb_ctl_M == WB_CTL_SNPC: snpc_M
   	]
-  	rs1 == rd_W: wb_data
+  	rs1 == rd_W && rs1 != 0: wb_data
   ]
   fw_b = [
   	default: r_data2
-  	rs2 == rd_E: [
+  	rs2 == rd_E && rs2 != 0: [
   		wb_ctl_E == WB_CTL_ALU: alu_out_E
   		wb_ctl_E == WB_CTL_MEM: reset E, disable F,D
   		wb_ctl_E == WB_CTL_SNPC: snpc_E
   	]
-  	rs1 == rd_M: [
+  	rs1 == rd_M && rs2 != 0: [
   		wb_ctl_M == WB_CTL_ALU: alu_out_M
   		wb_ctl_M == WB_CTL_MEM: mem_out_M
   		wb_ctl_M == WB_CTL_SNPC: snpc_M
   	]
-  	rs1 == rd_W: wb_data
+  	rs1 == rd_W && rs2 != 0: wb_data
   ]
   ```
   
   控制冒险，即无条件跳转和分支跳转指令的下一条指令的地址判断冒险。我们采取先继续执行，待跳转结果得出之后，再考虑是否冲刷执行过的指令。冲刷方法是重置相应阶段的寄存器。重置控制如下：
-  
-  ```
-  enable_F = (wb_ctl_E != WB_CTL_MEM) || (rs1 != rd_E && rs2 != rd_E)
-  enable_D = (wb_ctl_E != WB_CTL_MEM) || (rs1 != rd_E && rs2 != rd_E)
-  reset_D = jump_sig == true.B
-  reset_E = (jump_sig == true.B) || (wb_ctl_E != WB_CTL_MEM) || (rs1 != rd_E && rs2 != rd_E)
-  ```
+  $$
+  enable_F = (wb_ctl_E \neq WB\_CTL\_MEM) \or \\ ((rs1 \neq rd_E \or rs1 = 0) \and (rs2 \neq rd_E0 \or rs2 = 0)) 
+  $$
+
+$$
+enable_D = (wb_ctl_E \neq WB\_CTL\_MEM) \or \\ ((rs1 \neq rd_E \or rs1 = 0) \and (rs2 \neq rd_E0 \or rs2 = 0)) \\
+$$
+
+$$
+reset_D = jump\_sig \\
+reset_E = jump\_sig \or (wb_ctl_E \neq WB\_CTL\_MEM) \or \\ ((rs1 \neq rd_E \or rs1 = 0) \and (rs2 \neq rd_E0 \or rs2 = 0))
+$$
 
 ### 控制信号
 
