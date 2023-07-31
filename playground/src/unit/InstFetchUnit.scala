@@ -24,6 +24,7 @@ class InstFetchUnit extends Module {
     * instruction memory
     */
   inst_mem.io.addr := program_counter
+  inst_mem.io.en := inst_fetch_hazard.enable
 
   /**
     * inst = mem[pc]

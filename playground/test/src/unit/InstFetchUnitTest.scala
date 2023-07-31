@@ -9,18 +9,18 @@ object InstFetchUnitTest extends ChiselUtestTester {
     test("InstFetchUnit") {
       test("Enable") {
         testCircuit(new InstFetchUnit()) { dut =>
-          dut.io.npc.poke("h8000_0040".U)
-          dut.io.enable.poke(true.B)
+          dut.npc.poke("h8000_0040".U)
+          dut.inst_fetch_hazard.enable.poke(true.B)
           dut.clock.step()
-          dut.io.pc_f.expect("h8000_0040".U)
+          dut.inst_fetch_data.pc.expect("h8000_0040".U)
         }
       }
       test("Disable") {
         testCircuit(new InstFetchUnit()) { dut =>
-          dut.io.npc.poke("h8000_0040".U)
-          dut.io.enable.poke(false.B)
+          dut.npc.poke("h8000_0040".U)
+          dut.inst_fetch_hazard.enable.poke(false.B)
           dut.clock.step()
-          dut.io.pc_f.expect("h8000_0000".U)
+          dut.inst_fetch_data.pc.expect("h8000_0000".U)
         }
       }
     }

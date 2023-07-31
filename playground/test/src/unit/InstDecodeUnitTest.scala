@@ -8,36 +8,36 @@ object InstDecodeUnitTest extends ChiselUtestTester {
   val tests = Tests {
     test("InstDecodeUnit") {
       test("ResetOn") {
-        testCircuit(new InstDecodeUnit()) { dut =>
-          dut.io.pc_f.poke("h10001073".U)
-          dut.io.enable.poke(true.B)
-          dut.io.reset.poke(true.B)
+        testCircuit(new InstDecodeUnit) { dut =>
+          dut.inst_fetch_data.pc.poke("h10001073".U)
+          dut.inst_decode_hazard.enable.poke(true.B)
+          dut.inst_decode_hazard.reset.poke(true.B)
           dut.clock.step()
-          dut.io.pc_d.expect("h80000000".U)
+          dut.inst_decode_data.pc.expect("h80000000".U)
         }
       }
       test("ResetOff") {
-        testCircuit(new InstDecodeUnit()) { dut =>
-          dut.io.pc_f.poke("h10001073".U)
-          dut.io.enable.poke(true.B)
-          dut.io.reset.poke(false.B)
+        testCircuit(new InstDecodeUnit) { dut =>
+          dut.inst_fetch_data.pc.poke("h10001073".U)
+          dut.inst_decode_hazard.enable.poke(true.B)
+          dut.inst_decode_hazard.reset.poke(false.B)
           dut.clock.step()
-          dut.io.pc_d.expect("h10001073".U)
+          dut.inst_decode_data.pc.expect("h10001073".U)
         }
       }
       test("Disable") {
-        testCircuit(new InstDecodeUnit()) { dut =>
-          dut.io.pc_f.poke("h10001073".U)
-          dut.io.enable.poke(true.B)
-          dut.io.reset.poke(false.B)
+        testCircuit(new InstDecodeUnit) { dut =>
+          dut.inst_fetch_data.pc.poke("h10001073".U)
+          dut.inst_decode_hazard.enable.poke(true.B)
+          dut.inst_decode_hazard.reset.poke(false.B)
           dut.clock.step()
-          dut.io.pc_d.expect("h10001073".U)
+          dut.inst_decode_data.pc.expect("h10001073".U)
 
-          dut.io.pc_f.poke("h10001023".U)
-          dut.io.enable.poke(false.B)
-          dut.io.reset.poke(false.B)
+          dut.inst_fetch_data.pc.poke("h10001023".U)
+          dut.inst_decode_hazard.enable.poke(false.B)
+          dut.inst_decode_hazard.reset.poke(false.B)
           dut.clock.step()
-          dut.io.pc_d.expect("h10001073".U)
+          dut.inst_decode_data.pc.expect("h10001073".U)
         }
       }
     }

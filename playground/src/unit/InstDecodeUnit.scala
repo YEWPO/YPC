@@ -16,11 +16,11 @@ import entity._
   */
 class InstDecodeUnit extends Module {
   val inst_decode_hazard  = IO(new InstDecodeHazard)
-  val inst_fetch_data     = Flipped(IO(new InstFetchData))
+  val inst_fetch_data     = IO(Flipped(new InstFetchData))
   val inst_decode_control = IO(new InstDecodeControl)
   val inst_decode_data    = IO(new InstDecodeData)
-  val write_back_control  = Flipped(IO(new WriteBackControl))
-  val write_back_data     = Flipped(IO(new WriteBackData))
+  val write_back_control  = IO(Flipped(new WriteBackControl))
+  val write_back_data     = IO(Flipped(new WriteBackData))
 
   val control_unit = Module(new ControlUnit)
   val imm_gen      = Module(new ImmGen)
