@@ -21,10 +21,15 @@ class InstDecodeUnit extends Module {
   val inst_decode_data    = IO(new InstDecodeData)
   val write_back_control  = IO(Flipped(new WriteBackControl))
   val write_back_data     = IO(Flipped(new WriteBackData))
+  val execute_forward     = IO(Flipped(new ExecuteForward))
+  val load_store_forward  = IO(Flipped(new LoadStoreForward))
+  val write_back_forward  = IO(Flipped(new WriteBackForward))
 
   val control_unit = Module(new ControlUnit)
   val imm_gen      = Module(new ImmGen)
   val reg_files    = Module(new Register)
+  val forward_a    = Module(new Forward)
+  val forward_b    = Module(new Forward)
 
   withReset(inst_decode_hazard.reset || reset.asBool) {
     val inst = RegEnable(inst_fetch_data.inst, CommonMacro.INST_RESET_VAL, inst_decode_hazard.enable)
@@ -55,6 +60,30 @@ class InstDecodeUnit extends Module {
     reg_files.io.rs2 := inst(24, 20)
 
     /**
+      * forward a
+      */
+    forward_a.io.src     := reg_files.io.r_data1
+    forward_a.io.alu_E   := execute_forward.alu_out
+    forward_a.io.snpc_E  := execute_forward.snpc
+    forward_a.io.alu_M   := load_store_forward.alu_out
+    forward_a.io.mem_M   := load_store_forward.mem_out
+    forward_a.io.snpc_M  := load_store_forward.snpc
+    forward_a.io.wb_data := write_back_forward.wb_data
+    forward_a.io.f_ctl   := inst_decode_hazard.fa_ctl
+
+    /**
+      * forward b
+      */
+    forward_b.io.src     := reg_files.io.r_data2
+    forward_b.io.alu_E   := execute_forward.alu_out
+    forward_b.io.snpc_E  := execute_forward.snpc
+    forward_b.io.alu_M   := load_store_forward.alu_out
+    forward_b.io.mem_M   := load_store_forward.mem_out
+    forward_b.io.snpc_M  := load_store_forward.snpc
+    forward_b.io.wb_data := write_back_forward.wb_data
+    forward_b.io.f_ctl   := inst_decode_hazard.fb_ctl
+
+    /**
       * w_en, w_data and rd will be valid at write back stage
       */
     reg_files.io.rd     := write_back_data.rd
@@ -69,8 +98,8 @@ class InstDecodeUnit extends Module {
       */
     inst_decode_data.imm     := imm_gen.io.imm_out
     inst_decode_data.rd      := inst(11, 7)
-    inst_decode_data.r_data1 := reg_files.io.r_data1
-    inst_decode_data.r_data2 := reg_files.io.r_data2
+    inst_decode_data.r_data1 := forward_a.io.out
+    inst_decode_data.r_data2 := forward_b.io.out
     inst_decode_data.pc      := pc
     inst_decode_data.snpc    := snpc
     inst_decode_data.inst    := inst
