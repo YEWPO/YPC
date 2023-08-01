@@ -28,7 +28,8 @@ class HazardUnit extends Module {
     (rs === load_store_hazard.rd && execute_hazard.wb_ctl === ControlMacro.WB_CTL_ALU) -> HazardMacro.F_CTL_ALU_OUT_M,
     (rs === load_store_hazard.rd && execute_hazard.wb_ctl === ControlMacro.WB_CTL_MEM) -> HazardMacro.F_CTL_MEM_OUT_M,
     (rs === load_store_hazard.rd && execute_hazard.wb_ctl === ControlMacro.WB_CTL_SNPC) -> HazardMacro.F_CTL_SNPC_M,
-    (rs === write_back_hazard.rd) -> HazardMacro.F_CTL_WB_DATA
+    (rs === write_back_hazard.rd) -> HazardMacro.F_CTL_WB_DATA,
+    true.B -> HazardMacro.F_CTL_DEFAULT
   )
 
   inst_decode_hazard.fa_ctl := PriorityMux(get_fw_rules(inst_decode_hazard.rs1))
