@@ -25,7 +25,7 @@ class Forward extends Module {
   val map = Seq(
     HazardMacro.F_CTL_ALU_E -> io.alu_E,
     HazardMacro.F_CTL_SNPC_E -> io.snpc_E,
-    HazardMacro.F_CTL_ALU_E -> io.alu_M,
+    HazardMacro.F_CTL_ALU_M -> io.alu_M,
     HazardMacro.F_CTL_MEM_M -> io.mem_M,
     HazardMacro.F_CTL_SNPC_M -> io.snpc_M,
     HazardMacro.F_CTL_WB_DATA -> io.wb_data
