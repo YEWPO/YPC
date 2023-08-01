@@ -26,13 +26,13 @@ class HazardUnit extends Module {
     * rs != 0 && rs hazard
     */
   def get_fw_rules(rs: UInt) = Seq(
-    (rs.orR && rs === execute_hazard.rd && execute_hazard.wb_ctl === ControlMacro.WB_CTL_ALU) -> HazardMacro.F_CTL_ALU_E,
-    (rs.orR && rs === execute_hazard.rd && execute_hazard.wb_ctl === ControlMacro.WB_CTL_SNPC) -> HazardMacro.F_CTL_SNPC_E,
-    (rs.orR && rs === load_store_hazard.rd && load_store_hazard.wb_ctl === ControlMacro.WB_CTL_ALU) -> HazardMacro.F_CTL_ALU_M,
-    (rs.orR && rs === load_store_hazard.rd && load_store_hazard.wb_ctl === ControlMacro.WB_CTL_MEM) -> HazardMacro.F_CTL_MEM_M,
+    (rs.orR && rs === execute_hazard.rd && execute_hazard.wb_ctl === ControlMacro.WB_CTL_ALU)        -> HazardMacro.F_CTL_ALU_E,
+    (rs.orR && rs === execute_hazard.rd && execute_hazard.wb_ctl === ControlMacro.WB_CTL_SNPC)       -> HazardMacro.F_CTL_SNPC_E,
+    (rs.orR && rs === load_store_hazard.rd && load_store_hazard.wb_ctl === ControlMacro.WB_CTL_ALU)  -> HazardMacro.F_CTL_ALU_M,
+    (rs.orR && rs === load_store_hazard.rd && load_store_hazard.wb_ctl === ControlMacro.WB_CTL_MEM)  -> HazardMacro.F_CTL_MEM_M,
     (rs.orR && rs === load_store_hazard.rd && load_store_hazard.wb_ctl === ControlMacro.WB_CTL_SNPC) -> HazardMacro.F_CTL_SNPC_M,
-    (rs.orR && rs === write_back_hazard.rd) -> HazardMacro.F_CTL_WB_DATA,
-    true.B -> HazardMacro.F_CTL_DEFAULT
+    (rs.orR && rs === write_back_hazard.rd)                                                          -> HazardMacro.F_CTL_WB_DATA,
+    true.B                                                                                           -> HazardMacro.F_CTL_DEFAULT
   )
 
   inst_decode_hazard.fa_ctl := PriorityMux(get_fw_rules(inst_decode_hazard.rs1))

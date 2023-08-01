@@ -22,14 +22,14 @@ class ForwardIO extends Bundle {
 class Forward extends Module {
   val io = IO(new ForwardIO)
 
-  val map = Seq(
-    HazardMacro.F_CTL_ALU_E -> io.alu_E,
-    HazardMacro.F_CTL_SNPC_E -> io.snpc_E,
-    HazardMacro.F_CTL_ALU_M -> io.alu_M,
-    HazardMacro.F_CTL_MEM_M -> io.mem_M,
-    HazardMacro.F_CTL_SNPC_M -> io.snpc_M,
+  val forward_map = Seq(
+    HazardMacro.F_CTL_ALU_E   -> io.alu_E,
+    HazardMacro.F_CTL_SNPC_E  -> io.snpc_E,
+    HazardMacro.F_CTL_ALU_M   -> io.alu_M,
+    HazardMacro.F_CTL_MEM_M   -> io.mem_M,
+    HazardMacro.F_CTL_SNPC_M  -> io.snpc_M,
     HazardMacro.F_CTL_WB_DATA -> io.wb_data
   )
 
-  io.out := MuxLookup(io.f_ctl, io.src)(map)
+  io.out := MuxLookup(io.f_ctl, io.src)(forward_map)
 }
