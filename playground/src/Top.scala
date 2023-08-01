@@ -23,5 +23,5 @@ class Top extends Module {
 
   // ========== Output Test ==========
   control <> inst_decode_unit.inst_decode_control
-  data <> inst_decode_unit.inst_fetch_data
+  data <> inst_decode_unit.inst_decode_data
 }
