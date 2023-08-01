@@ -28,17 +28,10 @@ VerilatedVcdC *vcd;
 VTop *top;
 
 void ebreak() {
-  static bool pre_clock;
-
-  if (top->clock == 1) {
-    if (pre_clock == 1) {
-      return;
-    }
-    pre_clock = top->clock;
-  } else {
-    pre_clock = top->clock;
-    return;
-  }
+  static bool pre_clock = false;
+  if (top->clock == pre_clock) return;
+  pre_clock = top->clock;
+  if (top->clock == false) return;
 
   Log(ANSI_FMT("EBREAK", ANSI_FG_RED));
   npc_state.halt_pc = cpu.pc;
@@ -47,6 +40,11 @@ void ebreak() {
 }
 
 void invalid() {
+  static bool pre_clock = false;
+  if (top->clock == pre_clock) return;
+  pre_clock = top->clock;
+  if (top->clock == false) return;
+
   Log(ANSI_FMT("INVALID", ANSI_FG_RED));
 }
 
