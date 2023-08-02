@@ -12,8 +12,8 @@ class ExecuteUnit extends Module {
   val execute_data        = IO(new ExecuteData)
   val execute_control     = IO(new ExecuteControl)
   val execute_forward     = IO(new ExecuteForward)
-  val dnpc                = Output(UInt(64.W))
-  val jump_ctl            = Output(Bool())
+  val dnpc                = IO(Output(UInt(64.W)))
+  val jump_ctl            = IO(Output(Bool()))
 
   val alu = Module(new AlgLog)
 
@@ -55,6 +55,10 @@ class ExecuteUnit extends Module {
     execute_hazard.wb_ctl   := wb_ctl
     execute_hazard.rd       := rd
     execute_hazard.rd_tag   := reg_w_en
+
+    // forward part
+    execute_forward.alu_out := alu.io.alu_out
+    execute_forward.snpc    := snpc
 
     // algorithm logic unit
     alu.io.src1    := Mux(a_ctl, pc, r_data1)
