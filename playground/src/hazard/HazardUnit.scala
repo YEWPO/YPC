@@ -29,6 +29,7 @@ class HazardUnit extends Module {
     */
   def get_fw_rules(rs: UInt) = Seq(
     (rs.orR && execute_hazard.rd_tag && rs === execute_hazard.rd && execute_hazard.wb_ctl === ControlMacro.WB_CTL_ALU)           -> HazardMacro.F_CTL_ALU_E,
+    (rs.orR && execute_hazard.rd_tag && rs === execute_hazard.rd && execute_hazard.wb_ctl === ControlMacro.WB_CTL_MEM)           -> HazardMacro.F_CTL_DEFAULT,
     (rs.orR && execute_hazard.rd_tag && rs === execute_hazard.rd && execute_hazard.wb_ctl === ControlMacro.WB_CTL_SNPC)          -> HazardMacro.F_CTL_SNPC_E,
     (rs.orR && load_store_hazard.rd_tag && rs === load_store_hazard.rd && load_store_hazard.wb_ctl === ControlMacro.WB_CTL_ALU)  -> HazardMacro.F_CTL_ALU_M,
     (rs.orR && load_store_hazard.rd_tag && rs === load_store_hazard.rd && load_store_hazard.wb_ctl === ControlMacro.WB_CTL_MEM)  -> HazardMacro.F_CTL_MEM_M,

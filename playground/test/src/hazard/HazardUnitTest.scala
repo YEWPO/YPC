@@ -272,6 +272,126 @@ object HazardUnitTest extends ChiselUtestTester {
           dut.inst_decode_hazard.fb_ctl.expect(HazardMacro.F_CTL_DEFAULT)
         }
       }
+      test("rsValidrdNotAllValid") {
+        testCircuit(new HazardUnit) { dut =>
+          dut.inst_decode_hazard.rs1.poke(31.U)
+          dut.inst_decode_hazard.rs2.poke(5.U)
+          dut.execute_hazard.rd.poke(31.U)
+          dut.execute_hazard.jump_sig.poke(false.B)
+          dut.execute_hazard.wb_ctl.poke(ControlMacro.WB_CTL_MEM)
+          dut.load_store_hazard.rd.poke(31.U)
+          dut.load_store_hazard.wb_ctl.poke(ControlMacro.WB_CTL_SNPC)
+          dut.write_back_hazard.rd.poke(31.U)
+          dut.inst_decode_hazard.rs1_tag.poke(true.B)
+          dut.inst_decode_hazard.rs2_tag.poke(true.B)
+          dut.execute_hazard.rd_tag.poke(false.B)
+          dut.load_store_hazard.rd_tag.poke(true.B)
+          dut.write_back_hazard.rd_tag.poke(true.B)
+          dut.clock.step()
+          dut.inst_fetch_hazard.enable.expect(true.B)
+          dut.inst_decode_hazard.enable.expect(true.B)
+          dut.inst_decode_hazard.reset.expect(false.B)
+          dut.execute_hazard.reset.expect(false.B)
+          dut.inst_decode_hazard.fa_ctl.expect(HazardMacro.F_CTL_SNPC_M)
+          dut.inst_decode_hazard.fb_ctl.expect(HazardMacro.F_CTL_DEFAULT)
+        }
+      }
+      test("rsValidrdInvalid") {
+        testCircuit(new HazardUnit) { dut =>
+          dut.inst_decode_hazard.rs1.poke(31.U)
+          dut.inst_decode_hazard.rs2.poke(5.U)
+          dut.execute_hazard.rd.poke(31.U)
+          dut.execute_hazard.jump_sig.poke(false.B)
+          dut.execute_hazard.wb_ctl.poke(ControlMacro.WB_CTL_MEM)
+          dut.load_store_hazard.rd.poke(31.U)
+          dut.load_store_hazard.wb_ctl.poke(ControlMacro.WB_CTL_SNPC)
+          dut.write_back_hazard.rd.poke(31.U)
+          dut.inst_decode_hazard.rs1_tag.poke(true.B)
+          dut.inst_decode_hazard.rs2_tag.poke(true.B)
+          dut.execute_hazard.rd_tag.poke(false.B)
+          dut.load_store_hazard.rd_tag.poke(false.B)
+          dut.write_back_hazard.rd_tag.poke(false.B)
+          dut.clock.step()
+          dut.inst_fetch_hazard.enable.expect(true.B)
+          dut.inst_decode_hazard.enable.expect(true.B)
+          dut.inst_decode_hazard.reset.expect(false.B)
+          dut.execute_hazard.reset.expect(false.B)
+          dut.inst_decode_hazard.fa_ctl.expect(HazardMacro.F_CTL_DEFAULT)
+          dut.inst_decode_hazard.fb_ctl.expect(HazardMacro.F_CTL_DEFAULT)
+        }
+      }
+      test("rsInvalidrdValid") {
+        testCircuit(new HazardUnit) { dut =>
+          dut.inst_decode_hazard.rs1.poke(31.U)
+          dut.inst_decode_hazard.rs2.poke(5.U)
+          dut.execute_hazard.rd.poke(31.U)
+          dut.execute_hazard.jump_sig.poke(false.B)
+          dut.execute_hazard.wb_ctl.poke(ControlMacro.WB_CTL_MEM)
+          dut.load_store_hazard.rd.poke(31.U)
+          dut.load_store_hazard.wb_ctl.poke(ControlMacro.WB_CTL_SNPC)
+          dut.write_back_hazard.rd.poke(31.U)
+          dut.inst_decode_hazard.rs1_tag.poke(false.B)
+          dut.inst_decode_hazard.rs2_tag.poke(false.B)
+          dut.execute_hazard.rd_tag.poke(true.B)
+          dut.load_store_hazard.rd_tag.poke(true.B)
+          dut.write_back_hazard.rd_tag.poke(true.B)
+          dut.clock.step()
+          dut.inst_fetch_hazard.enable.expect(true.B)
+          dut.inst_decode_hazard.enable.expect(true.B)
+          dut.inst_decode_hazard.reset.expect(false.B)
+          dut.execute_hazard.reset.expect(false.B)
+          dut.inst_decode_hazard.fa_ctl.expect(HazardMacro.F_CTL_DEFAULT)
+          dut.inst_decode_hazard.fb_ctl.expect(HazardMacro.F_CTL_DEFAULT)
+        }
+      }
+      test("rsInvalidrdInvalid") {
+        testCircuit(new HazardUnit) { dut =>
+          dut.inst_decode_hazard.rs1.poke(31.U)
+          dut.inst_decode_hazard.rs2.poke(5.U)
+          dut.execute_hazard.rd.poke(31.U)
+          dut.execute_hazard.jump_sig.poke(false.B)
+          dut.execute_hazard.wb_ctl.poke(ControlMacro.WB_CTL_MEM)
+          dut.load_store_hazard.rd.poke(31.U)
+          dut.load_store_hazard.wb_ctl.poke(ControlMacro.WB_CTL_SNPC)
+          dut.write_back_hazard.rd.poke(31.U)
+          dut.inst_decode_hazard.rs1_tag.poke(false.B)
+          dut.inst_decode_hazard.rs2_tag.poke(false.B)
+          dut.execute_hazard.rd_tag.poke(false.B)
+          dut.load_store_hazard.rd_tag.poke(false.B)
+          dut.write_back_hazard.rd_tag.poke(false.B)
+          dut.clock.step()
+          dut.inst_fetch_hazard.enable.expect(true.B)
+          dut.inst_decode_hazard.enable.expect(true.B)
+          dut.inst_decode_hazard.reset.expect(false.B)
+          dut.execute_hazard.reset.expect(false.B)
+          dut.inst_decode_hazard.fa_ctl.expect(HazardMacro.F_CTL_DEFAULT)
+          dut.inst_decode_hazard.fb_ctl.expect(HazardMacro.F_CTL_DEFAULT)
+        }
+      }
+      test("rs1Validrs2InvalidrdValid") {
+        testCircuit(new HazardUnit) { dut =>
+          dut.inst_decode_hazard.rs1.poke(31.U)
+          dut.inst_decode_hazard.rs2.poke(31.U)
+          dut.execute_hazard.rd.poke(31.U)
+          dut.execute_hazard.jump_sig.poke(false.B)
+          dut.execute_hazard.wb_ctl.poke(ControlMacro.WB_CTL_MEM)
+          dut.load_store_hazard.rd.poke(31.U)
+          dut.load_store_hazard.wb_ctl.poke(ControlMacro.WB_CTL_SNPC)
+          dut.write_back_hazard.rd.poke(31.U)
+          dut.inst_decode_hazard.rs1_tag.poke(true.B)
+          dut.inst_decode_hazard.rs2_tag.poke(false.B)
+          dut.execute_hazard.rd_tag.poke(true.B)
+          dut.load_store_hazard.rd_tag.poke(true.B)
+          dut.write_back_hazard.rd_tag.poke(true.B)
+          dut.clock.step()
+          dut.inst_fetch_hazard.enable.expect(false.B)
+          dut.inst_decode_hazard.enable.expect(false.B)
+          dut.inst_decode_hazard.reset.expect(false.B)
+          dut.execute_hazard.reset.expect(true.B)
+          dut.inst_decode_hazard.fa_ctl.expect(HazardMacro.F_CTL_DEFAULT)
+          dut.inst_decode_hazard.fb_ctl.expect(HazardMacro.F_CTL_DEFAULT)
+        }
+      }
     }
   }
 }
