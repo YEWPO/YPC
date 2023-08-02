@@ -6,6 +6,9 @@ class InstDecodeHazard extends Bundle {
   val rs1 = Output(UInt(5.W))
   val rs2 = Output(UInt(5.W))
 
+  val rs1_tag = Output(Bool())
+  val rs2_tag = Output(Bool())
+
   val reset  = Input(Bool())
   val enable = Input(Bool())
 

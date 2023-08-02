@@ -11,6 +11,12 @@ object ControlMacro {
   val IMM_TYPE_U       = "b100".U
   val IMM_TYPE_J       = "b101".U
 
+  val RS1_VALID   = true.B
+  val RS1_INVALID = false.B
+
+  val RS2_VALID   = true.B
+  val RS2_INVALID = false.B
+
   val A_CTL_DEFAULT = false.B
   val A_CTL_SRC1    = false.B
   val A_CTL_PC      = true.B

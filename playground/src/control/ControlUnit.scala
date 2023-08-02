@@ -7,6 +7,8 @@ class ControlUnitIO extends Bundle {
   val inst = Input(UInt(32.W))
 
   val imm_type   = Output(UInt(3.W))
+  val rs1_tag    = Output(Bool())
+  val rs2_tag    = Output(Bool())
   val a_ctl      = Output(Bool())
   val b_ctl      = Output(Bool())
   val dnpc_ctl   = Output(Bool())
@@ -22,17 +24,19 @@ class ControlUnitIO extends Bundle {
 
 object DecodeTableInfo {
   val IMM_TYPE   = 0
-  val A_CTL      = 1
-  val B_CTL      = 2
-  val DNPC_CTL   = 3
-  val ALU_CTL    = 4
-  val MEM_W_EN   = 5
-  val MEM_MASK   = 6
-  val WB_CTL     = 7
-  val REG_W_EN   = 8
-  val JUMP_OP    = 9
-  val EBREAK_OP  = 10
-  val INVALID_OP = 11
+  val RS1_TAG    = 1
+  val RS2_TAG    = 2
+  val A_CTL      = 3
+  val B_CTL      = 4
+  val DNPC_CTL   = 5
+  val ALU_CTL    = 6
+  val MEM_W_EN   = 7
+  val MEM_MASK   = 8
+  val WB_CTL     = 9
+  val REG_W_EN   = 10
+  val JUMP_OP    = 11
+  val EBREAK_OP  = 12
+  val INVALID_OP = 13
 }
 
 class ControlUnit extends Module {
@@ -41,6 +45,8 @@ class ControlUnit extends Module {
   val decode_result = ListLookup(io.inst, DecodeTable.default_decode, DecodeTable.decode_map)
 
   io.imm_type   := decode_result(DecodeTableInfo.IMM_TYPE)
+  io.rs1_tag    := decode_result(DecodeTableInfo.RS1_TAG)
+  io.rs2_tag    := decode_result(DecodeTableInfo.RS2_TAG)
   io.a_ctl      := decode_result(DecodeTableInfo.A_CTL)
   io.b_ctl      := decode_result(DecodeTableInfo.B_CTL)
   io.dnpc_ctl   := decode_result(DecodeTableInfo.DNPC_CTL)

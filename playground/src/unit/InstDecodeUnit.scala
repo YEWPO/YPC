@@ -39,8 +39,10 @@ class InstDecodeUnit extends Module {
     /**
       * hazard
       */
-    inst_decode_hazard.rs1 := inst(19, 15)
-    inst_decode_hazard.rs2 := inst(24, 20)
+    inst_decode_hazard.rs1     := inst(19, 15)
+    inst_decode_hazard.rs2     := inst(24, 20)
+    inst_decode_hazard.rs1_tag := control_unit.io.rs1_tag
+    inst_decode_hazard.rs2_tag := control_unit.io.rs2_tag
 
     /**
       * control unit

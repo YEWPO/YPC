@@ -3,6 +3,8 @@ package control
 object DecodeTable {
   val default_decode = List(
     ControlMacro.IMM_TYPE_DEFAULT,
+    ControlMacro.RS1_INVALID,
+    ControlMacro.RS2_INVALID,
     ControlMacro.A_CTL_DEFAULT,
     ControlMacro.B_CTL_DEFAULT,
     ControlMacro.DNPC_CTL_DEFAULT,
@@ -19,6 +21,8 @@ object DecodeTable {
   val decode_map = Array(
     InstList.lui -> List(
       ControlMacro.IMM_TYPE_U,
+      ControlMacro.RS1_INVALID,
+      ControlMacro.RS2_INVALID,
       ControlMacro.A_CTL_DEFAULT,
       ControlMacro.B_CTL_IMM,
       ControlMacro.DNPC_CTL_DEFAULT,
@@ -33,6 +37,8 @@ object DecodeTable {
     ),
     InstList.auipc -> List(
       ControlMacro.IMM_TYPE_U,
+      ControlMacro.RS1_INVALID,
+      ControlMacro.RS2_INVALID,
       ControlMacro.A_CTL_PC,
       ControlMacro.B_CTL_IMM,
       ControlMacro.DNPC_CTL_DEFAULT,
@@ -47,6 +53,8 @@ object DecodeTable {
     ),
     InstList.addi -> List(
       ControlMacro.IMM_TYPE_I,
+      ControlMacro.RS1_VALID,
+      ControlMacro.RS2_INVALID,
       ControlMacro.A_CTL_SRC1,
       ControlMacro.B_CTL_IMM,
       ControlMacro.DNPC_CTL_DEFAULT,
@@ -61,6 +69,8 @@ object DecodeTable {
     ),
     InstList.slli -> List(
       ControlMacro.IMM_TYPE_I,
+      ControlMacro.RS1_VALID,
+      ControlMacro.RS2_INVALID,
       ControlMacro.A_CTL_SRC1,
       ControlMacro.B_CTL_IMM,
       ControlMacro.DNPC_CTL_DEFAULT,
@@ -75,6 +85,8 @@ object DecodeTable {
     ),
     InstList.slti -> List(
       ControlMacro.IMM_TYPE_I,
+      ControlMacro.RS1_VALID,
+      ControlMacro.RS2_INVALID,
       ControlMacro.A_CTL_SRC1,
       ControlMacro.B_CTL_IMM,
       ControlMacro.DNPC_CTL_DEFAULT,
@@ -89,6 +101,8 @@ object DecodeTable {
     ),
     InstList.sltiu -> List(
       ControlMacro.IMM_TYPE_I,
+      ControlMacro.RS1_VALID,
+      ControlMacro.RS2_INVALID,
       ControlMacro.A_CTL_SRC1,
       ControlMacro.B_CTL_IMM,
       ControlMacro.DNPC_CTL_DEFAULT,
@@ -103,6 +117,8 @@ object DecodeTable {
     ),
     InstList.xori -> List(
       ControlMacro.IMM_TYPE_I,
+      ControlMacro.RS1_VALID,
+      ControlMacro.RS2_INVALID,
       ControlMacro.A_CTL_SRC1,
       ControlMacro.B_CTL_IMM,
       ControlMacro.DNPC_CTL_DEFAULT,
@@ -117,6 +133,8 @@ object DecodeTable {
     ),
     InstList.srli -> List(
       ControlMacro.IMM_TYPE_I,
+      ControlMacro.RS1_VALID,
+      ControlMacro.RS2_INVALID,
       ControlMacro.A_CTL_SRC1,
       ControlMacro.B_CTL_IMM,
       ControlMacro.DNPC_CTL_DEFAULT,
@@ -131,6 +149,8 @@ object DecodeTable {
     ),
     InstList.srai -> List(
       ControlMacro.IMM_TYPE_I,
+      ControlMacro.RS1_VALID,
+      ControlMacro.RS2_INVALID,
       ControlMacro.A_CTL_SRC1,
       ControlMacro.B_CTL_IMM,
       ControlMacro.DNPC_CTL_DEFAULT,
@@ -145,6 +165,8 @@ object DecodeTable {
     ),
     InstList.ori -> List(
       ControlMacro.IMM_TYPE_I,
+      ControlMacro.RS1_VALID,
+      ControlMacro.RS2_INVALID,
       ControlMacro.A_CTL_SRC1,
       ControlMacro.B_CTL_IMM,
       ControlMacro.DNPC_CTL_DEFAULT,
@@ -159,6 +181,8 @@ object DecodeTable {
     ),
     InstList.andi -> List(
       ControlMacro.IMM_TYPE_I,
+      ControlMacro.RS1_VALID,
+      ControlMacro.RS2_INVALID,
       ControlMacro.A_CTL_SRC1,
       ControlMacro.B_CTL_IMM,
       ControlMacro.DNPC_CTL_DEFAULT,
@@ -173,6 +197,8 @@ object DecodeTable {
     ),
     InstList.add -> List(
       ControlMacro.IMM_TYPE_R,
+      ControlMacro.RS1_VALID,
+      ControlMacro.RS2_VALID,
       ControlMacro.A_CTL_SRC1,
       ControlMacro.B_CTL_SRC2,
       ControlMacro.DNPC_CTL_DEFAULT,
@@ -187,6 +213,8 @@ object DecodeTable {
     ),
     InstList.sub -> List(
       ControlMacro.IMM_TYPE_R,
+      ControlMacro.RS1_VALID,
+      ControlMacro.RS2_VALID,
       ControlMacro.A_CTL_SRC1,
       ControlMacro.B_CTL_SRC2,
       ControlMacro.DNPC_CTL_DEFAULT,
@@ -201,6 +229,8 @@ object DecodeTable {
     ),
     InstList.sll -> List(
       ControlMacro.IMM_TYPE_R,
+      ControlMacro.RS1_VALID,
+      ControlMacro.RS2_VALID,
       ControlMacro.A_CTL_SRC1,
       ControlMacro.B_CTL_SRC2,
       ControlMacro.DNPC_CTL_DEFAULT,
@@ -215,6 +245,8 @@ object DecodeTable {
     ),
     InstList.slt -> List(
       ControlMacro.IMM_TYPE_R,
+      ControlMacro.RS1_VALID,
+      ControlMacro.RS2_VALID,
       ControlMacro.A_CTL_SRC1,
       ControlMacro.B_CTL_SRC2,
       ControlMacro.DNPC_CTL_DEFAULT,
@@ -229,6 +261,8 @@ object DecodeTable {
     ),
     InstList.sltu -> List(
       ControlMacro.IMM_TYPE_R,
+      ControlMacro.RS1_VALID,
+      ControlMacro.RS2_VALID,
       ControlMacro.A_CTL_SRC1,
       ControlMacro.B_CTL_SRC2,
       ControlMacro.DNPC_CTL_DEFAULT,
@@ -243,6 +277,8 @@ object DecodeTable {
     ),
     InstList.xor -> List(
       ControlMacro.IMM_TYPE_R,
+      ControlMacro.RS1_VALID,
+      ControlMacro.RS2_VALID,
       ControlMacro.A_CTL_SRC1,
       ControlMacro.B_CTL_SRC2,
       ControlMacro.DNPC_CTL_DEFAULT,
@@ -257,6 +293,8 @@ object DecodeTable {
     ),
     InstList.srl -> List(
       ControlMacro.IMM_TYPE_R,
+      ControlMacro.RS1_VALID,
+      ControlMacro.RS2_VALID,
       ControlMacro.A_CTL_SRC1,
       ControlMacro.B_CTL_SRC2,
       ControlMacro.DNPC_CTL_DEFAULT,
@@ -271,6 +309,8 @@ object DecodeTable {
     ),
     InstList.sra -> List(
       ControlMacro.IMM_TYPE_R,
+      ControlMacro.RS1_VALID,
+      ControlMacro.RS2_VALID,
       ControlMacro.A_CTL_SRC1,
       ControlMacro.B_CTL_SRC2,
       ControlMacro.DNPC_CTL_DEFAULT,
@@ -285,6 +325,8 @@ object DecodeTable {
     ),
     InstList.or -> List(
       ControlMacro.IMM_TYPE_R,
+      ControlMacro.RS1_VALID,
+      ControlMacro.RS2_VALID,
       ControlMacro.A_CTL_SRC1,
       ControlMacro.B_CTL_SRC2,
       ControlMacro.DNPC_CTL_DEFAULT,
@@ -299,6 +341,8 @@ object DecodeTable {
     ),
     InstList.and -> List(
       ControlMacro.IMM_TYPE_R,
+      ControlMacro.RS1_VALID,
+      ControlMacro.RS2_VALID,
       ControlMacro.A_CTL_SRC1,
       ControlMacro.B_CTL_SRC2,
       ControlMacro.DNPC_CTL_DEFAULT,
@@ -313,6 +357,8 @@ object DecodeTable {
     ),
     InstList.addiw -> List(
       ControlMacro.IMM_TYPE_I,
+      ControlMacro.RS1_VALID,
+      ControlMacro.RS2_INVALID,
       ControlMacro.A_CTL_SRC1,
       ControlMacro.B_CTL_IMM,
       ControlMacro.DNPC_CTL_DEFAULT,
@@ -327,6 +373,8 @@ object DecodeTable {
     ),
     InstList.slliw -> List(
       ControlMacro.IMM_TYPE_I,
+      ControlMacro.RS1_VALID,
+      ControlMacro.RS2_INVALID,
       ControlMacro.A_CTL_SRC1,
       ControlMacro.B_CTL_IMM,
       ControlMacro.DNPC_CTL_DEFAULT,
@@ -341,6 +389,8 @@ object DecodeTable {
     ),
     InstList.srliw -> List(
       ControlMacro.IMM_TYPE_I,
+      ControlMacro.RS1_VALID,
+      ControlMacro.RS2_INVALID,
       ControlMacro.A_CTL_SRC1,
       ControlMacro.B_CTL_IMM,
       ControlMacro.DNPC_CTL_DEFAULT,
@@ -355,6 +405,8 @@ object DecodeTable {
     ),
     InstList.sraiw -> List(
       ControlMacro.IMM_TYPE_I,
+      ControlMacro.RS1_VALID,
+      ControlMacro.RS2_INVALID,
       ControlMacro.A_CTL_SRC1,
       ControlMacro.B_CTL_IMM,
       ControlMacro.DNPC_CTL_DEFAULT,
@@ -369,6 +421,8 @@ object DecodeTable {
     ),
     InstList.addw -> List(
       ControlMacro.IMM_TYPE_R,
+      ControlMacro.RS1_VALID,
+      ControlMacro.RS2_VALID,
       ControlMacro.A_CTL_SRC1,
       ControlMacro.B_CTL_SRC2,
       ControlMacro.DNPC_CTL_DEFAULT,
@@ -383,6 +437,8 @@ object DecodeTable {
     ),
     InstList.subw -> List(
       ControlMacro.IMM_TYPE_R,
+      ControlMacro.RS1_VALID,
+      ControlMacro.RS2_VALID,
       ControlMacro.A_CTL_SRC1,
       ControlMacro.B_CTL_SRC2,
       ControlMacro.DNPC_CTL_DEFAULT,
@@ -397,6 +453,8 @@ object DecodeTable {
     ),
     InstList.sllw -> List(
       ControlMacro.IMM_TYPE_R,
+      ControlMacro.RS1_VALID,
+      ControlMacro.RS2_VALID,
       ControlMacro.A_CTL_SRC1,
       ControlMacro.B_CTL_SRC2,
       ControlMacro.DNPC_CTL_DEFAULT,
@@ -411,6 +469,8 @@ object DecodeTable {
     ),
     InstList.srlw -> List(
       ControlMacro.IMM_TYPE_R,
+      ControlMacro.RS1_VALID,
+      ControlMacro.RS2_VALID,
       ControlMacro.A_CTL_SRC1,
       ControlMacro.B_CTL_SRC2,
       ControlMacro.DNPC_CTL_DEFAULT,
@@ -425,6 +485,8 @@ object DecodeTable {
     ),
     InstList.sraw -> List(
       ControlMacro.IMM_TYPE_R,
+      ControlMacro.RS1_VALID,
+      ControlMacro.RS2_VALID,
       ControlMacro.A_CTL_SRC1,
       ControlMacro.B_CTL_SRC2,
       ControlMacro.DNPC_CTL_DEFAULT,
@@ -439,6 +501,8 @@ object DecodeTable {
     ),
     InstList.jal -> List(
       ControlMacro.IMM_TYPE_J,
+      ControlMacro.RS1_INVALID,
+      ControlMacro.RS2_INVALID,
       ControlMacro.A_CTL_DEFAULT,
       ControlMacro.B_CTL_DEFAULT,
       ControlMacro.DNPC_CTL_PC,
@@ -453,6 +517,8 @@ object DecodeTable {
     ),
     InstList.jalr -> List(
       ControlMacro.IMM_TYPE_I,
+      ControlMacro.RS1_VALID,
+      ControlMacro.RS2_INVALID,
       ControlMacro.A_CTL_DEFAULT,
       ControlMacro.B_CTL_DEFAULT,
       ControlMacro.DNPC_CTL_SRC2,
@@ -467,6 +533,8 @@ object DecodeTable {
     ),
     InstList.beq -> List(
       ControlMacro.IMM_TYPE_B,
+      ControlMacro.RS1_VALID,
+      ControlMacro.RS2_VALID,
       ControlMacro.A_CTL_SRC1,
       ControlMacro.B_CTL_SRC2,
       ControlMacro.DNPC_CTL_PC,
@@ -481,6 +549,8 @@ object DecodeTable {
     ),
     InstList.bne -> List(
       ControlMacro.IMM_TYPE_B,
+      ControlMacro.RS1_VALID,
+      ControlMacro.RS2_VALID,
       ControlMacro.A_CTL_SRC1,
       ControlMacro.B_CTL_SRC2,
       ControlMacro.DNPC_CTL_PC,
@@ -495,6 +565,8 @@ object DecodeTable {
     ),
     InstList.blt -> List(
       ControlMacro.IMM_TYPE_B,
+      ControlMacro.RS1_VALID,
+      ControlMacro.RS2_VALID,
       ControlMacro.A_CTL_SRC1,
       ControlMacro.B_CTL_SRC2,
       ControlMacro.DNPC_CTL_PC,
@@ -509,6 +581,8 @@ object DecodeTable {
     ),
     InstList.bge -> List(
       ControlMacro.IMM_TYPE_B,
+      ControlMacro.RS1_VALID,
+      ControlMacro.RS2_VALID,
       ControlMacro.A_CTL_SRC1,
       ControlMacro.B_CTL_SRC2,
       ControlMacro.DNPC_CTL_PC,
@@ -523,6 +597,8 @@ object DecodeTable {
     ),
     InstList.bltu -> List(
       ControlMacro.IMM_TYPE_B,
+      ControlMacro.RS1_VALID,
+      ControlMacro.RS2_VALID,
       ControlMacro.A_CTL_SRC1,
       ControlMacro.B_CTL_SRC2,
       ControlMacro.DNPC_CTL_PC,
@@ -537,6 +613,8 @@ object DecodeTable {
     ),
     InstList.bgeu -> List(
       ControlMacro.IMM_TYPE_B,
+      ControlMacro.RS1_VALID,
+      ControlMacro.RS2_VALID,
       ControlMacro.A_CTL_SRC1,
       ControlMacro.B_CTL_SRC2,
       ControlMacro.DNPC_CTL_PC,
@@ -551,6 +629,8 @@ object DecodeTable {
     ),
     InstList.lb -> List(
       ControlMacro.IMM_TYPE_I,
+      ControlMacro.RS1_VALID,
+      ControlMacro.RS2_INVALID,
       ControlMacro.A_CTL_SRC1,
       ControlMacro.B_CTL_IMM,
       ControlMacro.DNPC_CTL_DEFAULT,
@@ -565,6 +645,8 @@ object DecodeTable {
     ),
     InstList.lh -> List(
       ControlMacro.IMM_TYPE_I,
+      ControlMacro.RS1_VALID,
+      ControlMacro.RS2_INVALID,
       ControlMacro.A_CTL_SRC1,
       ControlMacro.B_CTL_IMM,
       ControlMacro.DNPC_CTL_DEFAULT,
@@ -579,6 +661,8 @@ object DecodeTable {
     ),
     InstList.lw -> List(
       ControlMacro.IMM_TYPE_I,
+      ControlMacro.RS1_VALID,
+      ControlMacro.RS2_INVALID,
       ControlMacro.A_CTL_SRC1,
       ControlMacro.B_CTL_IMM,
       ControlMacro.DNPC_CTL_DEFAULT,
@@ -593,6 +677,8 @@ object DecodeTable {
     ),
     InstList.ld -> List(
       ControlMacro.IMM_TYPE_I,
+      ControlMacro.RS1_VALID,
+      ControlMacro.RS2_INVALID,
       ControlMacro.A_CTL_SRC1,
       ControlMacro.B_CTL_IMM,
       ControlMacro.DNPC_CTL_DEFAULT,
@@ -607,6 +693,8 @@ object DecodeTable {
     ),
     InstList.lbu -> List(
       ControlMacro.IMM_TYPE_I,
+      ControlMacro.RS1_VALID,
+      ControlMacro.RS2_INVALID,
       ControlMacro.A_CTL_SRC1,
       ControlMacro.B_CTL_IMM,
       ControlMacro.DNPC_CTL_DEFAULT,
@@ -621,6 +709,8 @@ object DecodeTable {
     ),
     InstList.lhu -> List(
       ControlMacro.IMM_TYPE_I,
+      ControlMacro.RS1_VALID,
+      ControlMacro.RS2_INVALID,
       ControlMacro.A_CTL_SRC1,
       ControlMacro.B_CTL_IMM,
       ControlMacro.DNPC_CTL_DEFAULT,
@@ -635,6 +725,8 @@ object DecodeTable {
     ),
     InstList.lwu -> List(
       ControlMacro.IMM_TYPE_I,
+      ControlMacro.RS1_VALID,
+      ControlMacro.RS2_INVALID,
       ControlMacro.A_CTL_SRC1,
       ControlMacro.B_CTL_IMM,
       ControlMacro.DNPC_CTL_DEFAULT,
@@ -649,6 +741,8 @@ object DecodeTable {
     ),
     InstList.sb -> List(
       ControlMacro.IMM_TYPE_S,
+      ControlMacro.RS1_VALID,
+      ControlMacro.RS2_VALID,
       ControlMacro.A_CTL_SRC1,
       ControlMacro.B_CTL_IMM,
       ControlMacro.DNPC_CTL_DEFAULT,
@@ -663,6 +757,8 @@ object DecodeTable {
     ),
     InstList.sh -> List(
       ControlMacro.IMM_TYPE_S,
+      ControlMacro.RS1_VALID,
+      ControlMacro.RS2_VALID,
       ControlMacro.A_CTL_SRC1,
       ControlMacro.B_CTL_IMM,
       ControlMacro.DNPC_CTL_DEFAULT,
@@ -677,6 +773,8 @@ object DecodeTable {
     ),
     InstList.sw -> List(
       ControlMacro.IMM_TYPE_S,
+      ControlMacro.RS1_VALID,
+      ControlMacro.RS2_VALID,
       ControlMacro.A_CTL_SRC1,
       ControlMacro.B_CTL_IMM,
       ControlMacro.DNPC_CTL_DEFAULT,
@@ -691,6 +789,8 @@ object DecodeTable {
     ),
     InstList.sd -> List(
       ControlMacro.IMM_TYPE_S,
+      ControlMacro.RS1_VALID,
+      ControlMacro.RS2_VALID,
       ControlMacro.A_CTL_SRC1,
       ControlMacro.B_CTL_IMM,
       ControlMacro.DNPC_CTL_DEFAULT,
@@ -705,6 +805,8 @@ object DecodeTable {
     ),
     InstList.ebreak -> List(
       ControlMacro.IMM_TYPE_DEFAULT,
+      ControlMacro.RS1_INVALID,
+      ControlMacro.RS2_INVALID,
       ControlMacro.A_CTL_DEFAULT,
       ControlMacro.B_CTL_DEFAULT,
       ControlMacro.DNPC_CTL_DEFAULT,
