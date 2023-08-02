@@ -116,7 +116,7 @@ object AlgLogTest extends ChiselUtestTester {
           dut.io.alu_out.expect(1.U)
         }
       }
-      test("equ") {
+      test("neq") {
         testCircuit(new AlgLog) { dut =>
           dut.io.src1.poke(12345.U)
           dut.io.src2.poke(23456.U)

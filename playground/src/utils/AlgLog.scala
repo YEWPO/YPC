@@ -44,7 +44,7 @@ class AlgLog extends Module {
   val sge  = !slt
   val sltu = src1 < src2
   val sgeu = !sltu
-  val equ  = !xor.orR
+  val equ  = xor.orR === 0.U
   val neq  = !equ
   val sll  = src1 << shamt
   val srl  = src1 >> shamt

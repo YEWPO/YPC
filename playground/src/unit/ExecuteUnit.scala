@@ -44,11 +44,11 @@ class ExecuteUnit extends Module {
       * first situation: a branch operation and condition is true
       * second situation; a jump operation
       */
-    val jump_sig = jump_op(0).orR || (jump_op(1).orR && alu.io.alu_out(0).orR)
+    val jump_sig = (jump_op === ControlMacro.JUMP_OP_JAL) || ((jump_op === ControlMacro.JUMP_OP_BRANCH) && alu.io.alu_out(0).orR)
     jump_ctl := jump_sig
 
     // dymatic next pc
-    snpc := Mux(dnpc_ctl, r_data2, pc) + imm
+    dnpc := Mux(dnpc_ctl, r_data2, pc) + imm
 
     // hazard part
     execute_hazard.jump_sig := jump_sig
