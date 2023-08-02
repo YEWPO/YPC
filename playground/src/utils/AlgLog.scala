@@ -52,6 +52,8 @@ class AlgLog extends Module {
   val mova = src1
   val movb = src2
 
+  val srlw_mask = "hffff_ffff".U >> shamt
+
   val alu_map = Seq(
     ControlMacro.ALU_CTL_DEFAULT -> add,
     ControlMacro.ALU_CTL_ADD     -> add,
@@ -70,7 +72,7 @@ class AlgLog extends Module {
     ControlMacro.ALU_CTL_SLL     -> sll,
     ControlMacro.ALU_CTL_SLLW    -> CommonMacro.signExtend(CommonMacro.getWord(sll)),
     ControlMacro.ALU_CTL_SRL     -> srl,
-    ControlMacro.ALU_CTL_SRLW    -> CommonMacro.signExtend(CommonMacro.getWord(srl)),
+    ControlMacro.ALU_CTL_SRLW    -> CommonMacro.signExtend(CommonMacro.getWord(srl) & srlw_mask),
     ControlMacro.ALU_CTL_SRA     -> sra,
     ControlMacro.ALU_CTL_SRAW    -> CommonMacro.signExtend(CommonMacro.getWord(sra)),
     ControlMacro.ALU_CTL_MOVA    -> mova,
