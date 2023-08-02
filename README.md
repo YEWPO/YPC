@@ -94,6 +94,8 @@ make clean
   
   ![image-20230731100439670](https://raw.githubusercontent.com/YEWPO/yewpoblogonlinePic/main/image-20230731100439670.png)
   
+  需要转发的情况，当需要源寄存器以及和相应的阶段的目的寄存器发生冒险时，才需要转发。为了记录指令是否需要源寄存器，我们使用了`rs1_tag`和`rs2_tag`两个标记，这两个标记会在控制单元译码时生成。是否需要目的寄存器可以通过寄存器使能控制信号来判断。
+  
   若冲突，则选择合适阶段的转发值。具体的转发选择如下：
   
   ```
@@ -129,15 +131,21 @@ make clean
   
   控制冒险，即无条件跳转和分支跳转指令的下一条指令的地址判断冒险。我们采取先继续执行，待跳转结果得出之后，再考虑是否冲刷执行过的指令。冲刷方法是重置相应阶段的寄存器。重置控制如下：
   $$
-  enable\_F = (wb\_ctl\_E \neq WB\_CTL\_MEM) \\ \or ((rs1 \neq rd\_E \or rs1 = 0) \and (rs2 \neq rd\_E \or rs2 = 0))
+  enable\_F = (wb\_ctl\_E \neq WB\_CTL\_MEM) \\ \or ((rs1 \neq rd\_E \or \overline{rs1} \or \overline{rs1\_tag}) \and (rs2 \neq rd\_E \or \overline{rs2} \or \overline{rs1\_tag})) \\
+  \or \overline{rd\_tag\_E}
   $$
+  
+- 
 
 $$
 enable\_D = enable\_F
 $$
 
 $$
-reset\_D = jump\_sig \\
+reset\_D = jump\_sig
+$$
+
+$$
 reset\_E = jump\_sig \or \overline{enable\_F}
 $$
 
