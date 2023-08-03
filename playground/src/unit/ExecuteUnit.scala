@@ -48,7 +48,7 @@ class ExecuteUnit extends Module {
       (jump_op === ControlMacro.JUMP_OP_JAL) || ((jump_op === ControlMacro.JUMP_OP_BRANCH) && alu.io.alu_out(0).andR)
     jump_ctl := jump_sig
 
-    // dymatic next pc
+    // dynamic next pc
     dnpc := Mux(dnpc_ctl, r_data2, pc) + imm
 
     // hazard part

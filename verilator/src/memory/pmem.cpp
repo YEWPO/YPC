@@ -39,7 +39,7 @@ void pmem_write(paddr_t addr, word_t data, char mask) {
     if (mask & (1 << i)) {
       host_write(guest_to_host(w_addr + i), 1, data);
     }
-    data >>= 1;
+    data >>= 8;
   }
 #ifdef CONFIG_MTRACE_COND
   Log("write finish");
