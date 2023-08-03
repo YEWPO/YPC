@@ -16,7 +16,7 @@ static inline bool in_pmem(paddr_t addr) {
 }
 
 void init_mem();
-word_t paddr_read(paddr_t addr, int len);
-void paddr_write(paddr_t addr, int len, word_t data);
+word_t pmem_read(paddr_t addr);
+void pmem_write(paddr_t addr, word_t data, char mask);
 
 #endif

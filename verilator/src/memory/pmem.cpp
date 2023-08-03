@@ -13,26 +13,38 @@ static uint8_t local_img[] = {
 uint8_t* guest_to_host(paddr_t paddr) { return pmem + paddr - CONFIG_MBASE; }
 paddr_t host_to_guest(uint8_t *haddr) { return haddr - pmem + CONFIG_MBASE; }
 
-static word_t pmem_read(paddr_t addr) {
+word_t pmem_read(paddr_t addr) {
  paddr_t r_addr = addr & ADDR_MASK;
 #ifdef CONFIG_MTRACE_COND
-  Log("read from address: 0x%016lx", r_addr);
-  log_write("read from address: 0x%016lx\n", r_addr);
+  Log("read from address: " FMT_PADDR, r_addr);
+  log_write("read from address: " FMT_PADDR "\n", r_addr);
 #endif
   word_t data = host_read(guest_to_host(r_addr), 8);
 #ifdef CONFIG_MTRACE_COND
-  Log("read data: 0x%016lx", data);
-  log_write("read data: 0x%016lx\n", data);
+  Log("read data: " FMT_WORD, data);
+  log_write("read data: " FMT_WORD "\n", data);
 #endif
   return data;
 }
 
-static void pmem_write(paddr_t addr, int len, word_t data) {
+void pmem_write(paddr_t addr, word_t data, char mask) {
+  paddr_t w_addr = addr & ADDR_MASK;
 #ifdef CONFIG_MTRACE_COND
-  Log("write: 0x%016lx 0x%016lx %d", addr, data, len);
-  log_write("write: 0x%016lx 0x%016lx %d\n", addr, data, len);
+  Log("write to address: " FMT_PADDR "and data: " FMT_WORD, w_addr, data);
+  log_write("write to address: " FMT_PADDR "and data: " FMT_WORD "\n", w_addr, data);
+  Log("mask is %d", mask);
+  log_write("mask is %d\n", mask);
 #endif
-  host_write(guest_to_host(addr), len, data);
+  for (int i = 0; i < 8; ++i) {
+    if (mask & (1 << i)) {
+      host_write(guest_to_host(w_addr + i), 1, data);
+    }
+    data >>= 1;
+  }
+#ifdef CONFIG_MTRACE_COND
+  Log("write finish");
+  log_write("write finish\n");
+#endif
 }
 
 void init_mem() {
@@ -50,20 +62,4 @@ void init_mem() {
   Log("physical memory area [" FMT_PADDR ", " FMT_PADDR "]", PMEM_LEFT, PMEM_RIGHT);
 
   memcpy(guest_to_host(RESET_VECTOR), local_img, sizeof(local_img));
-}
-
-word_t paddr_read(paddr_t addr, int len) {
-  if (likely(in_pmem(addr))) {
-    return pmem_read(addr, len);
-  }
-  Assert(0, "address = " FMT_PADDR " is out of bound", addr);
-  return 0;
-}
-
-void paddr_write(paddr_t addr, int len, word_t data) {
-  if (likely(in_pmem(addr))) {
-    pmem_write(addr, len, data);
-    return;
-  }
-  Assert(0, "address = " FMT_PADDR " is out of bound", addr);
 }

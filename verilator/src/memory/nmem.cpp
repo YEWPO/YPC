@@ -4,6 +4,7 @@
 #include "VTop.h"
 
 #include "common.h"
+#include "macro.h"
 #include "memory/pmem.h"
 
 #define ADDR_MASK (~0x7ull)
@@ -11,29 +12,26 @@
 
 extern VTop *top;
 
-void nmem_ifetch(const long long addr, int *inst, const svLogic en) {
+void nmem_read(const long long addr, long long *r_data, const svLogic r_en) {
   static bool pre_clock = false;
   if (top->clock == pre_clock) return;
   pre_clock = top->clock;
   if (top->clock == false) return;
 
-  *inst = en ? paddr_read(addr, 4) : 0x13;
+  if (!r_en) *r_data = 0;
+  if (likely(in_pmem(addr))) {
+    *r_data = pmem_read(addr);
+  }
 }
 
-void nmem_read(const long long addr, long long *r_data, const long long mask) {
+void nmem_write(const long long addr, const long long w_data, const long long mask, const svLogic w_en) {
   static bool pre_clock = false;
   if (top->clock == pre_clock) return;
   pre_clock = top->clock;
   if (top->clock == false) return;
 
-  *r_data = mask ? paddr_read(addr, 8) & mask : 0;
-}
-
-void nmem_write(const long long addr, const long long w_data, const long long mask) {
-  static bool pre_clock = false;
-  if (top->clock == pre_clock) return;
-  pre_clock = top->clock;
-  if (top->clock == false) return;
-
-  if (mask) paddr_write(addr, 8, (paddr_read(addr, 8) & ~mask) | (w_data & mask));
+  if (!w_en) return;
+  if (likely(in_pmem(addr))) {
+    pmem_write(addr, w_data, mask);
+  }
 }
