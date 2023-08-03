@@ -305,7 +305,7 @@ void sdb_mainloop() {
   }
 }
 
-void sdb_init() {
+void init_sdb() {
   init_regex();
   init_wp_pool();
 }

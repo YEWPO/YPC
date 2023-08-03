@@ -77,11 +77,11 @@ int main(int argc, char *argv[]) {
 
   img_size = load_img();
 
-  simulator_init();
+  init_simulator();
 
   IFDEF(CONFIG_DIFFTEST, dl_init(dl_file, img_size));
 
-  sdb_init();
+  init_sdb();
 
   IFDEF(CONFIG_ITRACE, init_disasm("riscv64" "-pc-linux-gnu"));
 

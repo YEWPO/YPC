@@ -58,7 +58,7 @@ static void reset(uint64_t n = 5) {
   top->reset = 0;
 }
 
-void simulator_init() {
+void init_simulator() {
   Log("Initializing simulator...");
 
   context = new VerilatedContext;

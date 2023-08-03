@@ -11,7 +11,7 @@ typedef struct Decode {
   IFDEF(CONFIG_ITRACE, char logbuf[128]);
 } Decode;
 
-void simulator_init();
+void init_simulator();
 void simulator_destroy();
 void cpu_exec(uint64_t n = 1);
 
