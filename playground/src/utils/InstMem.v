@@ -4,10 +4,10 @@ module InstMem (
   input en
 );
 
-  import "DPI-C" function void npc_mem_ifetch(input longint addr, output int inst, input logic en);
+  import "DPI-C" function void nmem_ifetch(input longint addr, output int inst, input logic en);
 
   always @(*) begin
-    npc_mem_ifetch(addr, inst, en);
+    nmem_ifetch(addr, inst, en);
   end
 
 endmodule

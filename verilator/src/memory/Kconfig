@@ -22,7 +22,7 @@ config PMEM_GARRAY
 endchoice
 
 config MEM_RANDOM
-  depends on MODE_SYSTEM && !DIFFTEST && !TARGET_AM
+  depends on !DIFFTEST
   bool "Initialize the memory with random values"
   default y
   help
