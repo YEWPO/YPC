@@ -13,11 +13,16 @@ static uint8_t local_img[] = {
 uint8_t* guest_to_host(paddr_t paddr) { return pmem + paddr - CONFIG_MBASE; }
 paddr_t host_to_guest(uint8_t *haddr) { return haddr - pmem + CONFIG_MBASE; }
 
-static word_t pmem_read(paddr_t addr, int len) {
-  word_t data = host_read(guest_to_host(addr), len);
+static word_t pmem_read(paddr_t addr) {
+ paddr_t r_addr = addr & ADDR_MASK;
 #ifdef CONFIG_MTRACE_COND
-  Log("read: 0x%016lx 0x%016lx %d", addr, data, len);
-  log_write("read: 0x%016lx 0x%016lx %d\n", addr, data, len);
+  Log("read from address: 0x%016lx", r_addr);
+  log_write("read from address: 0x%016lx\n", r_addr);
+#endif
+  word_t data = host_read(guest_to_host(r_addr), 8);
+#ifdef CONFIG_MTRACE_COND
+  Log("read data: 0x%016lx", data);
+  log_write("read data: 0x%016lx\n", data);
 #endif
   return data;
 }
