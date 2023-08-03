@@ -1,5 +1,5 @@
-#ifndef _TIMER_H
-#define _TIMER_H
+#ifndef _SYSTIME_H
+#define _SYSTIME_H
 
 #include "common.h"
 

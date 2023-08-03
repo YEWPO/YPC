@@ -9,7 +9,7 @@
 #include "simulate/simulator.h"
 #include "memory/vmem.h"
 #include "utils/cpu.h"
-#include "utils/timer.h"
+#include "utils/systime.h"
 #include "sdb/watchpoint.h"
 
 #include "simulate/difftest.h"
