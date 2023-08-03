@@ -5,6 +5,7 @@
 #include "sdb/sdb.h"
 #include "simulate/difftest.h"
 #include "utils/state.h"
+#include "utils/rand.h"
 
 static char *log_file;
 static char *img_file;
@@ -67,6 +68,8 @@ static long load_img() {
 
 int main(int argc, char *argv[]) {
   parse_args(argc, argv);
+
+  init_rand();
 
   init_log(log_file);
 
