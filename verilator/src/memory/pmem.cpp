@@ -1,7 +1,8 @@
 #include "memory/host.h"
 #include "memory/pmem.h"
 
-static uint8_t PG_ALIGN pmem[CONFIG_MSIZE] = {
+static uint8_t PG_ALIGN pmem[CONFIG_MSIZE];
+static uint8_t local_img[] = {
   0x97, 0x02, 0x00, 0x00, // auipc t0,0
   0x23, 0xb8, 0x02, 0x00, // sd  zero,16(t0)
   0x03, 0xb5, 0x02, 0x01, // ld  a0,16(t0)
@@ -27,6 +28,23 @@ static void pmem_write(paddr_t addr, int len, word_t data) {
   log_write("write: 0x%016lx 0x%016lx %d\n", addr, data, len);
 #endif
   host_write(guest_to_host(addr), len, data);
+}
+
+void init_mem() {
+#if   defined(CONFIG_PMEM_MALLOC)
+  pmem = malloc(CONFIG_MSIZE);
+  assert(pmem);
+#endif
+#ifdef CONFIG_MEM_RANDOM
+  uint32_t *p = (uint32_t *)pmem;
+  int i;
+  for (i = 0; i < (int) (CONFIG_MSIZE / sizeof(p[0])); i ++) {
+    p[i] = rand();
+  }
+#endif
+  Log("physical memory area [" FMT_PADDR ", " FMT_PADDR "]", PMEM_LEFT, PMEM_RIGHT);
+
+  memcpy(guest_to_host(RESET_VECTOR), local_img, sizeof(local_img));
 }
 
 word_t paddr_read(paddr_t addr, int len) {

@@ -70,6 +70,8 @@ int main(int argc, char *argv[]) {
 
   init_log(log_file);
 
+  init_mem();
+
   img_size = load_img();
 
   simulator_init();
