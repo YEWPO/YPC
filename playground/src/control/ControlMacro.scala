@@ -56,14 +56,18 @@ object ControlMacro {
   val JUMP_OP_JAL     = "b01".U
   val JUMP_OP_BRANCH  = "b10".U
 
-  val MEM_W_ENABLE  = true.B
-  val MEM_W_DISABLE = false.B
-
-  val MEM_MASK_DEFAULT = "h0000_0000_0000_0000_0000_0000_0000_0000".U
-  val MEM_MASK_1BYTE   = "h0000_0000_0000_0000_0000_0000_0000_ffff".U
-  val MEM_MASK_2BYTE   = "h0000_0000_0000_0000_0000_0000_ffff_ffff".U
-  val MEM_MASK_4BYTE   = "h0000_0000_0000_0000_ffff_ffff_ffff_ffff".U
-  val MEM_MASK_8BYTE   = "hffff_ffff_ffff_ffff_ffff_ffff_ffff_ffff".U
+  val MEM_CTL_DEFAULT = "b00000".U
+  val MEM_CTL_LB      = "b01000".U
+  val MEM_CTL_LH      = "b01001".U
+  val MEM_CTL_LW      = "b01010".U
+  val MEM_CTL_LD      = "b01011".U
+  val MEM_CTL_LBU     = "b01100".U
+  val MEM_CTL_LHU     = "b01101".U
+  val MEM_CTL_LWU     = "b01110".U
+  val MEM_CTL_SB      = "b10000".U
+  val MEM_CTL_SH      = "b10001".U
+  val MEM_CTL_SW      = "b10000".U
+  val MEM_CTL_SD      = "b10000".U
 
   val REG_W_ENABLE  = true.B
   val REG_W_DISABLE = false.B
