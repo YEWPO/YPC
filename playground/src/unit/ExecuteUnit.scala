@@ -33,8 +33,7 @@ class ExecuteUnit extends Module {
     val dnpc_ctl   = RegNext(inst_decode_control.dnpc_ctl, ControlMacro.DNPC_CTL_DEFAULT)
     val alu_ctl    = RegNext(inst_decode_control.alu_ctl, ControlMacro.ALU_CTL_DEFAULT)
     val jump_op    = RegNext(inst_decode_control.jump_op, ControlMacro.JUMP_OP_DEFAULT)
-    val mem_w_en   = RegNext(inst_decode_control.mem_w_en, ControlMacro.MEM_W_DISABLE)
-    val mem_mask   = RegNext(inst_decode_control.mem_mask, ControlMacro.MEM_MASK_DEFAULT)
+    val mem_ctl    = RegNext(inst_decode_control.mem_ctl, ControlMacro.MEM_CTL_DEFAULT)
     val wb_ctl     = RegNext(inst_decode_control.wb_ctl, ControlMacro.WB_CTL_DEFAULT)
     val reg_w_en   = RegNext(inst_decode_control.reg_w_en, ControlMacro.REG_W_DISABLE)
     val ebreak_op  = RegNext(inst_decode_control.ebreak_op, ControlMacro.EBREAK_OP_NO)
@@ -81,8 +80,7 @@ class ExecuteUnit extends Module {
     /**
       * control signals
       */
-    execute_control.mem_w_en   := mem_w_en
-    execute_control.mem_mask   := mem_mask
+    execute_control.mem_ctl    := mem_ctl
     execute_control.wb_ctl     := wb_ctl
     execute_control.reg_w_en   := reg_w_en
     execute_control.ebreak_op  := ebreak_op
