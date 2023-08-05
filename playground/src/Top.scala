@@ -29,8 +29,8 @@ class Top extends Module {
   execute_unit.execute_hazard      <> hazard_unit.execute_hazard
 
   // ========== Load Store Unit ==========
-  load_store_unit.execute_data <> execute_unit.execute_data
-  load_store_unit.execute_control <> execute_unit.execute_control
+  load_store_unit.execute_data      <> execute_unit.execute_data
+  load_store_unit.execute_control   <> execute_unit.execute_control
   load_store_unit.load_store_hazard <> hazard_unit.load_store_hazard
 
   // ========== Output Test ==========
