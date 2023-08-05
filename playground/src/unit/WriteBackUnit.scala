@@ -3,7 +3,8 @@ package unit
 import chisel3._
 import entity._
 import control._
-import chisel3.util.MuxLookup
+import chisel3.util._
+import utils._
 
 class WriteBackUnit extends Module {
   val load_store_data    = IO(Flipped(new LoadStoreData))
@@ -12,6 +13,8 @@ class WriteBackUnit extends Module {
   val write_back_control = IO(new WriteBackControl)
   val write_back_hazard  = IO(new WriteBackHazard)
   val write_back_forward = IO(new WriteBackForward)
+
+  val other_operation = Module(new OtherOperation)
 
   // data registers
   val snpc    = RegNext(load_store_data.snpc, CommonMacro.PC_RESET_VAL)
@@ -26,6 +29,10 @@ class WriteBackUnit extends Module {
   val reg_w_en   = RegNext(load_store_control.reg_w_en, ControlMacro.REG_W_DISABLE)
   val ebreak_op  = RegNext(load_store_control.ebreak_op, ControlMacro.EBREAK_OP_NO)
   val invalid_op = RegNext(load_store_control.invalid_op, ControlMacro.INVALID_OP_NO)
+
+  // other operation
+  other_operation.io.ebreak  := load_store_control.ebreak_op
+  other_operation.io.invalid := load_store_control.invalid_op
 
   val wb_map = Seq(
     0.U -> exe_out,

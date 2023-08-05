@@ -1,6 +1,6 @@
-module MemRead(
+module MemRead (
   input r_en,
-  input [63:0] addr
+  input [63:0] addr,
   output [63:0] r_data
 );
 

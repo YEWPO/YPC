@@ -1,4 +1,4 @@
-module MemWrite(
+module MemWrite (
   input w_en,
   input [63:0] addr,
   input [63:0] w_data,

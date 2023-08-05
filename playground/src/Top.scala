@@ -22,6 +22,7 @@ class Top extends Module {
   inst_decode_unit.inst_decode_hazard <> hazard_unit.inst_decode_hazard
   inst_decode_unit.inst_fetch_data    <> inst_fetch_unit.inst_fetch_data
   inst_decode_unit.write_back_data    <> write_back_unit.write_back_data
+  inst_decode_unit.write_back_control <> write_back_unit.write_back_control
   inst_decode_unit.execute_forward    <> execute_unit.execute_forward
   inst_decode_unit.load_store_forward <> load_store_unit.load_store_forward
   inst_decode_unit.write_back_forward <> write_back_unit.write_back_forward
