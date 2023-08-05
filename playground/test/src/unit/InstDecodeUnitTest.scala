@@ -53,7 +53,7 @@ object InstDecodeUnitTest extends ChiselUtestTester {
           dut.inst_decode_hazard.reset.poke(false.B)
           dut.clock.step()
           dut.inst_decode_data.imm.expect(40.U)
-          dut.inst_decode_data.r_data1.expect("h80000738".U)
+          dut.inst_decode_data.src1.expect("h80000738".U)
           dut.inst_decode_control.b_ctl.expect(ControlMacro.B_CTL_IMM)
           dut.inst_decode_control.dnpc_ctl.expect(ControlMacro.DNPC_CTL_DEFAULT)
           dut.inst_decode_control.wb_ctl.expect(ControlMacro.WB_CTL_MEM)

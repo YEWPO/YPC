@@ -19,13 +19,13 @@ class ExecuteUnit extends Module {
 
   withReset(execute_hazard.reset || reset.asBool) {
     // data registers
-    val snpc    = RegNext(inst_decode_data.snpc, CommonMacro.PC_RESET_VAL)
-    val pc      = RegNext(inst_decode_data.pc, CommonMacro.PC_RESET_VAL)
-    val inst    = RegNext(inst_decode_data.inst, CommonMacro.INST_RESET_VAL)
-    val rd      = RegNext(inst_decode_data.rd, 0.U)
-    val r_data1 = RegNext(inst_decode_data.r_data1, 0.U)
-    val r_data2 = RegNext(inst_decode_data.r_data2, 0.U)
-    val imm     = RegNext(inst_decode_data.imm, 0.U)
+    val snpc = RegNext(inst_decode_data.snpc, CommonMacro.PC_RESET_VAL)
+    val pc   = RegNext(inst_decode_data.pc, CommonMacro.PC_RESET_VAL)
+    val inst = RegNext(inst_decode_data.inst, CommonMacro.INST_RESET_VAL)
+    val rd   = RegNext(inst_decode_data.rd, 0.U)
+    val src1 = RegNext(inst_decode_data.src1, 0.U)
+    val src2 = RegNext(inst_decode_data.src2, 0.U)
+    val imm  = RegNext(inst_decode_data.imm, 0.U)
 
     // control registers
     val a_ctl      = RegNext(inst_decode_control.a_ctl, ControlMacro.A_CTL_DEFAULT)
@@ -48,7 +48,7 @@ class ExecuteUnit extends Module {
     jump_ctl := jump_sig
 
     // dynamic next pc
-    dnpc := Mux(dnpc_ctl, r_data2, pc) + imm
+    dnpc := Mux(dnpc_ctl, src1, pc) + imm
 
     // hazard part
     execute_hazard.jump_sig := jump_sig
@@ -61,8 +61,8 @@ class ExecuteUnit extends Module {
     execute_forward.snpc    := snpc
 
     // algorithm logic unit
-    alu.io.src1    := Mux(a_ctl, pc, r_data1)
-    alu.io.src2    := Mux(b_ctl, r_data2, imm)
+    alu.io.src1    := Mux(a_ctl, pc, src1)
+    alu.io.src2    := Mux(b_ctl, src2, imm)
     alu.io.alu_ctl := alu_ctl
 
     /**
@@ -74,8 +74,8 @@ class ExecuteUnit extends Module {
     execute_data.pc      := pc
     execute_data.inst    := inst
     execute_data.rd      := rd
-    execute_data.r_data2 := r_data2
-    execute_data.alu_out := alu.io.alu_out
+    execute_data.src2    := src2
+    execute_data.exe_out := alu.io.alu_out
 
     /**
       * control signals

@@ -98,13 +98,13 @@ class InstDecodeUnit extends Module {
       * r_data1 = reg[rs1]
       * r_data2 = reg[rs2]
       */
-    inst_decode_data.imm     := imm_gen.io.imm_out
-    inst_decode_data.rd      := inst(11, 7)
-    inst_decode_data.r_data1 := forward_a.io.out
-    inst_decode_data.r_data2 := forward_b.io.out
-    inst_decode_data.pc      := pc
-    inst_decode_data.snpc    := snpc
-    inst_decode_data.inst    := inst
+    inst_decode_data.imm  := imm_gen.io.imm_out
+    inst_decode_data.rd   := inst(11, 7)
+    inst_decode_data.src1 := forward_a.io.out
+    inst_decode_data.src2 := forward_b.io.out
+    inst_decode_data.pc   := pc
+    inst_decode_data.snpc := snpc
+    inst_decode_data.inst := inst
 
     /**
       * control signals
