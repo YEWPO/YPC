@@ -65,9 +65,9 @@ class InstDecodeUnit extends Module {
       * forward a
       */
     forward_a.io.src     := reg_files.io.r_data1
-    forward_a.io.alu_E   := execute_forward.alu_out
+    forward_a.io.alu_E   := execute_forward.exe_out
     forward_a.io.snpc_E  := execute_forward.snpc
-    forward_a.io.alu_M   := load_store_forward.alu_out
+    forward_a.io.alu_M   := load_store_forward.exe_out
     forward_a.io.mem_M   := load_store_forward.mem_out
     forward_a.io.snpc_M  := load_store_forward.snpc
     forward_a.io.wb_data := write_back_forward.wb_data
@@ -77,9 +77,9 @@ class InstDecodeUnit extends Module {
       * forward b
       */
     forward_b.io.src     := reg_files.io.r_data2
-    forward_b.io.alu_E   := execute_forward.alu_out
+    forward_b.io.alu_E   := execute_forward.exe_out
     forward_b.io.snpc_E  := execute_forward.snpc
-    forward_b.io.alu_M   := load_store_forward.alu_out
+    forward_b.io.alu_M   := load_store_forward.exe_out
     forward_b.io.mem_M   := load_store_forward.mem_out
     forward_b.io.snpc_M  := load_store_forward.snpc
     forward_b.io.wb_data := write_back_forward.wb_data

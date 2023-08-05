@@ -57,7 +57,7 @@ class ExecuteUnit extends Module {
     execute_hazard.rd_tag   := reg_w_en
 
     // forward part
-    execute_forward.alu_out := alu.io.alu_out
+    execute_forward.exe_out := alu.io.alu_out
     execute_forward.snpc    := snpc
 
     // algorithm logic unit
