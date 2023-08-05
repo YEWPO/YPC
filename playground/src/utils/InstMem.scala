@@ -15,5 +15,6 @@ class InstMem extends Module {
 
   mem_read.io.addr := io.addr
   mem_read.io.r_en := io.en
-  io.inst          := Mux(io.addr(2).orR, mem_read.io.r_data(63, 32), mem_read.io.r_data(31, 0))
+
+  io.inst := Mux(io.addr(2).orR, mem_read.io.r_data(63, 32), mem_read.io.r_data(31, 0))
 }

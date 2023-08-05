@@ -13,8 +13,13 @@ object CommonMacro {
     val extend_len = 64 - src_len
     Cat(Fill(extend_len, src(src_len - 1)), src)
   }
+  def zeroExtend(src: UInt): UInt = {
+    val src_len    = src.getWidth
+    val extend_len = 64 - src_len
+    Cat(Fill(extend_len, 0.U(1.W)), src)
+  }
 
-  def getWord(src:     UInt): UInt = src(31, 0)
-  def getHalfWord(src: UInt): UInt = src(15, 0)
-  def getByte(src:     UInt): UInt = src(7, 0)
+  def getWord(src:     UInt, pos: Int): UInt = src(32 * pos + 31, 32 * pos)
+  def getHalfWord(src: UInt, pos: Int): UInt = src(16 * pos + 15, 16 * pos)
+  def getByte(src:     UInt, pos: Int): UInt = src(8 * pos + 7, 8 * pos)
 }

@@ -30,8 +30,8 @@ class AlgLog extends Module {
   val io = IO(new AlgLogIO)
 
   // check if it is a word operation
-  val src1  = Mux(io.alu_ctl(AlgLogMacro.WORD_TAG).orR, CommonMacro.signExtend(CommonMacro.getWord(io.src1)), io.src1)
-  val src2  = Mux(io.alu_ctl(AlgLogMacro.WORD_TAG).orR, CommonMacro.signExtend(CommonMacro.getWord(io.src2)), io.src2)
+  val src1  = Mux(io.alu_ctl(AlgLogMacro.WORD_TAG).orR, CommonMacro.signExtend(CommonMacro.getWord(io.src1, 0)), io.src1)
+  val src2  = Mux(io.alu_ctl(AlgLogMacro.WORD_TAG).orR, CommonMacro.signExtend(CommonMacro.getWord(io.src2, 0)), io.src2)
   val shamt = Mux(io.alu_ctl(AlgLogMacro.WORD_TAG).orR, Cat(0.U(1.W), src2(4, 0)), src2(5, 0))
 
   // calcuate
@@ -57,9 +57,9 @@ class AlgLog extends Module {
   val alu_map = Seq(
     ControlMacro.ALU_CTL_DEFAULT -> add,
     ControlMacro.ALU_CTL_ADD     -> add,
-    ControlMacro.ALU_CTL_ADDW    -> CommonMacro.signExtend(CommonMacro.getWord(add)),
+    ControlMacro.ALU_CTL_ADDW    -> CommonMacro.signExtend(CommonMacro.getWord(add, 0)),
     ControlMacro.ALU_CTL_SUB     -> sub,
-    ControlMacro.ALU_CTL_SUBW    -> CommonMacro.signExtend(CommonMacro.getWord(sub)),
+    ControlMacro.ALU_CTL_SUBW    -> CommonMacro.signExtend(CommonMacro.getWord(sub, 0)),
     ControlMacro.ALU_CTL_XOR     -> xor,
     ControlMacro.ALU_CTL_OR      -> or,
     ControlMacro.ALU_CTL_AND     -> and,
@@ -70,11 +70,11 @@ class AlgLog extends Module {
     ControlMacro.ALU_CTL_EQU     -> equ,
     ControlMacro.ALU_CTL_NEQ     -> neq,
     ControlMacro.ALU_CTL_SLL     -> sll,
-    ControlMacro.ALU_CTL_SLLW    -> CommonMacro.signExtend(CommonMacro.getWord(sll)),
+    ControlMacro.ALU_CTL_SLLW    -> CommonMacro.signExtend(CommonMacro.getWord(sll, 0)),
     ControlMacro.ALU_CTL_SRL     -> srl,
-    ControlMacro.ALU_CTL_SRLW    -> CommonMacro.signExtend(CommonMacro.getWord(srl) & srlw_mask),
+    ControlMacro.ALU_CTL_SRLW    -> CommonMacro.signExtend(CommonMacro.getWord(srl, 0) & srlw_mask),
     ControlMacro.ALU_CTL_SRA     -> sra,
-    ControlMacro.ALU_CTL_SRAW    -> CommonMacro.signExtend(CommonMacro.getWord(sra)),
+    ControlMacro.ALU_CTL_SRAW    -> CommonMacro.signExtend(CommonMacro.getWord(sra, 0)),
     ControlMacro.ALU_CTL_MOVA    -> mova,
     ControlMacro.ALU_CTL_MOVB    -> movb
   )
