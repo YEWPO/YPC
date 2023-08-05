@@ -4,7 +4,7 @@ module OtherOperation (
 );
 
   import "DPI-C" function void ebreak();
-  import "DPI-C" funtion void invalid();
+  import "DPI-C" function void invalid();
 
   always @(*) begin
     if (ebreak) begin
