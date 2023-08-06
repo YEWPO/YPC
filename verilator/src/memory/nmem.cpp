@@ -18,7 +18,7 @@ void nmem_read(const long long addr, long long *r_data, const svLogic r_en) {
   pre_clock = top->clock;
   if (top->clock == false) return;
 
-  if (!r_en) *r_data = 0;
+  if (!r_en) { *r_data = 0; return; };
   if (likely(in_pmem(addr))) {
     *r_data = pmem_read(addr);
   }
