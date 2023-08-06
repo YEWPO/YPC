@@ -12,6 +12,16 @@
 
 extern VTop *top;
 
+void nmem_ifetch(const long long addr, long long *r_data, const svLogic r_en) {
+  static bool pre_clock = false;
+  if (top->clock == pre_clock) return;
+  pre_clock = top->clock;
+  if (top->clock == false) return;
+
+  if (!r_en) { *r_data = 0; return; };
+  *r_data = pmem_read(addr);
+}
+
 void nmem_read(const long long addr, long long *r_data, const svLogic r_en) {
   static bool pre_clock = false;
   if (top->clock == pre_clock) return;
