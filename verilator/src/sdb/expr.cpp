@@ -1,4 +1,5 @@
 #include "debug.h"
+#include "memory/host.h"
 #include "memory/pmem.h"
 #include "utils/cpu.h"
 
@@ -393,7 +394,7 @@ static word_t expr_calc(int l, int r, bool *success) {
     }
 
     *success = true;
-    val = paddr_read(val, 8);
+    val = host_read(guest_to_host(val), 8);
     tokens[op_position].type = TK_HEXNUM;
     sprintf(tokens[op_position].str, FMT_WORD, val);
     return expr_calc(l, op_position, success);

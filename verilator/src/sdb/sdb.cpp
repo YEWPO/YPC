@@ -5,6 +5,7 @@
 #include <malloc.h>
 
 #include "macro.h"
+#include "memory/host.h"
 #include "simulate/simulator.h"
 #include "utils/cpu.h"
 #include "sdb/expr.h"
@@ -151,7 +152,7 @@ static int cmd_x(char *args) {
 
         for (i = 0; i < xsize; i++) {
           word_t xaddr = paddr + i * 4;
-          printf(ANSI_FMT(FMT_WORD, ANSI_FG_BLUE) ":  0x%08lx\n", xaddr, paddr_read(xaddr, 4));
+          printf(ANSI_FMT(FMT_WORD, ANSI_FG_BLUE) ":  0x%08lx\n", xaddr, host_read(guest_to_host(xaddr), 4));
         }
       } else {
         printf("invalid address: %s\n", arg2);

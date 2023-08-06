@@ -7,7 +7,6 @@
 
 #include "common.h"
 #include "simulate/simulator.h"
-#include "memory/vmem.h"
 #include "utils/cpu.h"
 #include "utils/systime.h"
 #include "sdb/watchpoint.h"
