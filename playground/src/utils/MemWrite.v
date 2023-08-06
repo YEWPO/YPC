@@ -5,7 +5,7 @@ module MemWrite (
   input [63:0] mask
 );
 
-  import "DPI-C" function nmem_write(input longint addr, input longint w_data, input longint mask, input logic w_en);
+  import "DPI-C" function void nmem_write(input longint addr, input longint w_data, input longint mask, input logic w_en);
 
   always @(*) begin
     nmem_write(addr, w_data, mask, w_en);

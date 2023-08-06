@@ -31,8 +31,8 @@ class WriteBackUnit extends Module {
   val invalid_op = RegNext(load_store_control.invalid_op, ControlMacro.INVALID_OP_NO)
 
   // other operation
-  other_operation.io.ebreak  := load_store_control.ebreak_op
-  other_operation.io.invalid := load_store_control.invalid_op
+  other_operation.io.ebreak_op  := load_store_control.ebreak_op
+  other_operation.io.invalid_op := load_store_control.invalid_op
 
   val wb_map = Seq(
     0.U -> exe_out,
