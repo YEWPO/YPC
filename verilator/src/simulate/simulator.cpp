@@ -192,7 +192,7 @@ static void inst_itrace(Decode *s) {
 #endif
 }
 
-static void exec_inst(uint64_t n) {
+static void step_clock(uint64_t n) {
   Decode s;
 
   while (n--) {
@@ -239,7 +239,7 @@ void cpu_exec(uint64_t n) {
 
   uint64_t start_time = get_time();
 
-  exec_inst(n);
+  step_clock(n);
 
   uint64_t end_time = get_time();
 
@@ -249,7 +249,7 @@ void cpu_exec(uint64_t n) {
     case NPC_RUNNING: npc_state.state = NPC_STOP; break;
 
     case NPC_END: case NPC_ABORT:
-      Log("npc: %s at pc = " "%016lx",
+      Log("npc: %s at pc = " FMT_WORD,
           (npc_state.state == NPC_ABORT ? ANSI_FMT("ABORT", ANSI_FG_RED) :
            (npc_state.halt_ret == 0 ? ANSI_FMT("HIT GOOD TRAP", ANSI_FG_GREEN) :
             ANSI_FMT("HIT BAD TRAP", ANSI_FG_RED))),
