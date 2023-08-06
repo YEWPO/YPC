@@ -36,8 +36,8 @@ class WriteBackUnit extends Module {
   debug_part.io.inst := inst
 
   // other operation
-  other_operation.io.ebreak_op  := load_store_control.ebreak_op
-  other_operation.io.invalid_op := load_store_control.invalid_op
+  other_operation.io.ebreak_op  := ebreak_op
+  other_operation.io.invalid_op := invalid_op
 
   val wb_map = Seq(
     0.U -> exe_out,
