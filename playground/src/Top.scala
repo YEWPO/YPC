@@ -13,6 +13,7 @@ class Top extends Module {
   val execute_unit     = Module(new ExecuteUnit)
   val load_store_unit  = Module(new LoadStoreUnit)
   val write_back_unit  = Module(new WriteBackUnit)
+  val out_info_unit    = Module(new OutInfoUnit)
 
   // ========== Instruction Fetch Unit ============
   inst_fetch_unit.inst_fetch_hazard <> hazard_unit.inst_fetch_hazard
@@ -42,5 +43,6 @@ class Top extends Module {
   write_back_unit.load_store_control <> load_store_unit.load_store_control
   write_back_unit.write_back_hazard  <> hazard_unit.write_back_hazard
 
-  // ========== Output Test ==========
+  // ========== Out Infomation ==========
+  out_info_unit.out_info <> write_back_unit.out_info
 }

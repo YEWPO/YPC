@@ -13,9 +13,7 @@ class WriteBackUnit extends Module {
   val write_back_control = IO(new WriteBackControl)
   val write_back_hazard  = IO(new WriteBackHazard)
   val write_back_forward = IO(new WriteBackForward)
-
-  val other_operation = Module(new OtherOperation)
-  val debug_part      = Module(new Debug)
+  val out_info           = IO(new OutInfoData)
 
   // data registers
   val snpc    = RegNext(load_store_data.snpc, CommonMacro.PC_RESET_VAL)
@@ -31,13 +29,11 @@ class WriteBackUnit extends Module {
   val ebreak_op  = RegNext(load_store_control.ebreak_op, ControlMacro.EBREAK_OP_NO)
   val invalid_op = RegNext(load_store_control.invalid_op, ControlMacro.INVALID_OP_NO)
 
-  // inst finish
-  debug_part.io.pc   := pc
-  debug_part.io.inst := inst
-
-  // other operation
-  other_operation.io.ebreak_op  := ebreak_op
-  other_operation.io.invalid_op := invalid_op
+  // out info
+  out_info.ebreak_op  := ebreak_op
+  out_info.invalid_op := invalid_op
+  out_info.pc         := pc
+  out_info.inst       := inst
 
   val wb_map = Seq(
     0.U -> exe_out,
