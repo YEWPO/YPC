@@ -48,15 +48,6 @@ static void checkregs(CPU_state *ref, vaddr_t pc) {
   }
 }
 
-void difftest_step(uint64_t pc) {
-  CPU_state ref;
-
-  difftest_exec(1);
-  difftest_regcpy(&ref, DIFFTEST_TO_DUT);
-
-  checkregs(&ref, pc);
-}
-
 #ifdef CONFIG_DIFFTEST
 
 static bool is_skip_ref = false;

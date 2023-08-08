@@ -33,6 +33,7 @@ void ebreak(const long long pc) {
   if (top->clock == false) return;
 
   Log(ANSI_FMT("EBREAK", ANSI_FG_RED));
+  difftest_skip_ref();
   npc_state.halt_pc = pc;
   npc_state.halt_ret = cpu.gpr[10];
   npc_state.state = NPC_END;
@@ -158,7 +159,7 @@ static void trace_and_difftest(Decode *_this) {
   log_write("%s\n", _this->logbuf);
 #endif
   if (g_print_step) { IFDEF(CONFIG_ITRACE, puts(_this->logbuf)); }
-  IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc));
+  IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, _this->dnpc));
 
 #ifdef CONFIG_WATCHPOINT
   bool newtag;
@@ -193,6 +194,9 @@ static void inst_itrace(Decode *s) {
 }
 
 void inst_finish(const long long pc, const int inst, const long long dnpc) {
+  // update pc
+  cpu.pc = dnpc;
+
   if (inst == 0x13 || inst == 0x0) {
     // nop or reset
     return;
@@ -208,9 +212,6 @@ void inst_finish(const long long pc, const int inst, const long long dnpc) {
   inst_itrace(&s);
   g_nr_guest_inst++;
   trace_and_difftest(&s);
-
-  // update pc
-  cpu.pc = dnpc;
 }
 
 static void step_clock(uint64_t n) {
