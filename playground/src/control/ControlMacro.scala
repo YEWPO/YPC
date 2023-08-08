@@ -52,6 +52,25 @@ object ControlMacro {
   val ALU_CTL_MOVA    = "b01110".U
   val ALU_CTL_MOVB    = "b01111".U
 
+  val MUL_CTL_DEFAULT = "b0000".U
+  val MUL_CTL_MUL     = "b0000".U
+  val MUL_CTL_MULW    = "b1000".U
+  val MUL_CTL_MULH    = "b0001".U
+  val MUL_CTL_MULHSU  = "b0010".U
+  val MUL_CTL_MULHU   = "b0011".U
+  val MUL_CTL_DIV     = "b0100".U
+  val MUL_CTL_DIVW    = "b1100".U
+  val MUL_CTL_DIVU    = "b0101".U
+  val MUL_CTL_DIVUW   = "b1101".U
+  val MUL_CTL_REM     = "b0110".U
+  val MUL_CTL_REMW    = "b1110".U
+  val MUL_CTL_REMU    = "b0111".U
+  val MUL_CTL_REMUW   = "b1111".U
+
+  val EXE_OUT_DEFAULT = false.B
+  val EXE_OUT_ALU     = false.B
+  val EXE_OUT_MUL     = true.B
+
   val JUMP_OP_DEFAULT = "b00".U
   val JUMP_OP_JAL     = "b01".U
   val JUMP_OP_BRANCH  = "b10".U
