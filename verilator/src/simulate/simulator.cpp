@@ -195,8 +195,11 @@ void inst_finish(const long long pc, const int inst, const long long dnpc) {
     // nop or reset
     return;
   }
+
+#ifdef CONFIG_TRACE
   Log("DEBUG");
   Log("PC: 0x%016llx inst: 0x%08x", pc, inst);
+#endif
 
   Decode s;
   s.inst = inst;
