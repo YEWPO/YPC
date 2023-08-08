@@ -16,11 +16,17 @@ class OutInfoUnit extends Module {
   val ebreak_op  = RegNext(out_info.ebreak_op, false.B)
   val invalid_op = RegNext(out_info.invalid_op, false.B)
 
-  other_operation.io.ebreak_op  := ebreak_op
-  other_operation.io.invalid_op := invalid_op
-  other_operation.io.pc         := pc
+  val pc_1         = RegNext(pc, CommonMacro.PC_RESET_VAL)
+  val dnpc_1       = RegNext(dnpc, CommonMacro.PC_RESET_VAL)
+  val inst_1       = RegNext(inst, CommonMacro.INST_RESET_VAL)
+  val ebreak_op_1  = RegNext(ebreak_op, false.B)
+  val invalid_op_1 = RegNext(invalid_op, false.B)
 
-  debug_part.io.pc   := pc
-  debug_part.io.inst := inst
-  debug_part.io.dnpc := dnpc
+  other_operation.io.ebreak_op  := ebreak_op_1
+  other_operation.io.invalid_op := invalid_op_1
+  other_operation.io.pc         := pc_1
+
+  debug_part.io.pc   := pc_1
+  debug_part.io.inst := inst_1
+  debug_part.io.dnpc := dnpc_1
 }
