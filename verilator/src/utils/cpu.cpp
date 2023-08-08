@@ -17,10 +17,6 @@ void set_gpr_ptr(const svOpenArrayHandle regs) {
   }
 }
 
-void set_pc_val(const long long pc_val) {
-  cpu.pc = pc_val;
-}
-
 const char *regs[] = {
   "$0", "ra", "sp", "gp", "tp", "t0", "t1", "t2",
   "s0", "s1", "a0", "a1", "a2", "a3", "a4", "a5",

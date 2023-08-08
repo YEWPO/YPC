@@ -18,6 +18,7 @@ class WriteBackUnit extends Module {
   // data registers
   val snpc    = RegNext(load_store_data.snpc, CommonMacro.PC_RESET_VAL)
   val pc      = RegNext(load_store_data.pc, CommonMacro.PC_RESET_VAL)
+  val dnpc    = RegNext(load_store_data.dnpc, CommonMacro.PC_RESET_VAL)
   val inst    = RegNext(load_store_data.inst, CommonMacro.INST_RESET_VAL)
   val rd      = RegNext(load_store_data.rd, 0.U)
   val mem_out = RegNext(load_store_data.mem_out, 0.U)
@@ -33,6 +34,7 @@ class WriteBackUnit extends Module {
   out_info.ebreak_op  := ebreak_op
   out_info.invalid_op := invalid_op
   out_info.pc         := pc
+  out_info.dnpc       := dnpc
   out_info.inst       := inst
 
   val wb_map = Seq(

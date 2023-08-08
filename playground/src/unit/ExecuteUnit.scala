@@ -48,7 +48,9 @@ class ExecuteUnit extends Module {
     jump_ctl := jump_sig
 
     // dynamic next pc
-    dnpc := Mux(dnpc_ctl, src1, pc) + imm
+    val dnpc_val = Mux(dnpc_ctl, src1, pc) + imm
+    dnpc              := dnpc_val
+    execute_data.dnpc := Mux(jump_sig, dnpc_val, snpc)
 
     // hazard part
     execute_hazard.jump_sig := jump_sig

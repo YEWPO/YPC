@@ -18,6 +18,7 @@ class LoadStoreUnit extends Module {
   // data registers
   val snpc    = RegNext(execute_data.snpc, CommonMacro.PC_RESET_VAL)
   val pc      = RegNext(execute_data.pc, CommonMacro.PC_RESET_VAL)
+  val dnpc    = RegNext(execute_data.dnpc, CommonMacro.PC_RESET_VAL)
   val inst    = RegNext(execute_data.inst, CommonMacro.INST_RESET_VAL)
   val rd      = RegNext(execute_data.rd, 0.U)
   val src2    = RegNext(execute_data.src2, 0.U)
@@ -38,6 +39,7 @@ class LoadStoreUnit extends Module {
   // data part
   load_store_data.snpc    := snpc
   load_store_data.pc      := pc
+  load_store_data.dnpc    := dnpc
   load_store_data.inst    := inst
   load_store_data.rd      := rd
   load_store_data.mem_out := data_mem.io.r_data

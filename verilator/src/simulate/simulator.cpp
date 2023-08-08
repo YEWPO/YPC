@@ -26,19 +26,19 @@ VerilatedContext *context;
 VerilatedVcdC *vcd;
 VTop *top;
 
-void ebreak() {
+void ebreak(const long long pc) {
   static bool pre_clock = false;
   if (top->clock == pre_clock) return;
   pre_clock = top->clock;
   if (top->clock == false) return;
 
   Log(ANSI_FMT("EBREAK", ANSI_FG_RED));
-  npc_state.halt_pc = cpu.pc;
+  npc_state.halt_pc = pc;
   npc_state.halt_ret = cpu.gpr[10];
   npc_state.state = NPC_END;
 }
 
-void invalid() {
+void invalid(const long long pc) {
   static bool pre_clock = false;
   if (top->clock == pre_clock) return;
   pre_clock = top->clock;
@@ -192,10 +192,11 @@ static void inst_itrace(Decode *s) {
 #endif
 }
 
-void inst_finish(const long long pc, const int inst) {
+void inst_finish(const long long pc, const int inst, const long long dnpc) {
   if (inst == 0x13) return;
   Log("DEBUG");
   Log("PC: 0x%016llx inst: 0x%08x", pc, inst);
+  cpu.pc = dnpc;
 }
 
 static void step_clock(uint64_t n) {

@@ -9,4 +9,5 @@ class LoadStoreData extends Bundle {
   val inst    = Output(UInt(32.W))
   val pc      = Output(UInt(64.W))
   val snpc    = Output(UInt(64.W))
+  val dnpc    = Output(UInt(64.W))
 }

@@ -6,6 +6,7 @@ import chisel3.util._
 class DebugPartIO extends Bundle {
   val pc   = Input(UInt(64.W))
   val inst = Input(UInt(32.W))
+  val dnpc = Input(UInt(64.W))
 }
 
 class DebugPart extends BlackBox with HasBlackBoxPath {
