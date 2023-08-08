@@ -36,6 +36,10 @@ void ebreak(const long long pc) {
 
 void invalid(const long long pc) {
   Log(ANSI_FMT("INVALID", ANSI_FG_RED));
+  difftest_skip_ref();
+  npc_state.state = NPC_ABORT;
+  npc_state.halt_ret = -1;
+  npc_state.halt_pc = pc;
 }
 
 static void step_one();
