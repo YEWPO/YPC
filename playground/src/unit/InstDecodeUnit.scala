@@ -109,15 +109,17 @@ class InstDecodeUnit extends Module {
     /**
       * control signals
       */
-    inst_decode_control.a_ctl      := control_unit.io.a_ctl
-    inst_decode_control.b_ctl      := control_unit.io.b_ctl
-    inst_decode_control.dnpc_ctl   := control_unit.io.dnpc_ctl
-    inst_decode_control.alu_ctl    := control_unit.io.alu_ctl
-    inst_decode_control.mem_ctl    := control_unit.io.mem_ctl
-    inst_decode_control.wb_ctl     := control_unit.io.wb_ctl
-    inst_decode_control.reg_w_en   := control_unit.io.reg_w_en
-    inst_decode_control.jump_op    := control_unit.io.jump_op
-    inst_decode_control.ebreak_op  := control_unit.io.ebreak_op
-    inst_decode_control.invalid_op := control_unit.io.invalid_op
+    inst_decode_control.a_ctl       := control_unit.io.a_ctl
+    inst_decode_control.b_ctl       := control_unit.io.b_ctl
+    inst_decode_control.dnpc_ctl    := control_unit.io.dnpc_ctl
+    inst_decode_control.alu_ctl     := control_unit.io.alu_ctl
+    inst_decode_control.mul_ctl     := control_unit.io.mul_ctl
+    inst_decode_control.exe_out_ctl := control_unit.io.exe_out_ctl
+    inst_decode_control.mem_ctl     := control_unit.io.mem_ctl
+    inst_decode_control.wb_ctl      := control_unit.io.wb_ctl
+    inst_decode_control.reg_w_en    := control_unit.io.reg_w_en
+    inst_decode_control.jump_op     := control_unit.io.jump_op
+    inst_decode_control.ebreak_op   := control_unit.io.ebreak_op
+    inst_decode_control.invalid_op  := control_unit.io.invalid_op
   }
 }
