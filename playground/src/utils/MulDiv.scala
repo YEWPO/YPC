@@ -47,5 +47,32 @@ class MulDiv extends Module {
     ControlMacro.MUL_CTL_REMUW  -> CommonMacro.signExtend(remuw)
   )
 
-  io.mul_out := MuxLookup(io.mul_ctl, 0.U(64.W))(mul_map)
+  val mul_out = MuxLookup(io.mul_ctl, 0.U(64.W))(mul_map)
+
+  val spec_map = Array(
+    // div, divu, divw, divuw
+    (io.mul_ctl(2, 1) === "b10".U && io.src2 === 0.U) -> "hffff_ffff_ffff_ffff".U,
+    // rem, remu
+    (io.mul_ctl(3, 1) === "b011".U && io.src2 === 0.U) -> io.src1,
+    // rem, remu
+    (io.mul_ctl(3, 1) === "b111".U && io.src2 === 0.U) -> CommonMacro.signExtend(CommonMacro.getWord(io.src1, 0)),
+    // div
+    (io.mul_ctl === ControlMacro.MUL_CTL_DIV
+      && io.src1 === "h8000_0000_0000_0000".U
+      && io.src2 === "hffff_ffff_ffff_ffff".U) -> io.src1,
+    // divw
+    (io.mul_ctl === ControlMacro.MUL_CTL_DIVW
+      && CommonMacro.getWord(io.src1, 0) === "h8000_0000".U
+      && CommonMacro.getWord(io.src2, 0) === "hffff_ffff".U) -> "hffff_ffff_8000_0000".U,
+    // rem
+    (io.mul_ctl === ControlMacro.MUL_CTL_REM
+      && io.src1 === "h8000_0000_0000_0000".U
+      && io.src2 === "hffff_ffff_ffff_ffff".U) -> 0.U,
+    // remw
+    (io.mul_ctl === ControlMacro.MUL_CTL_REMW
+      && CommonMacro.getWord(io.src1, 0) === "h8000_0000".U
+      && CommonMacro.getWord(io.src2, 0) === "hffff_ffff".U) -> 0.U
+  )
+
+  io.mul_out := MuxCase(mul_out, spec_map)
 }
