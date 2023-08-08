@@ -195,7 +195,7 @@ static void inst_itrace(Decode *s) {
 void inst_finish(const long long pc, const int inst) {
   if (inst == 0x13) return;
   Log("DEBUG");
-  Log("PC: " FMT_WORD " inst: 0x%08x", pc, inst);
+  Log("PC: 0x%016llx inst: 0x%08x", pc, inst);
 }
 
 static void step_clock(uint64_t n) {
