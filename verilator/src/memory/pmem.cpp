@@ -30,8 +30,8 @@ word_t pmem_read(paddr_t addr) {
 void pmem_write(paddr_t addr, word_t data, char mask) {
   paddr_t w_addr = addr & ADDR_MASK;
 #ifdef CONFIG_MTRACE_COND
-  Log("write to address: " FMT_PADDR "and data: " FMT_WORD, w_addr, data);
-  log_write("write to address: " FMT_PADDR "and data: " FMT_WORD "\n", w_addr, data);
+  Log("write to address: " FMT_PADDR " and data: " FMT_WORD, w_addr, data);
+  log_write("write to address: " FMT_PADDR " and data: " FMT_WORD "\n", w_addr, data);
   Log("mask is %d", mask);
   log_write("mask is %d\n", mask);
 #endif

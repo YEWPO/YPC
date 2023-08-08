@@ -23,6 +23,8 @@ void dl_init(const char *dl_file, long size) {
 
   difftest_memcpy(CONFIG_MBASE, guest_to_host(CONFIG_MBASE), size, DIFFTEST_TO_REF);
   difftest_regcpy(&cpu, DIFFTEST_TO_REF);
+
+  if (difftest_exec) Log("Already dynamic link %s", dl_file);
 }
 
 static bool isa_difftest_checkregs(CPU_state *ref_r, vaddr_t pc) {
