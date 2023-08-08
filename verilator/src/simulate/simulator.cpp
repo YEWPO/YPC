@@ -27,11 +27,6 @@ VerilatedVcdC *vcd;
 VTop *top;
 
 void ebreak(const long long pc) {
-  static bool pre_clock = false;
-  if (top->clock == pre_clock) return;
-  pre_clock = top->clock;
-  if (top->clock == false) return;
-
   Log(ANSI_FMT("EBREAK", ANSI_FG_RED));
   difftest_skip_ref();
   npc_state.halt_pc = pc;
@@ -40,11 +35,6 @@ void ebreak(const long long pc) {
 }
 
 void invalid(const long long pc) {
-  static bool pre_clock = false;
-  if (top->clock == pre_clock) return;
-  pre_clock = top->clock;
-  if (top->clock == false) return;
-
   Log(ANSI_FMT("INVALID", ANSI_FG_RED));
 }
 
