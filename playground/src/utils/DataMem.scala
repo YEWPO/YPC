@@ -55,7 +55,7 @@ class DataMem extends Module {
     (io.mem_ctl === ControlMacro.MEM_CTL_SH && io.addr(2, 1) === 3.U) ||
     (io.mem_ctl === ControlMacro.MEM_CTL_SW && io.addr(2) === 1.U) ||
     io.mem_ctl === ControlMacro.MEM_CTL_SD
-  val mask = Cat(mask_0, mask_1, mask_2, mask_3, mask_4, mask_5, mask_6, mask_7)
+  val mask = Cat(mask_7, mask_6, mask_5, mask_4, mask_3, mask_2, mask_1, mask_0)
 
   // generate data to memory
   val sb_data = Fill(8, CommonMacro.getByte(io.w_data, 0))
