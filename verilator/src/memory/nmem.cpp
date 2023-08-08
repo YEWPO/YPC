@@ -24,7 +24,7 @@ void nmem_read(const long long addr, long long *r_data, const svLogic r_en) {
   }
 }
 
-void nmem_write(const long long addr, const long long w_data, const long long mask, const svLogic w_en) {
+void nmem_write(const long long addr, const long long w_data, const char mask, const svLogic w_en) {
   if (!w_en) return;
   if (likely(in_pmem(addr))) {
     pmem_write(addr, w_data, mask);

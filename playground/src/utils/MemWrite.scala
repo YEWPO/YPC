@@ -8,7 +8,7 @@ class MemWrite extends BlackBox with HasBlackBoxPath {
     val w_en   = Input(Bool())
     val addr   = Input(UInt(64.W))
     val w_data = Input(UInt(64.W))
-    val mask   = Input(UInt(64.W))
+    val mask   = Input(UInt(8.W))
   })
 
   addPath("playground/src/utils/MemWrite.v")
