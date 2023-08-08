@@ -66,8 +66,8 @@ object ControlMacro {
   val MEM_CTL_LWU     = "b01110".U
   val MEM_CTL_SB      = "b10000".U
   val MEM_CTL_SH      = "b10001".U
-  val MEM_CTL_SW      = "b10000".U
-  val MEM_CTL_SD      = "b10000".U
+  val MEM_CTL_SW      = "b10010".U
+  val MEM_CTL_SD      = "b10011".U
 
   val REG_W_ENABLE  = true.B
   val REG_W_DISABLE = false.B
