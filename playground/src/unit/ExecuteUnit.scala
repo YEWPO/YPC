@@ -16,6 +16,7 @@ class ExecuteUnit extends Module {
   val jump_ctl            = IO(Output(Bool()))
 
   val alu = Module(new AlgLog)
+  val mul = Module(new MulDiv)
 
   withReset(execute_hazard.reset || reset.asBool) {
     // data registers
@@ -28,16 +29,18 @@ class ExecuteUnit extends Module {
     val imm  = RegNext(inst_decode_data.imm, 0.U)
 
     // control registers
-    val a_ctl      = RegNext(inst_decode_control.a_ctl, ControlMacro.A_CTL_DEFAULT)
-    val b_ctl      = RegNext(inst_decode_control.b_ctl, ControlMacro.B_CTL_DEFAULT)
-    val dnpc_ctl   = RegNext(inst_decode_control.dnpc_ctl, ControlMacro.DNPC_CTL_DEFAULT)
-    val alu_ctl    = RegNext(inst_decode_control.alu_ctl, ControlMacro.ALU_CTL_DEFAULT)
-    val jump_op    = RegNext(inst_decode_control.jump_op, ControlMacro.JUMP_OP_DEFAULT)
-    val mem_ctl    = RegNext(inst_decode_control.mem_ctl, ControlMacro.MEM_CTL_DEFAULT)
-    val wb_ctl     = RegNext(inst_decode_control.wb_ctl, ControlMacro.WB_CTL_DEFAULT)
-    val reg_w_en   = RegNext(inst_decode_control.reg_w_en, ControlMacro.REG_W_DISABLE)
-    val ebreak_op  = RegNext(inst_decode_control.ebreak_op, ControlMacro.EBREAK_OP_NO)
-    val invalid_op = RegNext(inst_decode_control.invalid_op, ControlMacro.INVALID_OP_NO)
+    val a_ctl       = RegNext(inst_decode_control.a_ctl, ControlMacro.A_CTL_DEFAULT)
+    val b_ctl       = RegNext(inst_decode_control.b_ctl, ControlMacro.B_CTL_DEFAULT)
+    val dnpc_ctl    = RegNext(inst_decode_control.dnpc_ctl, ControlMacro.DNPC_CTL_DEFAULT)
+    val alu_ctl     = RegNext(inst_decode_control.alu_ctl, ControlMacro.ALU_CTL_DEFAULT)
+    val mul_ctl     = RegNext(inst_decode_control.mul_ctl, ControlMacro.MUL_CTL_DEFAULT)
+    val exe_out_ctl = RegNext(inst_decode_control.exe_out_ctl, ControlMacro.EXE_OUT_DEFAULT)
+    val jump_op     = RegNext(inst_decode_control.jump_op, ControlMacro.JUMP_OP_DEFAULT)
+    val mem_ctl     = RegNext(inst_decode_control.mem_ctl, ControlMacro.MEM_CTL_DEFAULT)
+    val wb_ctl      = RegNext(inst_decode_control.wb_ctl, ControlMacro.WB_CTL_DEFAULT)
+    val reg_w_en    = RegNext(inst_decode_control.reg_w_en, ControlMacro.REG_W_DISABLE)
+    val ebreak_op   = RegNext(inst_decode_control.ebreak_op, ControlMacro.EBREAK_OP_NO)
+    val invalid_op  = RegNext(inst_decode_control.invalid_op, ControlMacro.INVALID_OP_NO)
 
     /**
       * first situation: a branch operation and condition is true
@@ -49,8 +52,7 @@ class ExecuteUnit extends Module {
 
     // dynamic next pc
     val dnpc_val = Mux(dnpc_ctl, src1, pc) + imm
-    dnpc              := dnpc_val
-    execute_data.dnpc := Mux(jump_sig, dnpc_val, snpc)
+    dnpc := dnpc_val
 
     // hazard part
     execute_hazard.jump_sig := jump_sig
@@ -67,17 +69,23 @@ class ExecuteUnit extends Module {
     alu.io.src2    := Mux(b_ctl, src2, imm)
     alu.io.alu_ctl := alu_ctl
 
+    // multiplication division unit
+    mul.io.src1    := src1
+    mul.io.src2    := src2
+    mul.io.mul_ctl := mul_ctl
+
     /**
       * output data
       *
       * alu_out = alu(src1, src2)
       */
     execute_data.snpc    := snpc
+    execute_data.dnpc    := Mux(jump_sig, dnpc_val, snpc)
     execute_data.pc      := pc
     execute_data.inst    := inst
     execute_data.rd      := rd
     execute_data.src2    := src2
-    execute_data.exe_out := alu.io.alu_out
+    execute_data.exe_out := Mux(exe_out_ctl, mul.io.mul_out, alu.io.alu_out)
 
     /**
       * control signals
