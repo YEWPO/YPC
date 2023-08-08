@@ -193,27 +193,29 @@ static void inst_itrace(Decode *s) {
 }
 
 void inst_finish(const long long pc, const int inst, const long long dnpc) {
-  if (inst == 0x13) return;
+  if (inst == 0x13 || inst == 0x0) {
+    // nop or reset
+    return;
+  }
   Log("DEBUG");
   Log("PC: 0x%016llx inst: 0x%08x", pc, inst);
+
+  Decode s;
+  s.inst = inst;
+  s.pc = pc;
+  s.snpc = s.pc + 4;
+  s.dnpc = dnpc;
+  inst_itrace(&s);
+  g_nr_guest_inst++;
+  trace_and_difftest(&s);
+
+  // update pc
   cpu.pc = dnpc;
 }
 
 static void step_clock(uint64_t n) {
-  Decode s;
-
   while (n--) {
-    // top->io_inst = vaddr_ifetch(top->io_pc, 4);
-    // s.inst = top->io_inst;
-    // s.pc = top->io_pc;
-    // s.snpc = s.pc + 4;
-
     step_one();
-    // s.dnpc = top->io_pc;
-    inst_itrace(&s);
-
-    // g_nr_guest_inst++;
-    trace_and_difftest(&s);
 
     if (npc_state.state != NPC_RUNNING) {
       break;
