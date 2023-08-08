@@ -60,10 +60,6 @@ class ExecuteUnit extends Module {
     execute_hazard.rd       := rd
     execute_hazard.rd_tag   := reg_w_en
 
-    // forward part
-    execute_forward.exe_out := alu.io.alu_out
-    execute_forward.snpc    := snpc
-
     // algorithm logic unit
     alu.io.src1    := Mux(a_ctl, pc, src1)
     alu.io.src2    := Mux(b_ctl, src2, imm)
@@ -73,6 +69,12 @@ class ExecuteUnit extends Module {
     mul.io.src1    := src1
     mul.io.src2    := src2
     mul.io.mul_ctl := mul_ctl
+
+    val exe_out = Mux(exe_out_ctl, mul.io.mul_out, alu.io.alu_out)
+
+    // forward part
+    execute_forward.exe_out := exe_out
+    execute_forward.snpc    := snpc
 
     /**
       * output data
@@ -85,7 +87,7 @@ class ExecuteUnit extends Module {
     execute_data.inst    := inst
     execute_data.rd      := rd
     execute_data.src2    := src2
-    execute_data.exe_out := Mux(exe_out_ctl, mul.io.mul_out, alu.io.alu_out)
+    execute_data.exe_out := exe_out
 
     /**
       * control signals
