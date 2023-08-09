@@ -46,10 +46,29 @@ word_t mmio_read(paddr_t addr) {
 
 void mmio_write(paddr_t addr, word_t data, char mask) {
   paddr_t w_addr = addr & ADDR_MASK;
+
+  bool pre_mask = false;
+  int w_len = 0;
   for (int i = 0; i < 8; ++i) {
     if (mask & (1 << i)) {
-      map_write(w_addr + i, 1, data, fetch_mmio_map(addr));
+      if (pre_mask) {
+        w_len++;
+      } else {
+        pre_mask = true;
+        w_len = 1;
+      }
+    } else {
+      if (pre_mask) {
+        map_write(w_addr + i - w_len, w_len, data, fetch_mmio_map(addr));
+        data >>= (8 * w_len);
+        pre_mask = false;
+        w_len = 0;
+      }
+      data >>= 8;
     }
-    data >>= 8;
+  }
+  // write high bits
+  if (w_len) {
+      map_write(w_addr + 8 - w_len, w_len, data, fetch_mmio_map(addr));
   }
 }

@@ -35,11 +35,29 @@ void pmem_write(paddr_t addr, word_t data, char mask) {
   Log("mask is %d", mask);
   log_write("mask is %d\n", mask);
 #endif
+  bool pre_mask = false;
+  int w_len = 0;
   for (int i = 0; i < 8; ++i) {
     if (mask & (1 << i)) {
-      host_write(guest_to_host(w_addr + i), 1, data);
+      if (pre_mask) {
+        w_len++;
+      } else {
+        w_len = 1;
+        pre_mask = true;
+      }
+    } else {
+      if (pre_mask) {
+        host_write(guest_to_host(w_addr + i - w_len), w_len, data);
+        data >>= (8 * w_len);
+        pre_mask = false;
+        w_len = 0;
+      }
+      data >>= 8;
     }
-    data >>= 8;
+  }
+  // write high bits
+  if (w_len) {
+    host_write(guest_to_host(w_addr + 8 - w_len), w_len, data);
   }
 #ifdef CONFIG_MTRACE_COND
   Log("write finish");
