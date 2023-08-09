@@ -6,6 +6,7 @@
 #include <verilated_vcd_c.h>
 
 #include "common.h"
+#include "simulate/instpool.h"
 #include "simulate/simulator.h"
 #include "utils/cpu.h"
 #include "utils/systime.h"
@@ -42,6 +43,12 @@ void invalid(const long long pc) {
   npc_state.halt_pc = pc;
 }
 
+void inst_finish(const long long pc, const int inst, const long long dnpc) {
+#define NOP 0x13
+  if (top->reset == true || inst == NOP) return;
+  push_inst(pc, inst, dnpc);
+}
+
 static void step_one();
 
 static void reset(uint64_t n = 5) {
@@ -67,6 +74,8 @@ void init_simulator() {
 #endif
 
   reset();
+
+  cpu.pc = CONFIG_MBASE;
 }
 
 void simulator_destroy() {
@@ -139,8 +148,6 @@ void ftrace_print();
 
 #endif
 
-void difftest_step(uint64_t pc);
-
 static void trace_and_difftest(Decode *_this) {
 #ifdef CONFIG_ITRACE_COND
   add2iring(_this);
@@ -164,7 +171,15 @@ static void trace_and_difftest(Decode *_this) {
 #endif
 }
 
-static void inst_itrace(Decode *s) {
+static void exec_one(Decode *s) {
+  InstExeInfo *cur = pop_inst();
+  s->pc = cur->pc;
+  s->snpc = s->pc + 4;
+  s->inst = cur->inst;
+  cpu.pc = cur->dnpc;
+  if (cur->skip_diff) {
+    difftest_skip_ref();
+  }
 #ifdef CONFIG_ITRACE
   char *p = s->logbuf;
   p += snprintf(p, sizeof(s->logbuf), FMT_WORD ":", s->pc);
@@ -187,35 +202,23 @@ static void inst_itrace(Decode *s) {
 #endif
 }
 
-void inst_finish(const long long pc, const int inst, const long long dnpc) {
-  // update pc
-  cpu.pc = dnpc;
-
-  if (inst == 0x13 || inst == 0x0) {
-    // nop or reset
-    return;
+static void check_inst() {
+  if (test_inst_avail()) {
+    Decode s;
+    exec_one(&s);
+    g_nr_guest_inst++;
+    trace_and_difftest(&s);
   }
-
-#ifdef CONFIG_TRACE
-  Log("DEBUG");
-  Log("PC: 0x%016llx inst: 0x%08x", pc, inst);
-#endif
-
-  Decode s;
-  s.inst = inst;
-  s.pc = pc;
-  s.snpc = s.pc + 4;
-  s.dnpc = dnpc;
-  inst_itrace(&s);
-  g_nr_guest_inst++;
-  trace_and_difftest(&s);
 }
 
 static void step_clock(uint64_t n) {
   while (n--) {
+    check_inst();
+
     step_one();
 
     if (npc_state.state != NPC_RUNNING) {
+      check_inst();
       break;
     }
   }
