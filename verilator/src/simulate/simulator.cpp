@@ -143,6 +143,7 @@ static void exec_one(Decode *s) {
   cpu.pc = cur->dnpc;
   if (cur->skip_diff) {
     difftest_skip_ref();
+    cur->skip_diff = false;
   }
 #ifdef CONFIG_ITRACE
   char *p = s->logbuf;

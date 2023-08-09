@@ -27,6 +27,8 @@ void iring_print() {
 }
 
 void add2iring(Decode *_this) {
+#ifdef CONFIG_ITRACE_COND
   strcpy(iring[iring_head].log, _this->logbuf);
+#endif
   iring_head = IRING_NEXT(iring_head);
 }
