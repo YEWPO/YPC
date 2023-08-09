@@ -102,50 +102,14 @@ static void step_one() {
 #endif
 }
 
-// ========== itrace ===============
-
-#ifdef CONFIG_ITRACE_COND
-
-typedef struct Iring {
-  char log[128];
-} Iring;
-
-#define IRING_SIZE 36
-#define IRING_NEXT(p) ((p + 1) % IRING_SIZE)
-#define IRING_PREV(p) ((p - 1 + IRING_SIZE) % IRING_SIZE)
-static Iring iring[IRING_SIZE] = {};
-static int iring_head = 0;
-
-static void iring_print() {
-  printf("instruct execute info:\n");
-
-  int ptr = iring_head;
-  while (ptr != IRING_PREV(iring_head)) {
-    if (strlen(iring[ptr].log) > 0) {
-      printf("    ");
-      puts(iring[ptr].log);
-    }
-    ptr = IRING_NEXT(ptr);
-  }
-
-  printf("--> ");
-  puts(iring[ptr].log);
-}
-
-static void add2iring(Decode *_this) {
-  strcpy(iring[iring_head].log, _this->logbuf);
-  iring_head = IRING_NEXT(iring_head);
-}
-
-#endif
-
-// ============ itrace ============
-
 #ifdef CONFIG_FTRACE_COND
-
 void ftrace_inst(Decode *_this);
 void ftrace_print();
+#endif
 
+#ifdef CONFIG_ITRACE_COND
+void iring_print();
+void add2iring(Decode *_this);
 #endif
 
 static void trace_and_difftest(Decode *_this) {
