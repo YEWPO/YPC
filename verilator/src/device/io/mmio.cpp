@@ -48,7 +48,7 @@ void mmio_write(paddr_t addr, word_t data, char mask) {
   paddr_t w_addr = addr & ADDR_MASK;
   for (int i = 0; i < 8; ++i) {
     if (mask & (1 << i)) {
-      map_write(w_addr, 1, data, fetch_mmio_map(addr));
+      map_write(w_addr + i, 1, data, fetch_mmio_map(addr));
     }
     data >>= 8;
   }
