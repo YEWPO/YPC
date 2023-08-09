@@ -553,7 +553,7 @@ object DecodeTable {
       ControlMacro.RS2_INVALID,
       ControlMacro.A_CTL_DEFAULT,
       ControlMacro.B_CTL_DEFAULT,
-      ControlMacro.DNPC_CTL_SRC2,
+      ControlMacro.DNPC_CTL_SRC,
       ControlMacro.ALU_CTL_DEFAULT,
       ControlMacro.MUL_CTL_DEFAULT,
       ControlMacro.EXE_OUT_DEFAULT,

@@ -66,7 +66,7 @@ object ExecuteUnitTest extends ChiselUtestTester {
           dut.inst_decode_data.imm.poke("h10".U)
           dut.inst_decode_data.pc.poke("h8000_0200".U)
           dut.inst_decode_control.jump_op.poke(ControlMacro.JUMP_OP_JAL)
-          dut.inst_decode_control.dnpc_ctl.poke(ControlMacro.DNPC_CTL_SRC2)
+          dut.inst_decode_control.dnpc_ctl.poke(ControlMacro.DNPC_CTL_SRC)
           dut.clock.step()
           dut.jump_ctl.expect(true.B)
           dut.dnpc.expect("h8000_0010".U)

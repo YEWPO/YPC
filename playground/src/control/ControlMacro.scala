@@ -27,7 +27,7 @@ object ControlMacro {
 
   val DNPC_CTL_DEFAULT = false.B
   val DNPC_CTL_PC      = false.B
-  val DNPC_CTL_SRC2    = true.B
+  val DNPC_CTL_SRC     = true.B
 
   val ALU_CTL_DEFAULT = "h00000".U
   val ALU_CTL_ADD     = "b00000".U
