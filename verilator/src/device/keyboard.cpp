@@ -2,6 +2,8 @@
 #include <SDL2/SDL.h>
 #include "utils/cpu.h"
 
+#ifdef CONFIG_HAS_KEYBOARD
+
 #define KEYDOWN_MASK 0x8000
 
 // Note that this is not the standard
@@ -68,3 +70,5 @@ void init_i8042() {
   add_mmio_map("keyboard", CONFIG_I8042_DATA_MMIO, i8042_data_port_base, 4, i8042_data_io_handler);
   IFNDEF(CONFIG_TARGET_AM, init_keymap());
 }
+
+#endif
