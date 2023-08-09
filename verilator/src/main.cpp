@@ -6,6 +6,7 @@
 #include "simulate/difftest.h"
 #include "utils/state.h"
 #include "utils/rand.h"
+#include "device/device.h"
 
 static char *log_file;
 static char *img_file;
@@ -74,6 +75,8 @@ int main(int argc, char *argv[]) {
   init_log(log_file);
 
   init_mem();
+
+  IFDEF(CONFIG_DEVICE, init_device());
 
   img_size = load_img();
 

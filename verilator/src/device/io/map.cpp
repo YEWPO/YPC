@@ -1,6 +1,7 @@
 #include "common.h"
 #include "device/map.h"
 #include "memory/pmem.h"
+#include "memory/host.h"
 #include "utils/cpu.h"
 
 #define IO_SPACE_MAX (2 * 1024 * 1024)
@@ -37,4 +38,27 @@ void init_map() {
   io_space = (uint8_t *)malloc(IO_SPACE_MAX);
   assert(io_space);
   p_space = io_space;
+}
+
+word_t map_read(paddr_t addr, int len, IOMap *map) {
+  assert(len >= 1 && len <= 8);
+  check_bound(map, addr);
+  paddr_t offset = addr - map->low;
+  invoke_callback(map->callback, offset, len, false); // prepare data to read
+  word_t ret = host_read((void *)((uint64_t)map->space + offset), len);
+#ifdef CONFIG_DTRACE_COND
+  Log("Device %s read: 0x%016x 0x%08lx %d", map->name, addr, ret, len);
+#endif
+  return ret;
+}
+
+void map_write(paddr_t addr, int len, word_t data, IOMap *map) {
+  assert(len >= 1 && len <= 8);
+  check_bound(map, addr);
+  paddr_t offset = addr - map->low;
+  host_write((void *)((uint64_t)map->space + offset), len, data);
+  invoke_callback(map->callback, offset, len, true);
+#ifdef CONFIG_DTRACE_COND
+  Log("Device %s write: 0x%016x 0x%08lx %d", map->name, addr, data, len);
+#endif
 }
