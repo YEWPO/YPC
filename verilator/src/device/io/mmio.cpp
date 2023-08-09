@@ -39,10 +39,17 @@ void add_mmio_map(const char *name, paddr_t addr, void *space, uint32_t len, io_
 }
 
 /* bus interface */
-word_t mmio_read(paddr_t addr, int len) {
-  return map_read(addr, len, fetch_mmio_map(addr));
+word_t mmio_read(paddr_t addr) {
+  paddr_t r_addr = addr & ADDR_MASK;
+  return map_read(r_addr, 8, fetch_mmio_map(addr));
 }
 
-void mmio_write(paddr_t addr, int len, word_t data) {
-  map_write(addr, len, data, fetch_mmio_map(addr));
+void mmio_write(paddr_t addr, word_t data, char mask) {
+  paddr_t w_addr = addr & ADDR_MASK;
+  for (int i = 0; i < 8; ++i) {
+    if (mask & (1 << i)) {
+      map_write(w_addr, 1, data, fetch_mmio_map(addr));
+    }
+    data >>= 8;
+  }
 }
