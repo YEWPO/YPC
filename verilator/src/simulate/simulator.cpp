@@ -11,6 +11,7 @@
 #include "utils/cpu.h"
 #include "utils/systime.h"
 #include "sdb/watchpoint.h"
+#include "device/device.h"
 
 #include "simulate/difftest.h"
 
@@ -186,6 +187,8 @@ static void step_clock(uint64_t n) {
       check_inst();
       break;
     }
+
+    IFDEF(CONFIG_DEVICE, device_update());
   }
 }
 
