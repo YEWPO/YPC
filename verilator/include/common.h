@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <iostream>
 #include <cstdio>
+#include <cstdlib>
 #include <cassert>
 #include <inttypes.h>
 

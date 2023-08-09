@@ -8,6 +8,9 @@
 #define RESET_VECTOR (PMEM_LEFT + CONFIG_PC_RESET_OFFSET)
 #define ADDR_MASK (~0x7ull)
 
+#define PAGE_SIZE (1 << 12)
+#define PAGE_MASK (PAGE_SIZE - 1)
+
 uint8_t* guest_to_host(paddr_t paddr);
 paddr_t host_to_guest(uint8_t *haddr);
 
