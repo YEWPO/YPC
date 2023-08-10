@@ -8,7 +8,7 @@ object InstFetchUnitTest extends ChiselUtestTester {
   val tests = Tests {
     test("InstFetchUnit") {
       test("Enable") {
-        testCircuit(new InstFetchUnit()) { dut =>
+        testCircuit(new InstFetchUnit) { dut =>
           dut.npc.poke("h8000_0040".U)
           dut.inst_fetch_hazard.enable.poke(true.B)
           dut.clock.step()
@@ -16,7 +16,7 @@ object InstFetchUnitTest extends ChiselUtestTester {
         }
       }
       test("Disable") {
-        testCircuit(new InstFetchUnit()) { dut =>
+        testCircuit(new InstFetchUnit) { dut =>
           dut.npc.poke("h8000_0040".U)
           dut.inst_fetch_hazard.enable.poke(false.B)
           dut.clock.step()

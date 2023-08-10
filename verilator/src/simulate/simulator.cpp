@@ -19,6 +19,7 @@
 
 static uint64_t g_timer;
 static uint64_t g_nr_guest_inst;
+static uint64_t g_nr_guest_cycle;
 
 extern CPU_state cpu;
 
@@ -45,6 +46,7 @@ void invalid(const long long pc) {
 }
 
 void inst_finish(const long long pc, const int inst, const long long dnpc) {
+  if (top->reset == false) g_nr_guest_cycle++;
 #define NOP 0x13
   if (top->reset == true || inst == NOP) return;
   push_inst(pc, inst, dnpc);
@@ -196,6 +198,7 @@ static void statistic() {
 #define NUMBERIC_FMT "%'" PRIu64
   Log("host time spent = " NUMBERIC_FMT " us", g_timer);
   Log("total guest instructions = " NUMBERIC_FMT, g_nr_guest_inst);
+  Log("instruction per cycle = %.8lf", (double)g_nr_guest_inst / g_nr_guest_cycle);
   if (g_timer > 0) Log("simulation frequency = " NUMBERIC_FMT " inst/s", g_nr_guest_inst * 1000000 / g_timer);
   else Log("Finish running in less than 1 us and can not calculate the simulation frequency");
 }
