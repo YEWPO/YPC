@@ -10,3 +10,8 @@ class ExecuteHazard extends Bundle {
 
   val reset = Input(Bool())
 }
+
+class ExecuteCSRHazard extends Bundle {
+  val csr_w_addr     = Output(UInt(12.W))
+  val csr_w_addr_tag = Output(Bool())
+}

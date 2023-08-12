@@ -15,3 +15,10 @@ class InstDecodeHazard extends Bundle {
   val fa_ctl = Input(UInt(3.W))
   val fb_ctl = Input(UInt(3.W))
 }
+
+class InstDecodeCSRHazard extends Bundle {
+  val csr_r_addr     = Output(UInt(12.W))
+  val csr_r_addr_tag = Output(Bool())
+
+  val csr_forward_ctl = Input(UInt(2.W))
+}
