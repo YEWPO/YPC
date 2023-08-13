@@ -11,3 +11,8 @@ class InstDecodeData extends Bundle {
   val pc   = Output(UInt(64.W))
   val snpc = Output(UInt(64.W))
 }
+
+class InstDecodeCSRData extends Bundle {
+  val csr_data = Output(UInt(64.W))
+  val csr_uimm = Output(UInt(64.W))
+}

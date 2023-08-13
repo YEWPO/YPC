@@ -11,3 +11,7 @@ class LoadStoreData extends Bundle {
   val snpc    = Output(UInt(64.W))
   val dnpc    = Output(UInt(64.W))
 }
+
+class LoadStoreCSRData extends Bundle {
+  val csr_w_data = Output(UInt(64.W))
+}

@@ -16,3 +16,10 @@ class InstDecodeControl extends Bundle {
   val ebreak_op   = Output(Bool())
   val invalid_op  = Output(Bool())
 }
+
+class InstDecodeCSRControl extends Bundle {
+  val csr_r_en    = Output(Bool())
+  val csr_w_en    = Output(Bool())
+  val csr_src_ctl = Output(Bool())
+  val csr_op_ctl  = Output(UInt(2.W))
+}

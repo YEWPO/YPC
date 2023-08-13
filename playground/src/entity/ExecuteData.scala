@@ -11,3 +11,7 @@ class ExecuteData extends Bundle {
   val snpc    = Output(UInt(64.W))
   val dnpc    = Output(UInt(64.W))
 }
+
+class ExecuteCSRData extends Bundle {
+  val csr_w_data = Output(UInt(64.W))
+}

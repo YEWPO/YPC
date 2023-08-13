@@ -8,3 +8,7 @@ class LoadStoreControl extends Bundle {
   val ebreak_op  = Output(Bool())
   val invalid_op = Output(Bool())
 }
+
+class LoadStoreCSRControl extends Bundle {
+  val csr_w_en = Output(Bool())
+}
