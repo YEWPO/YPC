@@ -96,6 +96,9 @@ object ControlMacro {
   val WB_CTL_MEM     = "b01".U
   val WB_CTL_SNPC    = "b10".U
 
+  val CSR_OP_YES = true.B
+  val CSR_OP_NO  = false.B
+
   val EBREAK_OP_YES = true.B
   val EBREAK_OP_NO  = false.B
 

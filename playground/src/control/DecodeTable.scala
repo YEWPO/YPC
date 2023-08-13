@@ -14,6 +14,7 @@ object DecodeTable {
     ControlMacro.MEM_CTL_DEFAULT,
     ControlMacro.WB_CTL_DEFAULT,
     ControlMacro.REG_W_DISABLE,
+    ControlMacro.CSR_OP_NO,
     ControlMacro.JUMP_OP_DEFAULT,
     ControlMacro.EBREAK_OP_NO,
     ControlMacro.INVALID_OP_YES
@@ -34,6 +35,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_ALU,
       ControlMacro.REG_W_ENABLE,
       ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -51,6 +53,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_ALU,
       ControlMacro.REG_W_ENABLE,
       ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -68,6 +71,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_ALU,
       ControlMacro.REG_W_ENABLE,
       ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -85,6 +89,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_ALU,
       ControlMacro.REG_W_ENABLE,
       ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -102,6 +107,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_ALU,
       ControlMacro.REG_W_ENABLE,
       ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -119,6 +125,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_ALU,
       ControlMacro.REG_W_ENABLE,
       ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -136,6 +143,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_ALU,
       ControlMacro.REG_W_ENABLE,
       ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -153,6 +161,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_ALU,
       ControlMacro.REG_W_ENABLE,
       ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -170,6 +179,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_ALU,
       ControlMacro.REG_W_ENABLE,
       ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -187,6 +197,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_ALU,
       ControlMacro.REG_W_ENABLE,
       ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -204,6 +215,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_ALU,
       ControlMacro.REG_W_ENABLE,
       ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -221,6 +233,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_ALU,
       ControlMacro.REG_W_ENABLE,
       ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -238,6 +251,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_ALU,
       ControlMacro.REG_W_ENABLE,
       ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -255,6 +269,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_ALU,
       ControlMacro.REG_W_ENABLE,
       ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -272,6 +287,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_ALU,
       ControlMacro.REG_W_ENABLE,
       ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -289,6 +305,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_ALU,
       ControlMacro.REG_W_ENABLE,
       ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -306,6 +323,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_ALU,
       ControlMacro.REG_W_ENABLE,
       ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -323,6 +341,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_ALU,
       ControlMacro.REG_W_ENABLE,
       ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -340,6 +359,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_ALU,
       ControlMacro.REG_W_ENABLE,
       ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -357,6 +377,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_ALU,
       ControlMacro.REG_W_ENABLE,
       ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -374,6 +395,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_ALU,
       ControlMacro.REG_W_ENABLE,
       ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -391,6 +413,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_ALU,
       ControlMacro.REG_W_ENABLE,
       ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -408,6 +431,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_ALU,
       ControlMacro.REG_W_ENABLE,
       ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -425,6 +449,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_ALU,
       ControlMacro.REG_W_ENABLE,
       ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -442,6 +467,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_ALU,
       ControlMacro.REG_W_ENABLE,
       ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -459,6 +485,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_ALU,
       ControlMacro.REG_W_ENABLE,
       ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -476,6 +503,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_ALU,
       ControlMacro.REG_W_ENABLE,
       ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -493,6 +521,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_ALU,
       ControlMacro.REG_W_ENABLE,
       ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -510,6 +539,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_ALU,
       ControlMacro.REG_W_ENABLE,
       ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -527,6 +557,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_ALU,
       ControlMacro.REG_W_ENABLE,
       ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -544,6 +575,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_SNPC,
       ControlMacro.REG_W_ENABLE,
       ControlMacro.JUMP_OP_JAL,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -561,6 +593,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_SNPC,
       ControlMacro.REG_W_ENABLE,
       ControlMacro.JUMP_OP_JAL,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -578,6 +611,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_DEFAULT,
       ControlMacro.REG_W_DISABLE,
       ControlMacro.JUMP_OP_BRANCH,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -595,6 +629,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_DEFAULT,
       ControlMacro.REG_W_DISABLE,
       ControlMacro.JUMP_OP_BRANCH,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -612,6 +647,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_DEFAULT,
       ControlMacro.REG_W_DISABLE,
       ControlMacro.JUMP_OP_BRANCH,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -629,6 +665,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_DEFAULT,
       ControlMacro.REG_W_DISABLE,
       ControlMacro.JUMP_OP_BRANCH,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -646,6 +683,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_DEFAULT,
       ControlMacro.REG_W_DISABLE,
       ControlMacro.JUMP_OP_BRANCH,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -663,6 +701,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_DEFAULT,
       ControlMacro.REG_W_DISABLE,
       ControlMacro.JUMP_OP_BRANCH,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -680,6 +719,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_MEM,
       ControlMacro.REG_W_ENABLE,
       ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -697,6 +737,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_MEM,
       ControlMacro.REG_W_ENABLE,
       ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -714,6 +755,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_MEM,
       ControlMacro.REG_W_ENABLE,
       ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -731,6 +773,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_MEM,
       ControlMacro.REG_W_ENABLE,
       ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -748,6 +791,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_MEM,
       ControlMacro.REG_W_ENABLE,
       ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -765,6 +809,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_MEM,
       ControlMacro.REG_W_ENABLE,
       ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -782,6 +827,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_MEM,
       ControlMacro.REG_W_ENABLE,
       ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -799,6 +845,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_DEFAULT,
       ControlMacro.REG_W_DISABLE,
       ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -816,6 +863,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_DEFAULT,
       ControlMacro.REG_W_DISABLE,
       ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -833,6 +881,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_DEFAULT,
       ControlMacro.REG_W_DISABLE,
       ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -850,6 +899,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_DEFAULT,
       ControlMacro.REG_W_DISABLE,
       ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -867,6 +917,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_ALU,
       ControlMacro.REG_W_ENABLE,
       ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -884,6 +935,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_ALU,
       ControlMacro.REG_W_ENABLE,
       ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -901,6 +953,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_ALU,
       ControlMacro.REG_W_ENABLE,
       ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -918,6 +971,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_ALU,
       ControlMacro.REG_W_ENABLE,
       ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -935,6 +989,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_ALU,
       ControlMacro.REG_W_ENABLE,
       ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -952,6 +1007,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_ALU,
       ControlMacro.REG_W_ENABLE,
       ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -969,6 +1025,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_ALU,
       ControlMacro.REG_W_ENABLE,
       ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -986,6 +1043,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_ALU,
       ControlMacro.REG_W_ENABLE,
       ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -1003,6 +1061,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_ALU,
       ControlMacro.REG_W_ENABLE,
       ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -1020,6 +1079,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_ALU,
       ControlMacro.REG_W_ENABLE,
       ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -1037,6 +1097,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_ALU,
       ControlMacro.REG_W_ENABLE,
       ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -1054,6 +1115,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_ALU,
       ControlMacro.REG_W_ENABLE,
       ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -1071,6 +1133,115 @@ object DecodeTable {
       ControlMacro.WB_CTL_ALU,
       ControlMacro.REG_W_ENABLE,
       ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
+      ControlMacro.EBREAK_OP_NO,
+      ControlMacro.INVALID_OP_NO
+    ),
+    InstList.csrrw -> List(
+      ControlMacro.IMM_TYPE_I,
+      ControlMacro.RS1_VALID,
+      ControlMacro.RS2_INVALID,
+      ControlMacro.A_CTL_DEFAULT,
+      ControlMacro.B_CTL_DEFAULT,
+      ControlMacro.DNPC_CTL_DEFAULT,
+      ControlMacro.ALU_CTL_MOVA,
+      ControlMacro.MUL_CTL_DEFAULT,
+      ControlMacro.EXE_OUT_ALU,
+      ControlMacro.MEM_CTL_DEFAULT,
+      ControlMacro.WB_CTL_ALU,
+      ControlMacro.REG_W_ENABLE,
+      ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_YES,
+      ControlMacro.EBREAK_OP_NO,
+      ControlMacro.INVALID_OP_NO
+    ),
+    InstList.csrrs -> List(
+      ControlMacro.IMM_TYPE_I,
+      ControlMacro.RS1_VALID,
+      ControlMacro.RS2_INVALID,
+      ControlMacro.A_CTL_DEFAULT,
+      ControlMacro.B_CTL_DEFAULT,
+      ControlMacro.DNPC_CTL_DEFAULT,
+      ControlMacro.ALU_CTL_MOVA,
+      ControlMacro.MUL_CTL_DEFAULT,
+      ControlMacro.EXE_OUT_ALU,
+      ControlMacro.MEM_CTL_DEFAULT,
+      ControlMacro.WB_CTL_ALU,
+      ControlMacro.REG_W_ENABLE,
+      ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_YES,
+      ControlMacro.EBREAK_OP_NO,
+      ControlMacro.INVALID_OP_NO
+    ),
+    InstList.csrrc -> List(
+      ControlMacro.IMM_TYPE_I,
+      ControlMacro.RS1_VALID,
+      ControlMacro.RS2_INVALID,
+      ControlMacro.A_CTL_DEFAULT,
+      ControlMacro.B_CTL_DEFAULT,
+      ControlMacro.DNPC_CTL_DEFAULT,
+      ControlMacro.ALU_CTL_MOVA,
+      ControlMacro.MUL_CTL_DEFAULT,
+      ControlMacro.EXE_OUT_ALU,
+      ControlMacro.MEM_CTL_DEFAULT,
+      ControlMacro.WB_CTL_ALU,
+      ControlMacro.REG_W_ENABLE,
+      ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_YES,
+      ControlMacro.EBREAK_OP_NO,
+      ControlMacro.INVALID_OP_NO
+    ),
+    InstList.csrrwi -> List(
+      ControlMacro.IMM_TYPE_I,
+      ControlMacro.RS1_INVALID,
+      ControlMacro.RS2_INVALID,
+      ControlMacro.A_CTL_DEFAULT,
+      ControlMacro.B_CTL_DEFAULT,
+      ControlMacro.DNPC_CTL_DEFAULT,
+      ControlMacro.ALU_CTL_MOVA,
+      ControlMacro.MUL_CTL_DEFAULT,
+      ControlMacro.EXE_OUT_ALU,
+      ControlMacro.MEM_CTL_DEFAULT,
+      ControlMacro.WB_CTL_ALU,
+      ControlMacro.REG_W_ENABLE,
+      ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_YES,
+      ControlMacro.EBREAK_OP_NO,
+      ControlMacro.INVALID_OP_NO
+    ),
+    InstList.csrrsi -> List(
+      ControlMacro.IMM_TYPE_I,
+      ControlMacro.RS1_INVALID,
+      ControlMacro.RS2_INVALID,
+      ControlMacro.A_CTL_DEFAULT,
+      ControlMacro.B_CTL_DEFAULT,
+      ControlMacro.DNPC_CTL_DEFAULT,
+      ControlMacro.ALU_CTL_MOVA,
+      ControlMacro.MUL_CTL_DEFAULT,
+      ControlMacro.EXE_OUT_ALU,
+      ControlMacro.MEM_CTL_DEFAULT,
+      ControlMacro.WB_CTL_ALU,
+      ControlMacro.REG_W_ENABLE,
+      ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_YES,
+      ControlMacro.EBREAK_OP_NO,
+      ControlMacro.INVALID_OP_NO
+    ),
+    InstList.csrrci -> List(
+      ControlMacro.IMM_TYPE_I,
+      ControlMacro.RS1_INVALID,
+      ControlMacro.RS2_INVALID,
+      ControlMacro.A_CTL_DEFAULT,
+      ControlMacro.B_CTL_DEFAULT,
+      ControlMacro.DNPC_CTL_DEFAULT,
+      ControlMacro.ALU_CTL_MOVA,
+      ControlMacro.MUL_CTL_DEFAULT,
+      ControlMacro.EXE_OUT_ALU,
+      ControlMacro.MEM_CTL_DEFAULT,
+      ControlMacro.WB_CTL_ALU,
+      ControlMacro.REG_W_ENABLE,
+      ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_YES,
       ControlMacro.EBREAK_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
@@ -1088,6 +1259,7 @@ object DecodeTable {
       ControlMacro.WB_CTL_DEFAULT,
       ControlMacro.REG_W_DISABLE,
       ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_YES,
       ControlMacro.INVALID_OP_NO
     )
