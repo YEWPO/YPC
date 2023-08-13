@@ -56,7 +56,7 @@ class ExecuteUnit extends Module {
       */
     val csr_data    = RegNext(inst_decode_csr_data.csr_data, 0.U(64.W))
     val csr_uimm    = RegNext(inst_decode_csr_data.csr_uimm, 0.U(64.W))
-    val csr_w_addr  = RegNext(inst_decode_csr_data.csr_w_addr, 0.U(64.W))
+    val csr_w_addr  = RegNext(inst_decode_csr_data.csr_w_addr, 0.U(12.W))
     val csr_r_en    = RegNext(inst_decode_csr_control.csr_r_en, false.B)
     val csr_w_en    = RegNext(inst_decode_csr_control.csr_w_en, false.B)
     val csr_src_ctl = RegNext(inst_decode_csr_control.csr_src_ctl, false.B)

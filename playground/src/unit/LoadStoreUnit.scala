@@ -15,6 +15,13 @@ class LoadStoreUnit extends Module {
 
   val data_mem = Module(new DataMem)
 
+  val execute_csr_data       = IO(Flipped(new ExecuteCSRData))
+  val execute_csr_control    = IO(Flipped(new ExecuteCSRControl))
+  val load_store_csr_data    = IO(new LoadStoreCSRData)
+  val load_store_csr_control = IO(new LoadStoreCSRControl)
+  val load_store_csr_hazard  = IO(new LoadStoreCSRHazard)
+  val laod_store_csr_forward = IO(new LoadStoreCSRForward)
+
   // data registers
   val snpc    = RegNext(execute_data.snpc, CommonMacro.PC_RESET_VAL)
   val pc      = RegNext(execute_data.pc, CommonMacro.PC_RESET_VAL)
@@ -30,6 +37,13 @@ class LoadStoreUnit extends Module {
   val reg_w_en   = RegNext(execute_control.reg_w_en, ControlMacro.REG_W_DISABLE)
   val invalid_op = RegNext(execute_control.invalid_op, ControlMacro.INVALID_OP_NO)
   val ebreak_op  = RegNext(execute_control.ebreak_op, ControlMacro.EBREAK_OP_NO)
+
+  /**
+    * CSR control or data registers
+    */
+  val csr_w_data = RegNext(execute_csr_data.csr_w_data, 0.U(64.W))
+  val csr_w_addr = RegNext(execute_csr_data.csr_w_addr, 0.U(12.W))
+  val csr_w_en   = RegNext(execute_csr_control.csr_w_en, false.B)
 
   // memory
   data_mem.io.addr    := exe_out
@@ -60,4 +74,14 @@ class LoadStoreUnit extends Module {
   load_store_hazard.rd     := rd
   load_store_hazard.rd_tag := reg_w_en
   load_store_hazard.wb_ctl := wb_ctl
+
+  /**
+    * CSR part
+    */
+  load_store_csr_data.csr_w_addr       := csr_w_addr
+  load_store_csr_data.csr_w_data       := csr_w_data
+  load_store_csr_control.csr_w_en      := csr_w_en
+  load_store_csr_hazard.csr_w_addr     := csr_w_addr
+  load_store_csr_hazard.csr_w_addr_tag := csr_w_en
+  laod_store_csr_forward.csr_ls_out    := csr_w_data
 }
