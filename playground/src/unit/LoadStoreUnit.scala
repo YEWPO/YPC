@@ -20,7 +20,7 @@ class LoadStoreUnit extends Module {
   val load_store_csr_data    = IO(new LoadStoreCSRData)
   val load_store_csr_control = IO(new LoadStoreCSRControl)
   val load_store_csr_hazard  = IO(new LoadStoreCSRHazard)
-  val laod_store_csr_forward = IO(new LoadStoreCSRForward)
+  val load_store_csr_forward = IO(new LoadStoreCSRForward)
 
   // data registers
   val snpc    = RegNext(execute_data.snpc, CommonMacro.PC_RESET_VAL)
@@ -83,5 +83,5 @@ class LoadStoreUnit extends Module {
   load_store_csr_control.csr_w_en      := csr_w_en
   load_store_csr_hazard.csr_w_addr     := csr_w_addr
   load_store_csr_hazard.csr_w_addr_tag := csr_w_en
-  laod_store_csr_forward.csr_ls_out    := csr_w_data
+  load_store_csr_forward.csr_ls_out    := csr_w_data
 }
