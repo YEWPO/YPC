@@ -13,6 +13,7 @@ class InstDecodeData extends Bundle {
 }
 
 class InstDecodeCSRData extends Bundle {
-  val csr_data = Output(UInt(64.W))
-  val csr_uimm = Output(UInt(64.W))
+  val csr_data   = Output(UInt(64.W))
+  val csr_w_addr = Output(UInt(12.W))
+  val csr_uimm   = Output(UInt(64.W))
 }

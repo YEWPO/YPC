@@ -9,5 +9,5 @@ class LoadStoreForward extends Bundle {
 }
 
 class LoadStoreCSRForward extends Bundle {
-  val csr_exe_out = Output(UInt(64.W))
+  val csr_ls_out = Output(UInt(64.W))
 }

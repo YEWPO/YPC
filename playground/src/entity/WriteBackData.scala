@@ -9,4 +9,5 @@ class WriteBackData extends Bundle {
 
 class WriteBackCSRData extends Bundle {
   val csr_w_data = Output(UInt(64.W))
+  val csr_w_addr = Output(UInt(12.W))
 }

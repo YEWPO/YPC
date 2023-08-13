@@ -31,6 +31,19 @@ class InstDecodeUnit extends Module {
   val forward_a    = Module(new Forward)
   val forward_b    = Module(new Forward)
 
+  val inst_decode_csr_control = IO(new InstDecodeCSRControl)
+  val inst_decode_csr_data    = IO(new InstDecodeCSRData)
+  val inst_decode_csr_hazard  = IO(new InstDecodeCSRHazard)
+  val write_back_csr_control  = IO(Flipped(new WriteBackCSRControl))
+  val write_back_csr_data     = IO(Flipped(new WriteBackCSRData))
+  val execute_csr_forward     = IO(Flipped(new ExecuteCSRForward))
+  val load_store_csr_forward  = IO(Flipped(new LoadStoreCSRForward))
+  val write_back_csr_forward  = IO(Flipped(new WriteBackCSRForward))
+
+  val csr         = Module(new CSR)
+  val csr_forward = Module(new CSRForward)
+  val csr_control = Module(new CSRControlUnit)
+
   withReset(inst_decode_hazard.reset || reset.asBool) {
     val inst = RegEnable(inst_fetch_data.inst, CommonMacro.INST_RESET_VAL, inst_decode_hazard.enable)
     val pc   = RegEnable(inst_fetch_data.pc, CommonMacro.PC_RESET_VAL, inst_decode_hazard.enable)
@@ -121,5 +134,37 @@ class InstDecodeUnit extends Module {
     inst_decode_control.jump_op     := control_unit.io.jump_op
     inst_decode_control.ebreak_op   := control_unit.io.ebreak_op
     inst_decode_control.invalid_op  := control_unit.io.invalid_op
+
+    /**
+      * CSR part
+      */
+    csr_control.io.zicsr_op := control_unit.io.csr_op
+    csr_control.io.rd       := inst(11, 7)
+    csr_control.io.rs1      := inst(19, 15)
+    csr_control.io.funct    := inst(14, 12)
+
+    csr.io.csr_r_addr := inst(31, 20)
+    csr.io.csr_r_en   := csr_control.io.csr_r_en
+    csr.io.csr_w_addr := write_back_csr_data.csr_w_addr
+    csr.io.csr_w_data := write_back_csr_data.csr_w_data
+    csr.io.csr_w_en   := write_back_csr_control.csr_w_en
+
+    csr_forward.io.csr_data_D := csr.io.csr_r_data
+    csr_forward.io.csr_data_E := execute_csr_forward.csr_exe_out
+    csr_forward.io.csr_data_M := load_store_csr_forward.csr_ls_out
+    csr_forward.io.csr_data_W := write_back_csr_forward.csr_wb_out
+    csr_forward.io.csr_fw_ctl := inst_decode_csr_hazard.csr_forward_ctl
+
+    inst_decode_csr_hazard.csr_r_addr     := inst(31, 20)
+    inst_decode_csr_hazard.csr_r_addr_tag := csr_control.io.csr_r_en
+
+    inst_decode_csr_control.csr_r_en    := csr_control.io.csr_r_en
+    inst_decode_csr_control.csr_w_en    := csr_control.io.csr_w_en
+    inst_decode_csr_control.csr_op_ctl  := csr_control.io.csr_op_ctl
+    inst_decode_csr_control.csr_src_ctl := csr_control.io.csr_src_ctl
+
+    inst_decode_csr_data.csr_data   := csr_forward.io.csr_data_out
+    inst_decode_csr_data.csr_w_addr := inst(31, 20)
+    inst_decode_csr_data.csr_uimm   := CommonMacro.zeroExtend(inst(19, 15))
   }
 }
