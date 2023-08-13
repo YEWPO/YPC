@@ -15,6 +15,13 @@ class WriteBackUnit extends Module {
   val write_back_forward = IO(new WriteBackForward)
   val out_info           = IO(new OutInfoData)
 
+  val load_store_csr_data    = IO(Flipped(new LoadStoreCSRData))
+  val load_store_csr_control = IO(Flipped(new LoadStoreCSRControl))
+  val write_back_csr_data    = IO(new WriteBackCSRData)
+  val write_back_csr_control = IO(new WriteBackCSRControl)
+  val write_back_csr_hazard  = IO(new WriteBackCSRHazard)
+  val write_back_csr_forward = IO(new WriteBackCSRForward)
+
   // data registers
   val snpc    = RegNext(load_store_data.snpc, CommonMacro.PC_RESET_VAL)
   val pc      = RegNext(load_store_data.pc, CommonMacro.PC_RESET_VAL)
@@ -29,6 +36,13 @@ class WriteBackUnit extends Module {
   val reg_w_en   = RegNext(load_store_control.reg_w_en, ControlMacro.REG_W_DISABLE)
   val ebreak_op  = RegNext(load_store_control.ebreak_op, ControlMacro.EBREAK_OP_NO)
   val invalid_op = RegNext(load_store_control.invalid_op, ControlMacro.INVALID_OP_NO)
+
+  /**
+    * CSR control or data registers
+    */
+  val csr_w_data = RegNext(load_store_csr_data.csr_w_data, 0.U(64.W))
+  val csr_w_addr = RegNext(load_store_csr_data.csr_w_addr, 0.U(12.W))
+  val csr_w_en   = RegNext(load_store_csr_control.csr_w_en, false.B)
 
   // out info
   out_info.ebreak_op  := ebreak_op
@@ -57,4 +71,14 @@ class WriteBackUnit extends Module {
 
   // forward part
   write_back_forward.wb_data := wb_data
+
+  /**
+    * CSR part
+    */
+  write_back_csr_data.csr_w_addr       := csr_w_addr
+  write_back_csr_data.csr_w_data       := csr_w_data
+  write_back_csr_control.csr_w_en      := csr_w_en
+  write_back_csr_hazard.csr_w_addr     := csr_w_addr
+  write_back_csr_hazard.csr_w_addr_tag := csr_w_en
+  write_back_csr_forward.csr_wb_out    := csr_w_data
 }
