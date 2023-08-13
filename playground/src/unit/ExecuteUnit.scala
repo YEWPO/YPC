@@ -18,6 +18,15 @@ class ExecuteUnit extends Module {
   val alu = Module(new AlgLog)
   val mul = Module(new MulDiv)
 
+  val inst_decode_csr_data    = IO(Flipped(new InstDecodeCSRData))
+  val inst_decode_csr_control = IO(Flipped(new InstDecodeCSRControl))
+  val execute_csr_data        = IO(new ExecuteCSRData)
+  val execute_csr_control     = IO(new ExecuteCSRControl)
+  val execute_csr_hazard      = IO(new ExecuteCSRHazard)
+  val execute_csr_forward     = IO(new ExecuteCSRForward)
+
+  val csr_operator = Module(new CSROperation)
+
   withReset(execute_hazard.reset || reset.asBool) {
     // data registers
     val snpc = RegNext(inst_decode_data.snpc, CommonMacro.PC_RESET_VAL)
@@ -43,6 +52,17 @@ class ExecuteUnit extends Module {
     val invalid_op  = RegNext(inst_decode_control.invalid_op, ControlMacro.INVALID_OP_NO)
 
     /**
+      * CSR control or data registers
+      */
+    val csr_data    = RegNext(inst_decode_csr_data.csr_data, 0.U(64.W))
+    val csr_uimm    = RegNext(inst_decode_csr_data.csr_uimm, 0.U(64.W))
+    val csr_w_addr  = RegNext(inst_decode_csr_data.csr_w_addr, 0.U(64.W))
+    val csr_r_en    = RegNext(inst_decode_csr_control.csr_r_en, false.B)
+    val csr_w_en    = RegNext(inst_decode_csr_control.csr_w_en, false.B)
+    val csr_src_ctl = RegNext(inst_decode_csr_control.csr_src_ctl, false.B)
+    val csr_op_ctl  = RegNext(inst_decode_csr_control.csr_op_ctl, 0.U(2.W))
+
+    /**
       * first situation: a branch operation and condition is true
       * second situation; a jump operation
       */
@@ -61,7 +81,7 @@ class ExecuteUnit extends Module {
     execute_hazard.rd_tag   := reg_w_en
 
     // algorithm logic unit
-    alu.io.src1    := Mux(a_ctl, pc, src1)
+    alu.io.src1    := Mux(csr_r_en, csr_data, Mux(a_ctl, pc, src1))
     alu.io.src2    := Mux(b_ctl, src2, imm)
     alu.io.alu_ctl := alu_ctl
 
@@ -97,5 +117,20 @@ class ExecuteUnit extends Module {
     execute_control.reg_w_en   := reg_w_en
     execute_control.ebreak_op  := ebreak_op
     execute_control.invalid_op := invalid_op
+
+    /**
+      * CSR part
+      */
+    csr_operator.io.csr_data   := csr_data
+    csr_operator.io.src        := Mux(csr_src_ctl, csr_uimm, src1)
+    csr_operator.io.csr_op_ctl := csr_op_ctl
+
+    execute_csr_data.csr_w_addr  := csr_w_addr
+    execute_csr_data.csr_w_data  := csr_operator.io.csr_op_out
+    execute_csr_control.csr_w_en := csr_w_en
+
+    execute_csr_hazard.csr_w_addr     := csr_w_addr
+    execute_csr_hazard.csr_w_addr_tag := csr_w_en
+    execute_csr_forward.csr_exe_out   := csr_operator.io.csr_op_out
   }
 }
