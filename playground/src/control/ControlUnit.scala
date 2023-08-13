@@ -21,6 +21,8 @@ class ControlUnitIO extends Bundle {
   val jump_op     = Output(UInt(2.W))
   val csr_op      = Output(Bool())
   val ebreak_op   = Output(Bool())
+  val ecall_op    = Output(Bool())
+  val mret_op     = Output(Bool())
   val invalid_op  = Output(Bool())
 }
 
@@ -40,7 +42,9 @@ object DecodeTableInfo {
   val JUMP_OP     = 12
   val CSR_OP      = 13
   val EBREAK_OP   = 14
-  val INVALID_OP  = 15
+  val ECALL_OP    = 15
+  val MRET_OP     = 16
+  val INVALID_OP  = 17
 }
 
 class ControlUnit extends Module {
@@ -63,5 +67,7 @@ class ControlUnit extends Module {
   io.jump_op     := decode_result(DecodeTableInfo.JUMP_OP)
   io.csr_op      := decode_result(DecodeTableInfo.CSR_OP)
   io.ebreak_op   := decode_result(DecodeTableInfo.EBREAK_OP)
+  io.ecall_op    := decode_result(DecodeTableInfo.ECALL_OP)
+  io.mret_op     := decode_result(DecodeTableInfo.MRET_OP)
   io.invalid_op  := decode_result(DecodeTableInfo.INVALID_OP)
 }

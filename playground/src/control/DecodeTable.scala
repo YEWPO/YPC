@@ -17,6 +17,8 @@ object DecodeTable {
     ControlMacro.CSR_OP_NO,
     ControlMacro.JUMP_OP_DEFAULT,
     ControlMacro.EBREAK_OP_NO,
+    ControlMacro.ECALL_OP_NO,
+    ControlMacro.MRET_OP_NO,
     ControlMacro.INVALID_OP_YES
   )
 
@@ -37,6 +39,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.auipc -> List(
@@ -55,6 +59,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.addi -> List(
@@ -73,6 +79,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.slli -> List(
@@ -91,6 +99,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.slti -> List(
@@ -109,6 +119,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.sltiu -> List(
@@ -127,6 +139,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.xori -> List(
@@ -145,6 +159,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.srli -> List(
@@ -163,6 +179,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.srai -> List(
@@ -181,6 +199,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.ori -> List(
@@ -199,6 +219,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.andi -> List(
@@ -217,6 +239,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.add -> List(
@@ -235,6 +259,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.sub -> List(
@@ -253,6 +279,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.sll -> List(
@@ -271,6 +299,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.slt -> List(
@@ -289,6 +319,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.sltu -> List(
@@ -307,6 +339,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.xor -> List(
@@ -325,6 +359,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.srl -> List(
@@ -343,6 +379,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.sra -> List(
@@ -361,6 +399,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.or -> List(
@@ -379,6 +419,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.and -> List(
@@ -397,6 +439,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.addiw -> List(
@@ -415,6 +459,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.slliw -> List(
@@ -433,6 +479,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.srliw -> List(
@@ -451,6 +499,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.sraiw -> List(
@@ -469,6 +519,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.addw -> List(
@@ -487,6 +539,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.subw -> List(
@@ -505,6 +559,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.sllw -> List(
@@ -523,6 +579,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.srlw -> List(
@@ -541,6 +599,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.sraw -> List(
@@ -559,6 +619,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.jal -> List(
@@ -577,6 +639,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_JAL,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.jalr -> List(
@@ -595,6 +659,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_JAL,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.beq -> List(
@@ -613,6 +679,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_BRANCH,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.bne -> List(
@@ -631,6 +699,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_BRANCH,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.blt -> List(
@@ -649,6 +719,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_BRANCH,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.bge -> List(
@@ -667,6 +739,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_BRANCH,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.bltu -> List(
@@ -685,6 +759,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_BRANCH,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.bgeu -> List(
@@ -703,6 +779,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_BRANCH,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.lb -> List(
@@ -721,6 +799,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.lh -> List(
@@ -739,6 +819,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.lw -> List(
@@ -757,6 +839,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.ld -> List(
@@ -775,6 +859,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.lbu -> List(
@@ -793,6 +879,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.lhu -> List(
@@ -811,6 +899,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.lwu -> List(
@@ -829,6 +919,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.sb -> List(
@@ -847,6 +939,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.sh -> List(
@@ -865,6 +959,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.sw -> List(
@@ -883,6 +979,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.sd -> List(
@@ -901,6 +999,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.mul -> List(
@@ -919,6 +1019,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.mulh -> List(
@@ -937,6 +1039,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.mulhsu -> List(
@@ -955,6 +1059,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.mulhu -> List(
@@ -973,6 +1079,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.mulw -> List(
@@ -991,6 +1099,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.div -> List(
@@ -1009,6 +1119,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.divu -> List(
@@ -1027,6 +1139,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.rem -> List(
@@ -1045,6 +1159,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.remu -> List(
@@ -1063,6 +1179,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.divw -> List(
@@ -1081,6 +1199,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.divuw -> List(
@@ -1099,6 +1219,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.remw -> List(
@@ -1117,6 +1239,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.remuw -> List(
@@ -1135,6 +1259,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.csrrw -> List(
@@ -1153,6 +1279,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_YES,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.csrrs -> List(
@@ -1171,6 +1299,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_YES,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.csrrc -> List(
@@ -1189,6 +1319,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_YES,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.csrrwi -> List(
@@ -1207,6 +1339,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_YES,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.csrrsi -> List(
@@ -1225,6 +1359,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_YES,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.csrrci -> List(
@@ -1243,6 +1379,8 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_YES,
       ControlMacro.EBREAK_OP_NO,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
     ),
     InstList.ebreak -> List(
@@ -1261,6 +1399,48 @@ object DecodeTable {
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
       ControlMacro.EBREAK_OP_YES,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_NO,
+      ControlMacro.INVALID_OP_NO
+    ),
+    InstList.ecall -> List(
+      ControlMacro.IMM_TYPE_DEFAULT,
+      ControlMacro.RS1_INVALID,
+      ControlMacro.RS2_INVALID,
+      ControlMacro.A_CTL_DEFAULT,
+      ControlMacro.B_CTL_DEFAULT,
+      ControlMacro.DNPC_CTL_DEFAULT,
+      ControlMacro.ALU_CTL_DEFAULT,
+      ControlMacro.MUL_CTL_DEFAULT,
+      ControlMacro.EXE_OUT_DEFAULT,
+      ControlMacro.MEM_CTL_DEFAULT,
+      ControlMacro.WB_CTL_DEFAULT,
+      ControlMacro.REG_W_DISABLE,
+      ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
+      ControlMacro.EBREAK_OP_YES,
+      ControlMacro.ECALL_OP_YES,
+      ControlMacro.MRET_OP_NO,
+      ControlMacro.INVALID_OP_NO
+    ),
+    InstList.mret -> List(
+      ControlMacro.IMM_TYPE_DEFAULT,
+      ControlMacro.RS1_INVALID,
+      ControlMacro.RS2_INVALID,
+      ControlMacro.A_CTL_DEFAULT,
+      ControlMacro.B_CTL_DEFAULT,
+      ControlMacro.DNPC_CTL_DEFAULT,
+      ControlMacro.ALU_CTL_DEFAULT,
+      ControlMacro.MUL_CTL_DEFAULT,
+      ControlMacro.EXE_OUT_DEFAULT,
+      ControlMacro.MEM_CTL_DEFAULT,
+      ControlMacro.WB_CTL_DEFAULT,
+      ControlMacro.REG_W_DISABLE,
+      ControlMacro.JUMP_OP_DEFAULT,
+      ControlMacro.CSR_OP_NO,
+      ControlMacro.EBREAK_OP_YES,
+      ControlMacro.ECALL_OP_NO,
+      ControlMacro.MRET_OP_YES,
       ControlMacro.INVALID_OP_NO
     )
   )

@@ -102,6 +102,12 @@ object ControlMacro {
   val EBREAK_OP_YES = true.B
   val EBREAK_OP_NO  = false.B
 
+  val ECALL_OP_YES = true.B
+  val ECALL_OP_NO  = false.B
+
+  val MRET_OP_YES = true.B
+  val MRET_OP_NO  = false.B
+
   val INVALID_OP_YES = true.B
   val INVALID_OP_NO  = false.B
 }
