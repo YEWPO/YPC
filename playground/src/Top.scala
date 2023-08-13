@@ -18,7 +18,11 @@ class Top extends Module {
 
   // ========== Instruction Fetch Unit ============
   inst_fetch_unit.inst_fetch_hazard <> hazard_unit.inst_fetch_hazard
-  inst_fetch_unit.npc               := Mux(execute_unit.jump_ctl, execute_unit.dnpc, inst_fetch_unit.inst_fetch_data.snpc)
+  inst_fetch_unit.npc := Mux(
+    csr_hazard_unit.expt_op,
+    csr_hazard_unit.expt_pc,
+    Mux(execute_unit.jump_ctl, execute_unit.dnpc, inst_fetch_unit.inst_fetch_data.snpc)
+  )
 
   // ========== Instruction Decode Unit ============
   inst_decode_unit.inst_decode_hazard <> hazard_unit.inst_decode_hazard

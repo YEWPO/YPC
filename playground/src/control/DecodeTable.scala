@@ -1418,7 +1418,7 @@ object DecodeTable {
       ControlMacro.REG_W_DISABLE,
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
-      ControlMacro.EBREAK_OP_YES,
+      ControlMacro.EBREAK_OP_NO,
       ControlMacro.ECALL_OP_YES,
       ControlMacro.MRET_OP_NO,
       ControlMacro.INVALID_OP_NO
@@ -1438,7 +1438,7 @@ object DecodeTable {
       ControlMacro.REG_W_DISABLE,
       ControlMacro.JUMP_OP_DEFAULT,
       ControlMacro.CSR_OP_NO,
-      ControlMacro.EBREAK_OP_YES,
+      ControlMacro.EBREAK_OP_NO,
       ControlMacro.ECALL_OP_NO,
       ControlMacro.MRET_OP_YES,
       ControlMacro.INVALID_OP_NO

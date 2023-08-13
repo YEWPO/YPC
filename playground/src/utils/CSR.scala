@@ -20,6 +20,12 @@ class CSRIO extends Bundle {
 
   val csr_w_data = Input(UInt(64.W))
 
+  val expt_op = Input(Bool())
+  val pc      = Input(UInt(64.W))
+
+  val tvec = Output(UInt(64.W))
+  val epc  = Output(UInt(64.W))
+
   val csr_r_data = Output(UInt(64.W))
 }
 
@@ -39,6 +45,8 @@ class CSR extends Module {
   )
 
   io.csr_r_data := Mux(io.csr_r_en, MuxLookup(io.csr_r_addr, 0.U(64.W))(csr_map), 0.U(64.W))
+  io.tvec       := mtvec
+  io.epc        := mepc
 
   when(io.csr_w_en) {
     when(io.csr_w_addr === CSRAddr.mstatus) {
@@ -50,5 +58,8 @@ class CSR extends Module {
     }.elsewhen(io.csr_w_addr === CSRAddr.mcause) {
       mcause := io.csr_w_data
     }
+  }.elsewhen(io.expt_op) {
+    mepc   := io.pc
+    mcause := "hb".U(64.W)
   }
 }

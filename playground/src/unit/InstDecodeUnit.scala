@@ -44,7 +44,7 @@ class InstDecodeUnit extends Module {
   val csr_forward = Module(new CSRForward)
   val csr_control = Module(new CSRControlUnit)
 
-  withReset(inst_decode_hazard.reset || reset.asBool) {
+  withReset(inst_decode_hazard.reset || inst_decode_csr_hazard.csr_reset || reset.asBool) {
     val inst = RegEnable(inst_fetch_data.inst, CommonMacro.INST_RESET_VAL, inst_decode_hazard.enable)
     val pc   = RegEnable(inst_fetch_data.pc, CommonMacro.PC_RESET_VAL, inst_decode_hazard.enable)
     val snpc = RegEnable(inst_fetch_data.snpc, CommonMacro.PC_RESET_VAL, inst_decode_hazard.enable)
@@ -148,6 +148,8 @@ class InstDecodeUnit extends Module {
     csr.io.csr_w_addr := write_back_csr_data.csr_w_addr
     csr.io.csr_w_data := write_back_csr_data.csr_w_data
     csr.io.csr_w_en   := write_back_csr_control.csr_w_en
+    csr.io.expt_op    := control_unit.io.ecall_op
+    csr.io.pc         := pc
 
     csr_forward.io.csr_data_D := csr.io.csr_r_data
     csr_forward.io.csr_data_E := execute_csr_forward.csr_exe_out
@@ -157,6 +159,10 @@ class InstDecodeUnit extends Module {
 
     inst_decode_csr_hazard.csr_r_addr     := inst(31, 20)
     inst_decode_csr_hazard.csr_r_addr_tag := csr_control.io.csr_r_en
+    inst_decode_csr_hazard.ecall_op       := control_unit.io.ecall_op
+    inst_decode_csr_hazard.mret_op        := control_unit.io.mret_op
+    inst_decode_csr_hazard.epc            := csr.io.epc
+    inst_decode_csr_hazard.tvec           := csr.io.tvec
 
     inst_decode_csr_control.csr_r_en    := csr_control.io.csr_r_en
     inst_decode_csr_control.csr_w_en    := csr_control.io.csr_w_en

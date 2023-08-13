@@ -16,6 +16,8 @@ class CSRHazardUnit extends Module {
   val execute_csr_hazard     = IO(Flipped(new ExecuteCSRHazard))
   val load_store_csr_hazard  = IO(Flipped(new LoadStoreCSRHazard))
   val write_back_csr_hazard  = IO(Flipped(new WriteBackCSRHazard))
+  val expt_op                = IO(Output(Bool()))
+  val expt_pc                = IO(Output(UInt(64.W)))
 
   val csr_fw_rules = Seq(
     (execute_csr_hazard.csr_w_addr_tag && execute_csr_hazard.csr_w_addr === inst_decode_csr_hazard.csr_r_addr)       -> CSRHazardMacro.CSR_F_CTL_EXE,
@@ -29,4 +31,9 @@ class CSRHazardUnit extends Module {
     PriorityMux(csr_fw_rules),
     CSRHazardMacro.CSR_F_CTL_DEFAULT
   )
+
+  inst_decode_csr_hazard.csr_reset := inst_decode_csr_hazard.ecall_op || inst_decode_csr_hazard.mret_op
+
+  expt_pc := Mux(inst_decode_csr_hazard.mret_op, inst_decode_csr_hazard.epc, inst_decode_csr_hazard.tvec)
+  expt_op := inst_decode_csr_hazard.mret_op || inst_decode_csr_hazard.ecall_op
 }
