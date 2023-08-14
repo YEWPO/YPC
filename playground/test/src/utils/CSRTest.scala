@@ -41,6 +41,16 @@ object CSRTest extends ChiselUtestTester {
           dut.io.csr_r_data.expect(CommonMacro.MSTATUS_RESET_VAL)
         }
       }
+      test("exception") {
+        testCircuit(new CSR) { dut =>
+          dut.io.expt_op.poke(true.B)
+          dut.io.pc.poke("h80001000".U)
+          dut.io.csr_r_addr.poke(CSRAddr.mepc)
+          dut.io.csr_r_en.poke(true.B)
+          dut.clock.step()
+          dut.io.csr_r_data.expect("h80001000".U)
+        }
+      }
     }
   }
 }
