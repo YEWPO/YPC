@@ -37,6 +37,13 @@ class CSR extends Module {
   val mepc    = RegInit(0.U(64.W))
   val mcause  = RegInit(0.U(64.W))
 
+  val csr_info = Module(new CSRInfo)
+
+  csr_info.io.mstatus := mstatus
+  csr_info.io.mtvec   := mtvec
+  csr_info.io.mepc    := mepc
+  csr_info.io.mcause  := mcause
+
   val csr_map = Seq(
     CSRAddr.mstatus -> mstatus,
     CSRAddr.mtvec   -> mtvec,

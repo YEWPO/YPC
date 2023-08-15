@@ -116,7 +116,7 @@ class InstDecodeUnit extends Module {
     inst_decode_data.src1 := forward_a.io.out
     inst_decode_data.src2 := forward_b.io.out
     inst_decode_data.pc   := pc
-    inst_decode_data.snpc := snpc
+    inst_decode_data.snpc := Mux(control_unit.io.ecall_op, csr.io.tvec, Mux(control_unit.io.mret_op, csr.io.epc, snpc))
     inst_decode_data.inst := inst
 
     /**

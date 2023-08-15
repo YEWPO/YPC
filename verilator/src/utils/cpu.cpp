@@ -17,6 +17,13 @@ void set_gpr_ptr(const svOpenArrayHandle regs) {
   }
 }
 
+void set_csr(const long long mstatus, const long long mtvec, const long long mepc, const long long mcause) {
+  cpu.mstatus = mstatus;
+  cpu.mtvec = mtvec;
+  cpu.mepc = mepc;
+  cpu.mcause = mcause;
+}
+
 const char *regs[] = {
   "$0", "ra", "sp", "gp", "tp", "t0", "t1", "t2",
   "s0", "s1", "a0", "a1", "a2", "a3", "a4", "a5",
