@@ -79,6 +79,7 @@ void init_simulator() {
   reset();
 
   cpu.pc = CONFIG_MBASE;
+  cpu.mstatus = 0xa00001800;
 }
 
 void simulator_destroy() {
