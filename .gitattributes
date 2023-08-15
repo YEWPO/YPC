@@ -1,0 +1,3 @@
+*.c linguist-detectable=false
+*.y linguist-detectable=false
+*.l linguist-detectable=false
