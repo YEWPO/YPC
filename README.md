@@ -5,7 +5,7 @@ NPC
 >
 > Writen by Chisel
 
-`RISC-V`五级流水先处理器，支持`RISCV64IMZicsr`指令集。
+`RISC-V`五级流水线处理器，支持`RISCV64IMZicsr`指令集。
 
 ## 开始
 
@@ -143,13 +143,13 @@ make clean
 
 [控制信号表](./docs/控制信号表.csv)，目前暂时记录了每个指令具体产生的信号。
 
-在`utils/decodegen`目录下，已经编写好了`main.py`的`python`程序，该程序会将表格中的内容生成对应的`chisel`代码。使用时无需安装其他库。使用方法如下：（**请提前安装好`xclip`工具**）
+在`utils/decodegen`目录下，已经编写好了`main.py`的`python`程序，该程序会将表格中的内容生成对应的`chisel`代码。使用时无需安装其他库。使用方法如下：
 
 ```shell
-python3 utils/decodegen/main.py | xclip -sel c
+python3 utils/decodegen/main.py
 ```
 
-此时，会将生成的代码复制到剪切板中。然后将代码复制到`playground/src/control/DecodeTable.scala`中的`decode_map`的数组中。之后，在工程目录下运行`make reformat`会格式化代码。
+该程序会将代码复制到`playground/src/control/DecodeTable.scala`中的`decode_map`的数组中，并格式化代码样式。
 
 ## 测试
 
