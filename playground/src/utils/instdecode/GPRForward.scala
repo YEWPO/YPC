@@ -1,10 +1,10 @@
-package utils
+package utils.instdecode
 
 import chisel3._
 import chisel3.util._
 import hazard._
 
-class ForwardIO extends Bundle {
+class GPRForwardIO extends Bundle {
   val src = Input(UInt(64.W))
 
   val alu_E   = Input(UInt(64.W))
@@ -19,8 +19,8 @@ class ForwardIO extends Bundle {
   val out = Output(UInt(64.W))
 }
 
-class Forward extends Module {
-  val io = IO(new ForwardIO)
+class GPRForward extends Module {
+  val io = IO(new GPRForwardIO)
 
   val forward_map = Seq(
     HazardMacro.F_CTL_ALU_E   -> io.alu_E,

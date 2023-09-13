@@ -1,11 +1,11 @@
-package utils
+package utils.instdecode
 
 import chisel3._
 import chiseltest._
 import utest._
 import hazard._
 
-object ForwardTest extends ChiselUtestTester {
+object GPRForwardTest extends ChiselUtestTester {
   val tests = Tests {
     test("Forward") {
       test("Default") {
