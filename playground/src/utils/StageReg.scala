@@ -12,10 +12,10 @@ class StageRegIO[+T <: Data](bundle: T) extends Bundle {
 class StageReg[+T <: Data](bundle: T) extends Module {
   val io = IO(new StageRegIO[T](bundle))
 
-  /* ========== register ========== */
+  /* ========== Register ========== */
   val reg = RegInit(0.U.asTypeOf(bundle))
 
-  /* ========== sequential circuit ========== */
+  /* ========== Sequential Circuit ========== */
   when(io.enable) {
     // stall current stage
     reg := io.in
@@ -25,6 +25,6 @@ class StageReg[+T <: Data](bundle: T) extends Module {
     reg := 0.U.asTypeOf(bundle)
   }
 
-  /* ========== combinational circuit ========== */
+  /* ========== Combinational Circuit ========== */
   io.out := reg
 }
