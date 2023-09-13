@@ -1,4 +1,4 @@
-module OtherOperation (
+module Except (
   input ebreak_op,
   input invalid_op,
   input [63:0] pc

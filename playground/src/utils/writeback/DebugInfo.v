@@ -1,4 +1,4 @@
-module DebugPart (
+module DebugInfo (
   input [63:0] pc,
   input [31:0] inst,
   input [63:0] dnpc
