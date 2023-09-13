@@ -1,4 +1,4 @@
-package utils
+package utils.loadstore
 
 import chisel3._
 import chisel3.util._
@@ -10,5 +10,5 @@ class MemRead extends BlackBox with HasBlackBoxPath {
     val r_data = Output(UInt(64.W))
   })
 
-  addPath("playground/src/utils/MemRead.v")
+  addPath("playground/src/utils/loadstore/MemRead.v")
 }

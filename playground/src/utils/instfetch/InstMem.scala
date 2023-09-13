@@ -12,5 +12,5 @@ class InstMemIO extends Bundle {
 class InstMem extends BlackBox with HasBlackBoxPath {
   val io = IO(new InstMemIO)
 
-  addPath("playground/src/utils/InstMem.v")
+  addPath("playground/src/utils/instfetch/InstMem.v")
 }

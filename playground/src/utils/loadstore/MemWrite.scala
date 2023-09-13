@@ -1,4 +1,4 @@
-package utils
+package utils.loadstore
 
 import chisel3._
 import chisel3.util._
@@ -11,5 +11,5 @@ class MemWrite extends BlackBox with HasBlackBoxPath {
     val mask   = Input(UInt(8.W))
   })
 
-  addPath("playground/src/utils/MemWrite.v")
+  addPath("playground/src/utils/loadstore/MemWrite.v")
 }
