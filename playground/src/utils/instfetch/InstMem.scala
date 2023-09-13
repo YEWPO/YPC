@@ -1,4 +1,4 @@
-package utils1.instfetch
+package utils.instfetch
 
 import chisel3._
 import chisel3.util._
