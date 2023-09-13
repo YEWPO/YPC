@@ -1,4 +1,4 @@
-package utils
+package utils.instdecode
 
 import chisel3._
 
@@ -14,7 +14,7 @@ import chisel3._
   * r_data1: the read data 1
   * r_data2: the read data 2
   */
-class RegisterIO extends Bundle {
+class GPRIO extends Bundle {
   val rs1 = Input(UInt(5.W))
   val rs2 = Input(UInt(5.W))
   val rd  = Input(UInt(5.W))
@@ -26,8 +26,8 @@ class RegisterIO extends Bundle {
   val r_data2 = Output(UInt(64.W))
 }
 
-class Register extends Module {
-  val io = IO(new RegisterIO)
+class GPR extends Module {
+  val io = IO(new GPRIO)
 
   val reg_files = RegInit(VecInit(Seq.fill(32)(0.U(64.W))))
 
@@ -39,6 +39,6 @@ class Register extends Module {
   io.r_data2 := reg_files(io.rs2)
 
   // deliver registers info to the verilator
-  val regs_info = Module(new RegsInfo())
+  val regs_info = Module(new GPRInfo())
   regs_info.io.inbits := reg_files.asUInt
 }

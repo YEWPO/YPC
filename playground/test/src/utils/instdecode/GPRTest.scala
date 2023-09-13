@@ -1,10 +1,10 @@
-package utils
+package utils.instdecode
 
 import chisel3._
 import chiseltest._
 import utest._
 
-object RegisterTest extends ChiselUtestTester {
+object GPRTest extends ChiselUtestTester {
   val tests = Tests {
     test("Register") {
       test("readRS1") {

@@ -1,4 +1,4 @@
-module RegsInfo (
+module GPRInfo (
   input [64*32-1:0] inbits
 );
 
