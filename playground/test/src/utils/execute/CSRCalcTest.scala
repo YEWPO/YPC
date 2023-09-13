@@ -1,11 +1,11 @@
-package utils
+package utils.execute
 
 import chisel3._
 import chiseltest._
 import utest._
 import scala.util.Random
 
-object CSROperationTest extends ChiselUtestTester {
+object CSRCalcTest extends ChiselUtestTester {
   val tests = Tests {
     test("CSROperation") {
       def testCSROperation(): Unit = {
