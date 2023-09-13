@@ -1,10 +1,13 @@
 #include "device/map.h"
 #include "memory/pmem.h"
+#include "utils/cpu.h"
 
 #define NR_MAP 16
 
 static IOMap maps[NR_MAP] = {};
 static int nr_map = 0;
+
+extern CPU_state cpu;
 
 static IOMap* fetch_mmio_map(paddr_t addr) {
   int mapid = find_mapid_by_addr(maps, nr_map, addr);
@@ -41,11 +44,24 @@ void add_mmio_map(const char *name, paddr_t addr, void *space, uint32_t len, io_
 /* bus interface */
 word_t mmio_read(paddr_t addr) {
   paddr_t r_addr = addr & ADDR_MASK;
-  return map_read(r_addr, 8, fetch_mmio_map(addr));
+  IOMap *map = fetch_mmio_map(addr);
+  if (map == NULL) {
+    Log("address = " FMT_PADDR " is out of bound of pmem [" FMT_PADDR ", " FMT_PADDR "] at pc = " FMT_WORD,
+      (paddr_t)addr, PMEM_LEFT, PMEM_RIGHT, cpu.pc);
+    return 0;
+  }
+  return map_read(r_addr, 8, map);
 }
 
 void mmio_write(paddr_t addr, word_t data, char mask) {
   paddr_t w_addr = addr & ADDR_MASK;
+
+  IOMap *map = fetch_mmio_map(addr);
+  if (map == NULL) {
+    Log("address = " FMT_PADDR " is out of bound of pmem [" FMT_PADDR ", " FMT_PADDR "] at pc = " FMT_WORD,
+      (paddr_t)addr, PMEM_LEFT, PMEM_RIGHT, cpu.pc);
+    return;
+  }
 
   bool pre_mask = false;
   int w_len = 0;
@@ -59,7 +75,7 @@ void mmio_write(paddr_t addr, word_t data, char mask) {
       }
     } else {
       if (pre_mask) {
-        map_write(w_addr + i - w_len, w_len, data, fetch_mmio_map(addr));
+        map_write(w_addr + i - w_len, w_len, data, map);
         data >>= (8 * w_len);
         pre_mask = false;
         w_len = 0;
@@ -69,6 +85,6 @@ void mmio_write(paddr_t addr, word_t data, char mask) {
   }
   // write high bits
   if (w_len) {
-      map_write(w_addr + 8 - w_len, w_len, data, fetch_mmio_map(addr));
+      map_write(w_addr + 8 - w_len, w_len, data, map);
   }
 }

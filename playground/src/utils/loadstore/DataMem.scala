@@ -75,11 +75,9 @@ class DataMem extends Module {
   mem_write.io.addr   := io.addr
   mem_write.io.w_data := w_data
   mem_write.io.mask   := mask
-  mem_write.io.w_en   := w_en
 
   // read from memory
   mem_read.io.addr := io.addr
-  mem_read.io.r_en := r_en
   val r_data = mem_read.io.r_data
 
   // handle read data
