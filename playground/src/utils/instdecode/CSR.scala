@@ -1,8 +1,8 @@
 package utils.instdecode
 
 import chisel3._
-import unit._
 import chisel3.util._
+import macros._
 
 object CSRAddr {
   val mstatus = "h300".U(12.W)
@@ -32,7 +32,7 @@ class CSRIO extends Bundle {
 class CSR extends Module {
   val io = IO(new CSRIO)
 
-  val mstatus = RegInit(CommonMacro.MSTATUS_RESET_VAL)
+  val mstatus = RegInit(CommonMacros.MSTATUS_RESET_VAL)
   val mtvec   = RegInit(0.U(64.W))
   val mepc    = RegInit(0.U(64.W))
   val mcause  = RegInit(0.U(64.W))

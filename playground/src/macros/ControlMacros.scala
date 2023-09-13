@@ -1,8 +1,8 @@
-package control
+package macros
 
 import chisel3._
 
-object ControlMacro {
+object ControlMacros {
   val IMM_TYPE_DEFAULT = "b000".U
   val IMM_TYPE_R       = "b000".U
   val IMM_TYPE_I       = "b001".U

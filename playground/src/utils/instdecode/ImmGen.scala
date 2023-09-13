@@ -2,8 +2,8 @@ package utils.instdecode
 
 import chisel3._
 import chisel3.util._
-import control._
 import unit._
+import macros._
 
 class ImmGenIO extends Bundle {
   val in       = Input(UInt(25.W))
@@ -50,11 +50,11 @@ class ImmGen extends Module {
   )
 
   val imm_out_map = Seq(
-    ControlMacro.IMM_TYPE_I -> CommonMacro.signExtend(immI),
-    ControlMacro.IMM_TYPE_S -> CommonMacro.signExtend(immS),
-    ControlMacro.IMM_TYPE_B -> CommonMacro.signExtend(immB),
-    ControlMacro.IMM_TYPE_U -> CommonMacro.signExtend(immU),
-    ControlMacro.IMM_TYPE_J -> CommonMacro.signExtend(immJ)
+    ControlMacros.IMM_TYPE_I -> CommonMacros.signExtend(immI),
+    ControlMacros.IMM_TYPE_S -> CommonMacros.signExtend(immS),
+    ControlMacros.IMM_TYPE_B -> CommonMacros.signExtend(immB),
+    ControlMacros.IMM_TYPE_U -> CommonMacros.signExtend(immU),
+    ControlMacros.IMM_TYPE_J -> CommonMacros.signExtend(immJ)
   )
 
   io.imm_out := MuxLookup(io.imm_type, 0.U(64.W))(imm_out_map)

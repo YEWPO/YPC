@@ -2,8 +2,7 @@ package utils.execute
 
 import chisel3._
 import chisel3.util._
-import unit._
-import control._
+import macros._
 
 object AlgLogMacro {
   val WORD_TAG   = 4
@@ -30,8 +29,10 @@ class AlgLog extends Module {
   val io = IO(new AlgLogIO)
 
   // check if it is a word operation
-  val src1  = Mux(io.alu_ctl(AlgLogMacro.WORD_TAG).orR, CommonMacro.signExtend(CommonMacro.getWord(io.src1, 0)), io.src1)
-  val src2  = Mux(io.alu_ctl(AlgLogMacro.WORD_TAG).orR, CommonMacro.signExtend(CommonMacro.getWord(io.src2, 0)), io.src2)
+  val src1 =
+    Mux(io.alu_ctl(AlgLogMacro.WORD_TAG).orR, CommonMacros.signExtend(CommonMacros.getWord(io.src1, 0)), io.src1)
+  val src2 =
+    Mux(io.alu_ctl(AlgLogMacro.WORD_TAG).orR, CommonMacros.signExtend(CommonMacros.getWord(io.src2, 0)), io.src2)
   val shamt = Mux(io.alu_ctl(AlgLogMacro.WORD_TAG).orR, Cat(0.U(1.W), src2(4, 0)), src2(5, 0))
 
   // calcuate
@@ -55,28 +56,28 @@ class AlgLog extends Module {
   val srlw_mask = "hffff_ffff".U >> shamt
 
   val alu_map = Seq(
-    ControlMacro.ALU_CTL_DEFAULT -> add,
-    ControlMacro.ALU_CTL_ADD     -> add,
-    ControlMacro.ALU_CTL_ADDW    -> CommonMacro.signExtend(CommonMacro.getWord(add, 0)),
-    ControlMacro.ALU_CTL_SUB     -> sub,
-    ControlMacro.ALU_CTL_SUBW    -> CommonMacro.signExtend(CommonMacro.getWord(sub, 0)),
-    ControlMacro.ALU_CTL_XOR     -> xor,
-    ControlMacro.ALU_CTL_OR      -> or,
-    ControlMacro.ALU_CTL_AND     -> and,
-    ControlMacro.ALU_CTL_SLT     -> slt,
-    ControlMacro.ALU_CTL_SGE     -> sge,
-    ControlMacro.ALU_CTL_SLTU    -> sltu,
-    ControlMacro.ALU_CTL_SGEU    -> sgeu,
-    ControlMacro.ALU_CTL_EQU     -> equ,
-    ControlMacro.ALU_CTL_NEQ     -> neq,
-    ControlMacro.ALU_CTL_SLL     -> sll,
-    ControlMacro.ALU_CTL_SLLW    -> CommonMacro.signExtend(CommonMacro.getWord(sll, 0)),
-    ControlMacro.ALU_CTL_SRL     -> srl,
-    ControlMacro.ALU_CTL_SRLW    -> CommonMacro.signExtend(CommonMacro.getWord(srl, 0) & srlw_mask),
-    ControlMacro.ALU_CTL_SRA     -> sra,
-    ControlMacro.ALU_CTL_SRAW    -> CommonMacro.signExtend(CommonMacro.getWord(sra, 0)),
-    ControlMacro.ALU_CTL_MOVA    -> mova,
-    ControlMacro.ALU_CTL_MOVB    -> movb
+    ControlMacros.ALU_CTL_DEFAULT -> add,
+    ControlMacros.ALU_CTL_ADD     -> add,
+    ControlMacros.ALU_CTL_ADDW    -> CommonMacros.signExtend(CommonMacros.getWord(add, 0)),
+    ControlMacros.ALU_CTL_SUB     -> sub,
+    ControlMacros.ALU_CTL_SUBW    -> CommonMacros.signExtend(CommonMacros.getWord(sub, 0)),
+    ControlMacros.ALU_CTL_XOR     -> xor,
+    ControlMacros.ALU_CTL_OR      -> or,
+    ControlMacros.ALU_CTL_AND     -> and,
+    ControlMacros.ALU_CTL_SLT     -> slt,
+    ControlMacros.ALU_CTL_SGE     -> sge,
+    ControlMacros.ALU_CTL_SLTU    -> sltu,
+    ControlMacros.ALU_CTL_SGEU    -> sgeu,
+    ControlMacros.ALU_CTL_EQU     -> equ,
+    ControlMacros.ALU_CTL_NEQ     -> neq,
+    ControlMacros.ALU_CTL_SLL     -> sll,
+    ControlMacros.ALU_CTL_SLLW    -> CommonMacros.signExtend(CommonMacros.getWord(sll, 0)),
+    ControlMacros.ALU_CTL_SRL     -> srl,
+    ControlMacros.ALU_CTL_SRLW    -> CommonMacros.signExtend(CommonMacros.getWord(srl, 0) & srlw_mask),
+    ControlMacros.ALU_CTL_SRA     -> sra,
+    ControlMacros.ALU_CTL_SRAW    -> CommonMacros.signExtend(CommonMacros.getWord(sra, 0)),
+    ControlMacros.ALU_CTL_MOVA    -> mova,
+    ControlMacros.ALU_CTL_MOVB    -> movb
   )
 
   io.alu_out := MuxLookup(io.alu_ctl, 0.U(64.W))(alu_map)
