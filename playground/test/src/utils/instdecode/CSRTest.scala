@@ -1,4 +1,4 @@
-package utils
+package utils.instdecode
 
 import chisel3._
 import chiseltest._
