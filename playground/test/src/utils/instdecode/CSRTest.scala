@@ -3,7 +3,7 @@ package utils.instdecode
 import chisel3._
 import chiseltest._
 import utest._
-import unit._
+import macros._
 
 object CSRTest extends ChiselUtestTester {
   val tests = Tests {
@@ -38,7 +38,7 @@ object CSRTest extends ChiselUtestTester {
           dut.io.csr_w_en.poke(true.B)
           dut.io.csr_w_data.poke("h1234".U)
           dut.clock.step()
-          dut.io.csr_r_data.expect(CommonMacro.MSTATUS_RESET_VAL)
+          dut.io.csr_r_data.expect(CommonMacros.MSTATUS_RESET_VAL)
         }
       }
       test("exception") {

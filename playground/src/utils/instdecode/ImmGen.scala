@@ -2,7 +2,6 @@ package utils.instdecode
 
 import chisel3._
 import chisel3.util._
-import unit._
 import macros._
 
 class ImmGenIO extends Bundle {

@@ -3,7 +3,7 @@ package utils.execute
 import chisel3._
 import chiseltest._
 import utest._
-import control._
+import macros._
 
 object AlgLogTest extends ChiselUtestTester {
   val tests = Tests {

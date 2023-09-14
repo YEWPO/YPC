@@ -13,5 +13,5 @@ class CSRInfoIO extends Bundle {
 class CSRInfo extends BlackBox with HasBlackBoxPath {
   val io = IO(new CSRInfoIO)
 
-  addPath("playground/src/utils/CSRInfo.v")
+  addPath("playground/src/utils/instdecode/CSRInfo.v")
 }

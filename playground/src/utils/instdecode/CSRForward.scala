@@ -1,8 +1,8 @@
 package utils.instdecode
 
 import chisel3._
-import hazard._
 import chisel3.util._
+import macros._
 
 class CSRForwardIO extends Bundle {
   val csr_data_D = Input(UInt(64.W))
@@ -19,10 +19,10 @@ class CSRForward extends Module {
   val io = IO(new CSRForwardIO)
 
   val csr_forward_map = Seq(
-    CSRHazardMacro.CSR_F_CTL_DEFAULT -> io.csr_data_D,
-    CSRHazardMacro.CSR_F_CTL_EXE     -> io.csr_data_E,
-    CSRHazardMacro.CSR_F_CTL_LS      -> io.csr_data_M,
-    CSRHazardMacro.CSR_F_CTL_WB      -> io.csr_data_W
+    CSRHazardMacros.CSR_F_CTL_DEFAULT -> io.csr_data_D,
+    CSRHazardMacros.CSR_F_CTL_EXE     -> io.csr_data_E,
+    CSRHazardMacros.CSR_F_CTL_LS      -> io.csr_data_M,
+    CSRHazardMacros.CSR_F_CTL_WB      -> io.csr_data_W
   )
 
   io.csr_data_out := MuxLookup(io.csr_fw_ctl, 0.U(64.W))(csr_forward_map)

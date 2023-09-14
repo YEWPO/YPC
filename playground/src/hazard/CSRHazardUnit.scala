@@ -1,39 +1,55 @@
 package hazard
 
 import chisel3._
-import entity._
 import chisel3.util._
+import macros._
+import bundles.instdecode._
+import bundles.execute._
+import bundles.loadstore._
+import bundles.writeback._
 
-object CSRHazardMacro {
-  val CSR_F_CTL_DEFAULT = "b00".U
-  val CSR_F_CTL_EXE     = "b01".U
-  val CSR_F_CTL_LS      = "b10".U
-  val CSR_F_CTL_WB      = "b11".U
+class CSRHazardUnitIO extends Bundle {
+  val inst_decode = new Bundle {
+    val data    = Input(new IDCSRHazardDataBundle)
+    val control = Output(new IDCSRHazardControlBundle)
+  }
+  val execute = new Bundle {
+    val data    = Input(new EXCSRHazardDataBundle)
+    val control = Output(new EXCSRHazardControlBundle)
+  }
+  val load_store = new Bundle {
+    val data    = Input(new LSCSRHazardDataBundle)
+    val control = Output(new LSCSRHazardControlBundle)
+  }
+  val write_back = new Bundle {
+    val data    = Input(new WBCSRHazardDataBundle)
+    val control = Output(new WBCSRHazardControlBundle)
+  }
+  val expt_op   = IO(Output(Bool()))
+  val expt_pc   = IO(Output(UInt(64.W)))
+  val csr_reset = Bool()
 }
 
 class CSRHazardUnit extends Module {
-  val inst_decode_csr_hazard = IO(Flipped(new InstDecodeCSRHazard))
-  val execute_csr_hazard     = IO(Flipped(new ExecuteCSRHazard))
-  val load_store_csr_hazard  = IO(Flipped(new LoadStoreCSRHazard))
-  val write_back_csr_hazard  = IO(Flipped(new WriteBackCSRHazard))
-  val expt_op                = IO(Output(Bool()))
-  val expt_pc                = IO(Output(UInt(64.W)))
+  /* ========== Input and Output ========== */
+  val io = IO(new CSRHazardUnitIO)
 
+  /* ========== Combinational Circuit ========== */
   val csr_fw_rules = Seq(
-    (execute_csr_hazard.csr_w_addr_tag && execute_csr_hazard.csr_w_addr === inst_decode_csr_hazard.csr_r_addr)       -> CSRHazardMacro.CSR_F_CTL_EXE,
-    (load_store_csr_hazard.csr_w_addr_tag && load_store_csr_hazard.csr_w_addr === inst_decode_csr_hazard.csr_r_addr) -> CSRHazardMacro.CSR_F_CTL_LS,
-    (write_back_csr_hazard.csr_w_addr_tag && write_back_csr_hazard.csr_w_addr === inst_decode_csr_hazard.csr_r_addr) -> CSRHazardMacro.CSR_F_CTL_WB,
-    true.B                                                                                                           -> CSRHazardMacro.CSR_F_CTL_DEFAULT
+    (io.execute.data.csr_w_addr_tag && io.execute.data.csr_w_addr === io.inst_decode.data.csr_r_addr)       -> CSRHazardMacros.CSR_F_CTL_EXE,
+    (io.load_store.data.csr_w_addr_tag && io.load_store.data.csr_w_addr === io.inst_decode.data.csr_r_addr) -> CSRHazardMacros.CSR_F_CTL_LS,
+    (io.write_back.data.csr_w_addr_tag && io.write_back.data.csr_w_addr === io.inst_decode.data.csr_r_addr) -> CSRHazardMacros.CSR_F_CTL_WB,
+    true.B                                                                                                  -> CSRHazardMacros.CSR_F_CTL_DEFAULT
   )
 
-  inst_decode_csr_hazard.csr_forward_ctl := Mux(
-    inst_decode_csr_hazard.csr_r_addr_tag,
+  io.inst_decode.control.csr_forward_ctl := Mux(
+    io.inst_decode.data.csr_r_addr_tag,
     PriorityMux(csr_fw_rules),
-    CSRHazardMacro.CSR_F_CTL_DEFAULT
+    CSRHazardMacros.CSR_F_CTL_DEFAULT
   )
 
-  inst_decode_csr_hazard.csr_reset := inst_decode_csr_hazard.ecall_op || inst_decode_csr_hazard.mret_op
+  io.csr_reset := io.inst_decode.data.ecall_op || io.inst_decode.data.mret_op
 
-  expt_pc := Mux(inst_decode_csr_hazard.mret_op, inst_decode_csr_hazard.epc, inst_decode_csr_hazard.tvec)
-  expt_op := inst_decode_csr_hazard.mret_op || inst_decode_csr_hazard.ecall_op
+  io.expt_pc := Mux(io.inst_decode.data.mret_op, io.inst_decode.data.epc, io.inst_decode.data.tvec)
+  io.expt_op := io.inst_decode.data.mret_op || io.inst_decode.data.ecall_op
 }

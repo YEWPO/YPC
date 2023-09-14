@@ -11,5 +11,5 @@ class GPRInfo extends BlackBox with HasBlackBoxPath {
     val inbits = Input(UInt((64 * 32).W))
   })
 
-  addPath("playground/src/utils/GPRInfo.v")
+  addPath("playground/src/utils/instdecode/GPRInfo.v")
 }

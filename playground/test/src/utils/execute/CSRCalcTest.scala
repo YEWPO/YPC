@@ -7,8 +7,8 @@ import scala.util.Random
 
 object CSRCalcTest extends ChiselUtestTester {
   val tests = Tests {
-    test("CSROperation") {
-      def testCSROperation(): Unit = {
+    test("CSRCalc") {
+      def testCSRCalc(): Unit = {
         val rand = new Random
         val src1: Int = rand.nextInt(10)
         val src2: Int = rand.nextInt(10)
@@ -19,7 +19,7 @@ object CSRCalcTest extends ChiselUtestTester {
           case 2 => src2 | src1
           case 3 => src2 & ~src1
         }
-        testCircuit(new CSROperation) { dut =>
+        testCircuit(new CSRCalc) { dut =>
           dut.io.src.poke(src1.U)
           dut.io.csr_data.poke(src2.U)
           dut.io.csr_op_ctl.poke(op.U)
@@ -29,7 +29,7 @@ object CSRCalcTest extends ChiselUtestTester {
       }
 
       for (i <- 1 to 10) {
-        testCSROperation()
+        testCSRCalc()
       }
     }
   }
