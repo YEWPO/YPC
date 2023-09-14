@@ -1,4 +1,4 @@
-package utils
+package bundles
 
 import chisel3._
 import bundles._
