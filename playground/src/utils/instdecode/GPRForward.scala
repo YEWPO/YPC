@@ -2,7 +2,7 @@ package utils.instdecode
 
 import chisel3._
 import chisel3.util._
-import hazard._
+import macros._
 
 class GPRForwardIO extends Bundle {
   val src = Input(UInt(64.W))
@@ -23,12 +23,12 @@ class GPRForward extends Module {
   val io = IO(new GPRForwardIO)
 
   val forward_map = Seq(
-    HazardMacro.F_CTL_ALU_E   -> io.alu_E,
-    HazardMacro.F_CTL_SNPC_E  -> io.snpc_E,
-    HazardMacro.F_CTL_ALU_M   -> io.alu_M,
-    HazardMacro.F_CTL_MEM_M   -> io.mem_M,
-    HazardMacro.F_CTL_SNPC_M  -> io.snpc_M,
-    HazardMacro.F_CTL_WB_DATA -> io.wb_data
+    HazardMacros.F_CTL_ALU_E   -> io.alu_E,
+    HazardMacros.F_CTL_SNPC_E  -> io.snpc_E,
+    HazardMacros.F_CTL_ALU_M   -> io.alu_M,
+    HazardMacros.F_CTL_MEM_M   -> io.mem_M,
+    HazardMacros.F_CTL_SNPC_M  -> io.snpc_M,
+    HazardMacros.F_CTL_WB_DATA -> io.wb_data
   )
 
   io.out := MuxLookup(io.f_ctl, io.src)(forward_map)
