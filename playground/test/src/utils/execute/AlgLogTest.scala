@@ -12,7 +12,7 @@ object AlgLogTest extends ChiselUtestTester {
         testCircuit(new AlgLog) { dut =>
           dut.io.src1.poke(10.U)
           dut.io.src2.poke("hffff_ffff_ffff_ffff".U)
-          dut.io.alu_ctl.poke(ControlMacro.ALU_CTL_ADD)
+          dut.io.alu_ctl.poke(ControlMacros.ALU_CTL_ADD)
           dut.clock.step()
           dut.io.alu_out.expect("h0000_0000_0000_0009".U)
         }
@@ -21,7 +21,7 @@ object AlgLogTest extends ChiselUtestTester {
         testCircuit(new AlgLog) { dut =>
           dut.io.src1.poke("h0000_0000_ffff_fffe".U)
           dut.io.src2.poke(1.U)
-          dut.io.alu_ctl.poke(ControlMacro.ALU_CTL_ADDW)
+          dut.io.alu_ctl.poke(ControlMacros.ALU_CTL_ADDW)
           dut.clock.step()
           dut.io.alu_out.expect("hffff_ffff_ffff_ffff".U)
         }
@@ -30,7 +30,7 @@ object AlgLogTest extends ChiselUtestTester {
         testCircuit(new AlgLog) { dut =>
           dut.io.src1.poke(0.U)
           dut.io.src2.poke(1.U)
-          dut.io.alu_ctl.poke(ControlMacro.ALU_CTL_SUB)
+          dut.io.alu_ctl.poke(ControlMacros.ALU_CTL_SUB)
           dut.clock.step()
           dut.io.alu_out.expect("hffff_ffff_ffff_ffff".U)
         }
@@ -39,7 +39,7 @@ object AlgLogTest extends ChiselUtestTester {
         testCircuit(new AlgLog) { dut =>
           dut.io.src1.poke(0.U)
           dut.io.src2.poke(1.U)
-          dut.io.alu_ctl.poke(ControlMacro.ALU_CTL_SUBW)
+          dut.io.alu_ctl.poke(ControlMacros.ALU_CTL_SUBW)
           dut.clock.step()
           dut.io.alu_out.expect("hffff_ffff_ffff_ffff".U)
         }
@@ -48,7 +48,7 @@ object AlgLogTest extends ChiselUtestTester {
         testCircuit(new AlgLog) { dut =>
           dut.io.src1.poke("b1100".U)
           dut.io.src2.poke("b1010".U)
-          dut.io.alu_ctl.poke(ControlMacro.ALU_CTL_XOR)
+          dut.io.alu_ctl.poke(ControlMacros.ALU_CTL_XOR)
           dut.clock.step()
           dut.io.alu_out.expect("b0110".U)
         }
@@ -57,7 +57,7 @@ object AlgLogTest extends ChiselUtestTester {
         testCircuit(new AlgLog) { dut =>
           dut.io.src1.poke("b1100".U)
           dut.io.src2.poke("b1010".U)
-          dut.io.alu_ctl.poke(ControlMacro.ALU_CTL_OR)
+          dut.io.alu_ctl.poke(ControlMacros.ALU_CTL_OR)
           dut.clock.step()
           dut.io.alu_out.expect("b1110".U)
         }
@@ -66,7 +66,7 @@ object AlgLogTest extends ChiselUtestTester {
         testCircuit(new AlgLog) { dut =>
           dut.io.src1.poke("b1100".U)
           dut.io.src2.poke("b1010".U)
-          dut.io.alu_ctl.poke(ControlMacro.ALU_CTL_AND)
+          dut.io.alu_ctl.poke(ControlMacros.ALU_CTL_AND)
           dut.clock.step()
           dut.io.alu_out.expect("b1000".U)
         }
@@ -75,7 +75,7 @@ object AlgLogTest extends ChiselUtestTester {
         testCircuit(new AlgLog) { dut =>
           dut.io.src1.poke("hffff_ffff_ffff_ffff".U)
           dut.io.src2.poke(0.U)
-          dut.io.alu_ctl.poke(ControlMacro.ALU_CTL_SLT)
+          dut.io.alu_ctl.poke(ControlMacros.ALU_CTL_SLT)
           dut.clock.step()
           dut.io.alu_out.expect(1.U)
         }
@@ -84,7 +84,7 @@ object AlgLogTest extends ChiselUtestTester {
         testCircuit(new AlgLog) { dut =>
           dut.io.src1.poke("hffff_ffff_ffff_ffff".U)
           dut.io.src2.poke(0.U)
-          dut.io.alu_ctl.poke(ControlMacro.ALU_CTL_SGE)
+          dut.io.alu_ctl.poke(ControlMacros.ALU_CTL_SGE)
           dut.clock.step()
           dut.io.alu_out.expect(0.U)
         }
@@ -93,7 +93,7 @@ object AlgLogTest extends ChiselUtestTester {
         testCircuit(new AlgLog) { dut =>
           dut.io.src1.poke("hffff_ffff_ffff_ffff".U)
           dut.io.src2.poke(0.U)
-          dut.io.alu_ctl.poke(ControlMacro.ALU_CTL_SLTU)
+          dut.io.alu_ctl.poke(ControlMacros.ALU_CTL_SLTU)
           dut.clock.step()
           dut.io.alu_out.expect(0.U)
         }
@@ -102,7 +102,7 @@ object AlgLogTest extends ChiselUtestTester {
         testCircuit(new AlgLog) { dut =>
           dut.io.src1.poke("hffff_ffff_ffff_ffff".U)
           dut.io.src2.poke(0.U)
-          dut.io.alu_ctl.poke(ControlMacro.ALU_CTL_SGEU)
+          dut.io.alu_ctl.poke(ControlMacros.ALU_CTL_SGEU)
           dut.clock.step()
           dut.io.alu_out.expect(1.U)
         }
@@ -111,7 +111,7 @@ object AlgLogTest extends ChiselUtestTester {
         testCircuit(new AlgLog) { dut =>
           dut.io.src1.poke(123456.U)
           dut.io.src2.poke(123456.U)
-          dut.io.alu_ctl.poke(ControlMacro.ALU_CTL_EQU)
+          dut.io.alu_ctl.poke(ControlMacros.ALU_CTL_EQU)
           dut.clock.step()
           dut.io.alu_out.expect(1.U)
         }
@@ -120,7 +120,7 @@ object AlgLogTest extends ChiselUtestTester {
         testCircuit(new AlgLog) { dut =>
           dut.io.src1.poke(12345.U)
           dut.io.src2.poke(23456.U)
-          dut.io.alu_ctl.poke(ControlMacro.ALU_CTL_NEQ)
+          dut.io.alu_ctl.poke(ControlMacros.ALU_CTL_NEQ)
           dut.clock.step()
           dut.io.alu_out.expect(1.U)
         }
@@ -129,7 +129,7 @@ object AlgLogTest extends ChiselUtestTester {
         testCircuit(new AlgLog) { dut =>
           dut.io.src1.poke(1.U)
           dut.io.src2.poke(2.U)
-          dut.io.alu_ctl.poke(ControlMacro.ALU_CTL_SLL)
+          dut.io.alu_ctl.poke(ControlMacros.ALU_CTL_SLL)
           dut.clock.step()
           dut.io.alu_out.expect("b100".U)
         }
@@ -138,7 +138,7 @@ object AlgLogTest extends ChiselUtestTester {
         testCircuit(new AlgLog) { dut =>
           dut.io.src1.poke("h8000_0000".U)
           dut.io.src2.poke(2.U)
-          dut.io.alu_ctl.poke(ControlMacro.ALU_CTL_SLLW)
+          dut.io.alu_ctl.poke(ControlMacros.ALU_CTL_SLLW)
           dut.clock.step()
           dut.io.alu_out.expect(0.U)
         }
@@ -147,7 +147,7 @@ object AlgLogTest extends ChiselUtestTester {
         testCircuit(new AlgLog) { dut =>
           dut.io.src1.poke("h8000_0000_0000_0000".U)
           dut.io.src2.poke(2.U)
-          dut.io.alu_ctl.poke(ControlMacro.ALU_CTL_SRL)
+          dut.io.alu_ctl.poke(ControlMacros.ALU_CTL_SRL)
           dut.clock.step()
           dut.io.alu_out.expect("h2000_0000_0000_0000".U)
         }
@@ -156,7 +156,7 @@ object AlgLogTest extends ChiselUtestTester {
         testCircuit(new AlgLog) { dut =>
           dut.io.src1.poke("h0000_0001_8000_0000".U)
           dut.io.src2.poke(2.U)
-          dut.io.alu_ctl.poke(ControlMacro.ALU_CTL_SRLW)
+          dut.io.alu_ctl.poke(ControlMacros.ALU_CTL_SRLW)
           dut.clock.step()
           dut.io.alu_out.expect("h0000_0000_2000_0000".U)
         }
@@ -165,7 +165,7 @@ object AlgLogTest extends ChiselUtestTester {
         testCircuit(new AlgLog) { dut =>
           dut.io.src1.poke("h8000_0000_0000_0000".U)
           dut.io.src2.poke(2.U)
-          dut.io.alu_ctl.poke(ControlMacro.ALU_CTL_SRA)
+          dut.io.alu_ctl.poke(ControlMacros.ALU_CTL_SRA)
           dut.clock.step()
           dut.io.alu_out.expect("he000_0000_0000_0000".U)
         }
@@ -174,7 +174,7 @@ object AlgLogTest extends ChiselUtestTester {
         testCircuit(new AlgLog) { dut =>
           dut.io.src1.poke("h0000_0001_8000_0000".U)
           dut.io.src2.poke(2.U)
-          dut.io.alu_ctl.poke(ControlMacro.ALU_CTL_SRAW)
+          dut.io.alu_ctl.poke(ControlMacros.ALU_CTL_SRAW)
           dut.clock.step()
           dut.io.alu_out.expect("hffff_ffff_e000_0000".U)
         }
@@ -183,7 +183,7 @@ object AlgLogTest extends ChiselUtestTester {
         testCircuit(new AlgLog) { dut =>
           dut.io.src1.poke(1.U)
           dut.io.src2.poke(2.U)
-          dut.io.alu_ctl.poke(ControlMacro.ALU_CTL_MOVA)
+          dut.io.alu_ctl.poke(ControlMacros.ALU_CTL_MOVA)
           dut.clock.step()
           dut.io.alu_out.expect(1.U)
         }
@@ -192,7 +192,7 @@ object AlgLogTest extends ChiselUtestTester {
         testCircuit(new AlgLog) { dut =>
           dut.io.src1.poke(1.U)
           dut.io.src2.poke(2.U)
-          dut.io.alu_ctl.poke(ControlMacro.ALU_CTL_MOVB)
+          dut.io.alu_ctl.poke(ControlMacros.ALU_CTL_MOVB)
           dut.clock.step()
           dut.io.alu_out.expect(2.U)
         }
