@@ -9,8 +9,3 @@ class WBHazardDataBundle extends Bundle {
 }
 
 class WBHazardControlBundle extends Bundle {}
-
-class WBHazardBundle extends Bundle {
-  val data    = new WBHazardDataBundle
-  val control = new WBHazardControlBundle
-}
