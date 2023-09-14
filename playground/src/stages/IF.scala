@@ -5,16 +5,18 @@ import bundles._
 import macros._
 import utils.instfetch._
 
+class IFIO extends Bundle {
+  val in = Input(new Bundle {
+    val data = new PreIFDataBundle
+  })
+  val out = Output(new Bundle {
+    val data = new IF2IDDataBundle
+  })
+}
+
 class IF extends Module {
   /* ========== Input and Output ========== */
-  val io = IO(new Bundle {
-    val in = Input(new Bundle {
-      val data = new PreIFDataBundle
-    })
-    val out = Output(new Bundle {
-      val data = new IF2IDDataBundle
-    })
-  })
+  val io = IO(new IFIO)
 
   /* ========== Module ========== */
   val inst_mem = Module(new InstMem)

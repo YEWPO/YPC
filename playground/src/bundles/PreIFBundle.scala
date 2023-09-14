@@ -7,8 +7,3 @@ class PreIFDataBundle extends Bundle {
 }
 
 class PreIFControlBundle extends Bundle {}
-
-class PreIFBundle extends Bundle {
-  val data    = new PreIFDataBundle
-  val control = new PreIFControlBundle
-}
