@@ -24,6 +24,7 @@ class LSU extends Module {
 
   /* ========== Module ========== */
   val data_mem = Module(new DataMem)
+
   data_mem.io.addr    := io.in.data.exe_out
   data_mem.io.w_data  := io.in.data.src2
   data_mem.io.mem_ctl := io.in.control.mem_ctl

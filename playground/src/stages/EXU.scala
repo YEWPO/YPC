@@ -29,6 +29,7 @@ class EXU extends Module {
   val alu      = Module(new AlgLog)
   val mul      = Module(new MulDiv)
   val csr_calc = Module(new CSRCalc)
+
   alu.io.src1 := Mux(
     io.in.control.csr_r_en,
     io.in.data.csr_data,

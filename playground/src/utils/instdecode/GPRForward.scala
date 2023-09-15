@@ -5,7 +5,8 @@ import chisel3.util._
 import macros._
 
 class GPRForwardIO extends Bundle {
-  val src = Input(UInt(64.W))
+  val data1 = Input(UInt(64.W))
+  val data2 = Input(UInt(64.W))
 
   val alu_E   = Input(UInt(64.W))
   val snpc_E  = Input(UInt(64.W))
@@ -14,9 +15,11 @@ class GPRForwardIO extends Bundle {
   val snpc_M  = Input(UInt(64.W))
   val wb_data = Input(UInt(64.W))
 
-  val f_ctl = Input(UInt(3.W))
+  val fa_ctl = Input(UInt(3.W))
+  val fb_ctl = Input(UInt(3.W))
 
-  val out = Output(UInt(64.W))
+  val src1 = Output(UInt(64.W))
+  val src2 = Output(UInt(64.W))
 }
 
 class GPRForward extends Module {
@@ -31,5 +34,6 @@ class GPRForward extends Module {
     HazardMacros.F_CTL_WB_DATA -> io.wb_data
   )
 
-  io.out := MuxLookup(io.f_ctl, io.src)(forward_map)
+  io.src1 := MuxLookup(io.fa_ctl, io.data1)(forward_map)
+  io.src2 := MuxLookup(io.fb_ctl, io.data2)(forward_map)
 }

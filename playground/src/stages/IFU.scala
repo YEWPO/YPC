@@ -20,6 +20,7 @@ class IFU extends Module {
 
   /* ========== Module ========== */
   val inst_mem = Module(new InstMem)
+
   inst_mem.io.addr := io.in.data.pc
 
   /* ========== Combinational Circuit ========== */
