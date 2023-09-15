@@ -20,10 +20,9 @@ class IFU extends Module {
 
   /* ========== Module ========== */
   val inst_mem = Module(new InstMem)
-
-  /* ========== Combinational Circuit ========== */
   inst_mem.io.addr := io.in.data.pc
 
+  /* ========== Combinational Circuit ========== */
   io.out.data.inst := Mux(
     io.in.data.pc(2).orR,
     CommonMacros.getWord(inst_mem.io.r_data, 1),
