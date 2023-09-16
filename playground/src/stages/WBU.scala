@@ -16,7 +16,6 @@ class WBUIO extends Bundle {
     val data       = Output(new WB2RegBundle)
     val hazard     = Output(new WBHazardDataBundle)
     val csr_hazard = Output(new WBCSRHazardDataBundle)
-    val stat       = Output(new StatisticBundle)
   })
 }
 
@@ -56,6 +55,7 @@ class WBU extends Module {
 
   io.out.hazard.rd                 := io.in.data.rd
   io.out.hazard.rd_tag             := io.in.control.reg_w_en
+  io.out.hazard.wb_ctl             := io.in.control.wb_ctl
   io.out.csr_hazard.csr_w_addr     := io.in.data.csr_w_addr
   io.out.csr_hazard.csr_w_addr_tag := io.in.control.csr_w_en
 

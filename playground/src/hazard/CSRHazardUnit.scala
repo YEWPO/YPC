@@ -25,8 +25,8 @@ class CSRHazardUnitIO extends Bundle {
     val data    = Input(new WBCSRHazardDataBundle)
     val control = Output(new WBCSRHazardControlBundle)
   }
-  val expt_op   = IO(Output(Bool()))
-  val expt_pc   = IO(Output(UInt(64.W)))
+  val expt_op   = Output(Bool())
+  val expt_pc   = Output(UInt(64.W))
   val csr_reset = Bool()
 }
 

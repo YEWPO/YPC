@@ -63,9 +63,15 @@ class HazardUnit extends Module {
 
   /* ========== Combinational Circuit ========== */
   io.pre_if_control.enable := not_execute_mem_out
+  io.pre_if_control.reset  := reset.asBool
   io.if_id_control.enable  := not_execute_mem_out
-  io.if_id_control.reset   := io.execute.data.jump_sig
+  io.if_id_control.reset   := reset.asBool || io.execute.data.jump_sig
+  io.id_ex_control.enable  := true.B
   io.id_ex_control.reset   := io.execute.data.jump_sig || !not_execute_mem_out
+  io.ex_ls_control.enable  := true.B
+  io.ex_ls_control.reset   := reset.asBool
+  io.ls_wb_control.enable  := true.B
+  io.ls_wb_control.reset   := reset.asBool
 
   io.inst_decode.control.fa_ctl := Mux(
     io.inst_decode.data.rs1_tag,
