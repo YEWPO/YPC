@@ -11,12 +11,22 @@ static void serial_putc(char ch) {
 }
 
 static void serial_io_handler(uint32_t offset, int len, bool is_write) {
-  assert(len == 1);
+  if (len != 1) {
+#ifdef CONFIG_MTRACE_COND
+    Log("serial len is not 1!");
+#endif
+    return;
+  }
   switch (offset) {
     /* We bind the serial port with the host stderr in NEMU. */
     case CH_OFFSET:
       if (is_write) serial_putc(serial_base[0]);
-      else Assert(0, "do not support read");
+      else {
+#ifdef CONFIG_MTRACE_COND
+        Log("do not support read");
+#endif
+        return;
+      }
       break;
     default: Assert(0, "do not support offset = %d", offset);
   }

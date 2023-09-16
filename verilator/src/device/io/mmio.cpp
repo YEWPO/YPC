@@ -46,8 +46,10 @@ word_t mmio_read(paddr_t addr) {
   paddr_t r_addr = addr & ADDR_MASK;
   IOMap *map = fetch_mmio_map(addr);
   if (map == NULL) {
+#ifdef TRACE_COND
     Log("address = " FMT_PADDR " is out of bound of pmem [" FMT_PADDR ", " FMT_PADDR "] at pc = " FMT_WORD,
       (paddr_t)addr, PMEM_LEFT, PMEM_RIGHT, cpu.pc);
+#endif
     return 0;
   }
   return map_read(r_addr, 8, map);
@@ -58,8 +60,10 @@ void mmio_write(paddr_t addr, word_t data, char mask) {
 
   IOMap *map = fetch_mmio_map(addr);
   if (map == NULL) {
+#ifdef TRACE_COND
     Log("address = " FMT_PADDR " is out of bound of pmem [" FMT_PADDR ", " FMT_PADDR "] at pc = " FMT_WORD,
       (paddr_t)addr, PMEM_LEFT, PMEM_RIGHT, cpu.pc);
+#endif
     return;
   }
 

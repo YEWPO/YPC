@@ -52,5 +52,5 @@ class ID2EXReg extends Module {
   }
 
   /* ========== Combination Circuit ========== */
-  io.out := io.in
+  io.out := reg
 }

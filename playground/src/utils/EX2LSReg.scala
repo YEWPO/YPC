@@ -41,5 +41,6 @@ class EX2LSReg extends Module {
   }
 
   /* ========== Combination Circuit ========== */
-  io.out := io.in
+  io.out := reg
+
 }

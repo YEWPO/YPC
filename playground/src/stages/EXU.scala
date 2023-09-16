@@ -18,6 +18,7 @@ class EXUIO extends Bundle {
     val hazard     = new EXHazardDataBundle
     val csr_hazard = new EXCSRHazardDataBundle
     val jump_ctl   = Bool()
+    val dnpc       = UInt(64.W)
   })
 }
 
@@ -32,7 +33,7 @@ class EXU extends Module {
 
   /* ========== Wire Circuit ========== */
   val w_jump_ctl = (io.in.control.jump_op & Cat(alu.io.alu_out(0), 1.U(1.W))).orR
-  val w_dnpc     = Mux(io.in.control.dnpc_ctl, io.in.data.pc, io.in.data.src1) + io.in.data.imm
+  val w_dnpc     = Mux(io.in.control.dnpc_ctl, io.in.data.src1, io.in.data.pc) + io.in.data.imm
 
   /* ========== Combinational Circuit ========== */
   alu.io.src1 := Mux(
@@ -50,7 +51,8 @@ class EXU extends Module {
   csr_calc.io.csr_op_ctl := io.in.control.csr_op_ctl
 
   io.out.jump_ctl           := w_jump_ctl
-  io.out.data.dnpc          := w_dnpc
+  io.out.dnpc               := w_dnpc
+  io.out.data.dnpc          := Mux(w_jump_ctl, w_dnpc, io.in.data.snpc)
   io.out.data.snpc          := io.in.data.snpc
   io.out.data.pc            := io.in.data.pc
   io.out.data.inst          := io.in.data.inst

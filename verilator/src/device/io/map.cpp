@@ -47,7 +47,7 @@ word_t map_read(paddr_t addr, int len, IOMap *map) {
   invoke_callback(map->callback, offset, len, false); // prepare data to read
   word_t ret = host_read((void *)((uint64_t)map->space + offset), len);
 #ifdef CONFIG_DTRACE_COND
-  Log("Device %s read: 0x%016x 0x%08lx %d", map->name, addr, ret, len);
+  Log("Device %s read: 0x%016lx 0x%08lx %d", map->name, addr, ret, len);
 #endif
   return ret;
 }
@@ -59,6 +59,6 @@ void map_write(paddr_t addr, int len, word_t data, IOMap *map) {
   host_write((void *)((uint64_t)map->space + offset), len, data);
   invoke_callback(map->callback, offset, len, true);
 #ifdef CONFIG_DTRACE_COND
-  Log("Device %s write: 0x%016x 0x%08lx %d", map->name, addr, data, len);
+  Log("Device %s write: 0x%016lx 0x%08lx %d", map->name, addr, data, len);
 #endif
 }

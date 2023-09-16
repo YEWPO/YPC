@@ -25,5 +25,5 @@ class IF2IDReg extends Module {
   }
 
   /* ========== Combination Circuit ========== */
-  io.out := io.in
+  io.out := reg
 }

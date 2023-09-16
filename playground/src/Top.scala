@@ -29,7 +29,7 @@ class Top extends Module {
   r_pre_if.io.in.data.pc := Mux(
     csr_hazard.io.expt_op,
     csr_hazard.io.expt_pc,
-    Mux(exu.io.out.jump_ctl, exu.io.out.data.dnpc, ifu.io.out.data.snpc)
+    Mux(exu.io.out.jump_ctl, exu.io.out.dnpc, ifu.io.out.data.snpc)
   )
   r_pre_if.io.control.enable := hazard.io.pre_if_control.enable
   r_pre_if.io.control.reset  := hazard.io.pre_if_control.reset

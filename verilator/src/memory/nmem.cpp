@@ -20,8 +20,10 @@ static void out_of_bound(paddr_t addr) {
 
 void nmem_ifetch(const long long addr, long long *r_data) {
   if (addr < PMEM_LEFT || addr > PMEM_RIGHT) {
+#ifdef CONFIG_MTRACE_COND
     Log("address = " FMT_PADDR " is out of bound of pmem [" FMT_PADDR ", " FMT_PADDR "] at pc = " FMT_WORD,
       (paddr_t)addr, PMEM_LEFT, PMEM_RIGHT, cpu.pc);
+#endif
     *r_data = 0;
     return;
   }
@@ -34,9 +36,11 @@ void nmem_read(const long long addr, long long *r_data) {
     return;
   }
   IFDEF(CONFIG_DEVICE, *r_data = mmio_read(addr); return);
+#ifdef CONFIG_MTRACE_COND
   Log("address = " FMT_PADDR " is out of bound of pmem [" FMT_PADDR ", " FMT_PADDR "] at pc = " FMT_WORD,
     (paddr_t)addr, PMEM_LEFT, PMEM_RIGHT, cpu.pc);
   *r_data = 0;
+#endif
 }
 
 void nmem_write(const long long addr, const long long w_data, const char mask) {
@@ -45,6 +49,8 @@ void nmem_write(const long long addr, const long long w_data, const char mask) {
     return;
   }
   IFDEF(CONFIG_DEVICE, mmio_write(addr, w_data, mask); return);
+#ifdef CONFIG_MTRACE_COND
   Log("address = " FMT_PADDR " is out of bound of pmem [" FMT_PADDR ", " FMT_PADDR "] at pc = " FMT_WORD,
     (paddr_t)addr, PMEM_LEFT, PMEM_RIGHT, cpu.pc);
+#endif
 }

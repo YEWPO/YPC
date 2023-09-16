@@ -12,5 +12,5 @@ class DebugInfoIO extends Bundle {
 class DebugInfo extends BlackBox with HasBlackBoxPath {
   val io = IO(new DebugInfoIO)
 
-  addPath("playground/src/utils/writeback/DebugPart.v")
+  addPath("playground/src/utils/writeback/DebugInfo.v")
 }

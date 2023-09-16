@@ -23,5 +23,5 @@ class PreIFReg extends Module {
   }
 
   /* ========== Combination Circuit ========== */
-  io.out := io.in
+  io.out := reg
 }

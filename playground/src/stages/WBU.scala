@@ -2,6 +2,7 @@ package stages
 
 import chisel3._
 import chisel3.util._
+import chisel3.experimental.BundleLiterals._
 import bundles._
 import macros._
 import bundles.writeback._
@@ -27,7 +28,15 @@ class WBU extends Module {
   val statistic = Module(new Statistic)
 
   /* ========== Register ========== */
-  val r_statistic = RegInit(0.U.asTypeOf(new StatisticBundle))
+  val r_statistic = RegInit(
+    (new StatisticBundle).Lit(
+      _.pc         -> CommonMacros.PC_RESET_VAL,
+      _.dnpc       -> CommonMacros.PC_RESET_VAL,
+      _.inst       -> CommonMacros.INST_RESET_VAL,
+      _.ebreak_op  -> ControlMacros.EBREAK_OP_NO,
+      _.invalid_op -> ControlMacros.INVALID_OP_NO
+    )
+  )
 
   /* ========== Sequential Circuit ========== */
   r_statistic.ebreak_op  := io.in.control.ebreak_op
@@ -58,6 +67,4 @@ class WBU extends Module {
   io.out.hazard.wb_ctl             := io.in.control.wb_ctl
   io.out.csr_hazard.csr_w_addr     := io.in.data.csr_w_addr
   io.out.csr_hazard.csr_w_addr_tag := io.in.control.csr_w_en
-
-  statistic.io.in := r_statistic
 }
