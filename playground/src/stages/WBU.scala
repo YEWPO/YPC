@@ -38,6 +38,8 @@ class WBU extends Module {
   r_statistic.inst       := io.in.data.inst
 
   /* ========== Combinational Circuit ========== */
+  statistic.io.in := r_statistic
+
   io.out.data.wb_data := MuxLookup(io.in.control.wb_ctl, 0.U(64.W))(
     Seq(
       ControlMacros.WB_CTL_ALU  -> io.in.data.exe_out,

@@ -30,6 +30,11 @@ class EXU extends Module {
   val mul      = Module(new MulDiv)
   val csr_calc = Module(new CSRCalc)
 
+  /* ========== Wire Circuit ========== */
+  val w_jump_ctl = (io.in.control.jump_op & Cat(alu.io.alu_out(0), 1.U(1.W))).orR
+  val w_dnpc     = Mux(io.in.control.dnpc_ctl, io.in.data.pc, io.in.data.src1) + io.in.data.imm
+
+  /* ========== Combinational Circuit ========== */
   alu.io.src1 := Mux(
     io.in.control.csr_r_en,
     io.in.data.csr_data,
@@ -44,11 +49,6 @@ class EXU extends Module {
   csr_calc.io.src        := Mux(io.in.control.csr_src_ctl, io.in.data.csr_uimm, io.in.data.src1)
   csr_calc.io.csr_op_ctl := io.in.control.csr_op_ctl
 
-  /* ========== Wire Circuit ========== */
-  val w_jump_ctl = (io.in.control.jump_op & Cat(alu.io.alu_out(0), 1.U(1.W))).orR
-  val w_dnpc     = Mux(io.in.control.dnpc_ctl, io.in.data.pc, io.in.data.src1) + io.in.data.imm
-
-  /* ========== Combinational Circuit ========== */
   io.out.jump_ctl           := w_jump_ctl
   io.out.data.dnpc          := w_dnpc
   io.out.data.snpc          := io.in.data.snpc

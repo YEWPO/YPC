@@ -25,11 +25,11 @@ class LSU extends Module {
   /* ========== Module ========== */
   val data_mem = Module(new DataMem)
 
+  /* ========== Combinational Circuit ========== */
   data_mem.io.addr    := io.in.data.exe_out
   data_mem.io.w_data  := io.in.data.src2
   data_mem.io.mem_ctl := io.in.control.mem_ctl
 
-  /* ========== Combinational Circuit ========== */
   io.out.data.snpc          := io.in.data.snpc
   io.out.data.pc            := io.in.data.pc
   io.out.data.dnpc          := io.in.data.dnpc

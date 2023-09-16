@@ -48,6 +48,7 @@ class IDU extends Module {
   val csr_forward  = Module(new CSRForward)
   val csr_control  = Module(new CSRControlUnit)
 
+  /* ========== Combinational Circuit ========== */
   control_unit.io.inst      := io.in.data.inst
   imm_gen.io.in             := io.in.data.inst(31, 7)
   imm_gen.io.imm_type       := control_unit.io.imm_type
@@ -83,7 +84,6 @@ class IDU extends Module {
   csr_forward.io.csr_data_W := io.in.csr_forward.csr_data_W
   csr_forward.io.csr_fw_ctl := io.in.csr_hazard.csr_forward_ctl
 
-  /* ========== Combinational Circuit ========== */
   io.out.data.imm            := imm_gen.io.imm_out
   io.out.data.rd             := io.in.data.inst(11, 7)
   io.out.data.src1           := gpr_forward.io.src1
