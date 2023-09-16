@@ -8,9 +8,9 @@ class GPRForwardIO extends Bundle {
   val data1 = Input(UInt(64.W))
   val data2 = Input(UInt(64.W))
 
-  val alu_E   = Input(UInt(64.W))
+  val exe_E   = Input(UInt(64.W))
   val snpc_E  = Input(UInt(64.W))
-  val alu_M   = Input(UInt(64.W))
+  val exe_M   = Input(UInt(64.W))
   val mem_M   = Input(UInt(64.W))
   val snpc_M  = Input(UInt(64.W))
   val wb_data = Input(UInt(64.W))
@@ -26,9 +26,9 @@ class GPRForward extends Module {
   val io = IO(new GPRForwardIO)
 
   val forward_map = Seq(
-    HazardMacros.F_CTL_ALU_E   -> io.alu_E,
+    HazardMacros.F_CTL_EXE_E   -> io.exe_E,
     HazardMacros.F_CTL_SNPC_E  -> io.snpc_E,
-    HazardMacros.F_CTL_ALU_M   -> io.alu_M,
+    HazardMacros.F_CTL_EXE_M   -> io.exe_M,
     HazardMacros.F_CTL_MEM_M   -> io.mem_M,
     HazardMacros.F_CTL_SNPC_M  -> io.snpc_M,
     HazardMacros.F_CTL_WB_DATA -> io.wb_data

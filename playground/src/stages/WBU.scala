@@ -5,6 +5,7 @@ import chisel3.util._
 import bundles._
 import macros._
 import bundles.writeback._
+import utils.writeback._
 
 class WBUIO extends Bundle {
   val in = Input(new Bundle {
@@ -22,6 +23,19 @@ class WBUIO extends Bundle {
 class WBU extends Module {
   /* ========== Input and Output ========== */
   val io = IO(new WBUIO)
+
+  /* ========== Module ========== */
+  val statistic = Module(new Statistic)
+
+  /* ========== Register ========== */
+  val r_statistic = RegInit(0.U.asTypeOf(new StatisticBundle))
+
+  /* ========== Sequential Circuit ========== */
+  r_statistic.ebreak_op  := io.in.control.ebreak_op
+  r_statistic.invalid_op := io.in.control.invalid_op
+  r_statistic.pc         := io.in.data.pc
+  r_statistic.dnpc       := io.in.data.dnpc
+  r_statistic.inst       := io.in.data.inst
 
   /* ========== Combinational Circuit ========== */
   io.out.data.wb_data := MuxLookup(io.in.control.wb_ctl, 0.U(64.W))(
@@ -43,9 +57,5 @@ class WBU extends Module {
   io.out.csr_hazard.csr_w_addr     := io.in.data.csr_w_addr
   io.out.csr_hazard.csr_w_addr_tag := io.in.control.csr_w_en
 
-  io.out.stat.ebreak_op  := io.in.control.ebreak_op
-  io.out.stat.invalid_op := io.in.control.invalid_op
-  io.out.stat.pc         := io.in.data.pc
-  io.out.stat.dnpc       := io.in.data.dnpc
-  io.out.stat.inst       := io.in.data.inst
+  statistic.io.in := r_statistic
 }

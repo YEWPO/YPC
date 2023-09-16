@@ -51,10 +51,10 @@ class HazardUnit extends Module {
     * rs != 0 && rs hazard
     */
   def get_fw_rules(rs: UInt) = Seq(
-    (rs.orR && io.execute.data.rd_tag && rs === io.execute.data.rd && io.execute.data.wb_ctl === ControlMacros.WB_CTL_ALU)           -> HazardMacros.F_CTL_ALU_E,
+    (rs.orR && io.execute.data.rd_tag && rs === io.execute.data.rd && io.execute.data.wb_ctl === ControlMacros.WB_CTL_ALU)           -> HazardMacros.F_CTL_EXE_E,
     (rs.orR && io.execute.data.rd_tag && rs === io.execute.data.rd && io.execute.data.wb_ctl === ControlMacros.WB_CTL_MEM)           -> HazardMacros.F_CTL_DEFAULT,
     (rs.orR && io.execute.data.rd_tag && rs === io.execute.data.rd && io.execute.data.wb_ctl === ControlMacros.WB_CTL_SNPC)          -> HazardMacros.F_CTL_SNPC_E,
-    (rs.orR && io.load_store.data.rd_tag && rs === io.load_store.data.rd && io.load_store.data.wb_ctl === ControlMacros.WB_CTL_ALU)  -> HazardMacros.F_CTL_ALU_M,
+    (rs.orR && io.load_store.data.rd_tag && rs === io.load_store.data.rd && io.load_store.data.wb_ctl === ControlMacros.WB_CTL_ALU)  -> HazardMacros.F_CTL_EXE_M,
     (rs.orR && io.load_store.data.rd_tag && rs === io.load_store.data.rd && io.load_store.data.wb_ctl === ControlMacros.WB_CTL_MEM)  -> HazardMacros.F_CTL_MEM_M,
     (rs.orR && io.load_store.data.rd_tag && rs === io.load_store.data.rd && io.load_store.data.wb_ctl === ControlMacros.WB_CTL_SNPC) -> HazardMacros.F_CTL_SNPC_M,
     (rs.orR && io.write_back.data.rd_tag && rs === io.write_back.data.rd)                                                            -> HazardMacros.F_CTL_WB_DATA,

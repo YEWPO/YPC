@@ -9,12 +9,11 @@ object GPRForwardTest extends ChiselUtestTester {
   val tests = Tests {
     test("Forward") {
       test("Default") {
-        testCircuit(new GPRForward) { dut =>
-          dut.io.data1.poke(1.U)
+        testCircuit(new GPRForward) { dut => dut.io.data1.poke(1.U)
           dut.io.data2.poke(1.U)
-          dut.io.alu_E.poke(2.U)
+          dut.io.exe_E.poke(2.U)
           dut.io.snpc_E.poke(3.U)
-          dut.io.alu_M.poke(4.U)
+          dut.io.exe_M.poke(4.U)
           dut.io.mem_M.poke(5.U)
           dut.io.snpc_M.poke(6.U)
           dut.io.wb_data.poke(7.U)
@@ -25,18 +24,18 @@ object GPRForwardTest extends ChiselUtestTester {
           dut.io.src2.expect(1.U)
         }
       }
-      test("alu_E") {
+      test("exe_E") {
         testCircuit(new GPRForward) { dut =>
           dut.io.data1.poke(1.U)
           dut.io.data2.poke(1.U)
-          dut.io.alu_E.poke(2.U)
+          dut.io.exe_E.poke(2.U)
           dut.io.snpc_E.poke(3.U)
-          dut.io.alu_M.poke(4.U)
+          dut.io.exe_M.poke(4.U)
           dut.io.mem_M.poke(5.U)
           dut.io.snpc_M.poke(6.U)
           dut.io.wb_data.poke(7.U)
-          dut.io.fa_ctl.poke(HazardMacros.F_CTL_ALU_E)
-          dut.io.fb_ctl.poke(HazardMacros.F_CTL_ALU_E)
+          dut.io.fa_ctl.poke(HazardMacros.F_CTL_EXE_E)
+          dut.io.fb_ctl.poke(HazardMacros.F_CTL_EXE_E)
           dut.clock.step()
           dut.io.src1.expect(2.U)
           dut.io.src2.expect(2.U)
@@ -46,9 +45,9 @@ object GPRForwardTest extends ChiselUtestTester {
         testCircuit(new GPRForward) { dut =>
           dut.io.data1.poke(1.U)
           dut.io.data2.poke(1.U)
-          dut.io.alu_E.poke(2.U)
+          dut.io.exe_E.poke(2.U)
           dut.io.snpc_E.poke(3.U)
-          dut.io.alu_M.poke(4.U)
+          dut.io.exe_M.poke(4.U)
           dut.io.mem_M.poke(5.U)
           dut.io.snpc_M.poke(6.U)
           dut.io.wb_data.poke(7.U)
@@ -59,18 +58,18 @@ object GPRForwardTest extends ChiselUtestTester {
           dut.io.src2.expect(3.U)
         }
       }
-      test("alu_M") {
+      test("exe_M") {
         testCircuit(new GPRForward) { dut =>
           dut.io.data1.poke(1.U)
           dut.io.data2.poke(1.U)
-          dut.io.alu_E.poke(2.U)
+          dut.io.exe_E.poke(2.U)
           dut.io.snpc_E.poke(3.U)
-          dut.io.alu_M.poke(4.U)
+          dut.io.exe_M.poke(4.U)
           dut.io.mem_M.poke(5.U)
           dut.io.snpc_M.poke(6.U)
           dut.io.wb_data.poke(7.U)
-          dut.io.fa_ctl.poke(HazardMacros.F_CTL_ALU_M)
-          dut.io.fb_ctl.poke(HazardMacros.F_CTL_ALU_M)
+          dut.io.fa_ctl.poke(HazardMacros.F_CTL_EXE_M)
+          dut.io.fb_ctl.poke(HazardMacros.F_CTL_EXE_M)
           dut.clock.step()
           dut.io.src1.expect(4.U)
           dut.io.src2.expect(4.U)
@@ -80,9 +79,9 @@ object GPRForwardTest extends ChiselUtestTester {
         testCircuit(new GPRForward) { dut =>
           dut.io.data1.poke(1.U)
           dut.io.data2.poke(1.U)
-          dut.io.alu_E.poke(2.U)
+          dut.io.exe_E.poke(2.U)
           dut.io.snpc_E.poke(3.U)
-          dut.io.alu_M.poke(4.U)
+          dut.io.exe_M.poke(4.U)
           dut.io.mem_M.poke(5.U)
           dut.io.snpc_M.poke(6.U)
           dut.io.wb_data.poke(7.U)
@@ -97,9 +96,9 @@ object GPRForwardTest extends ChiselUtestTester {
         testCircuit(new GPRForward) { dut =>
           dut.io.data1.poke(1.U)
           dut.io.data2.poke(1.U)
-          dut.io.alu_E.poke(2.U)
+          dut.io.exe_E.poke(2.U)
           dut.io.snpc_E.poke(3.U)
-          dut.io.alu_M.poke(4.U)
+          dut.io.exe_M.poke(4.U)
           dut.io.mem_M.poke(5.U)
           dut.io.snpc_M.poke(6.U)
           dut.io.wb_data.poke(7.U)
@@ -114,9 +113,9 @@ object GPRForwardTest extends ChiselUtestTester {
         testCircuit(new GPRForward) { dut =>
           dut.io.data1.poke(1.U)
           dut.io.data2.poke(1.U)
-          dut.io.alu_E.poke(2.U)
+          dut.io.exe_E.poke(2.U)
           dut.io.snpc_E.poke(3.U)
-          dut.io.alu_M.poke(4.U)
+          dut.io.exe_M.poke(4.U)
           dut.io.mem_M.poke(5.U)
           dut.io.snpc_M.poke(6.U)
           dut.io.wb_data.poke(7.U)
