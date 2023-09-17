@@ -11,7 +11,7 @@ class GPRForwardIO extends Bundle {
 
   val forward = Input(new IDForwardBundle)
 
-  val id_f_ctl = Input(new IDHazardControlBundle)
+  val fw_ctl = Input(new IDHazardControlBundle)
 
   val src1 = Output(UInt(64.W))
   val src2 = Output(UInt(64.W))
@@ -29,6 +29,6 @@ class GPRForward extends Module {
     HazardMacros.F_CTL_WB_DATA -> io.forward.wb_data
   )
 
-  io.src1 := MuxLookup(io.id_f_ctl.fa_ctl, io.data1)(forward_map)
-  io.src2 := MuxLookup(io.id_f_ctl.fb_ctl, io.data2)(forward_map)
+  io.src1 := MuxLookup(io.fw_ctl.fa_ctl, io.data1)(forward_map)
+  io.src2 := MuxLookup(io.fw_ctl.fb_ctl, io.data2)(forward_map)
 }
