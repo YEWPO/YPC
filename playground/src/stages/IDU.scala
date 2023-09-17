@@ -59,14 +59,8 @@ class IDU extends Module {
   gpr.io.w_data             := io.in.wb_data.wb_data
   gpr_forward.io.data1      := gpr.io.r_data1
   gpr_forward.io.data2      := gpr.io.r_data2
-  gpr_forward.io.exe_E      := io.in.forward.exe_E
-  gpr_forward.io.snpc_E     := io.in.forward.snpc_E
-  gpr_forward.io.exe_M      := io.in.forward.exe_M
-  gpr_forward.io.mem_M      := io.in.forward.mem_M
-  gpr_forward.io.snpc_M     := io.in.forward.snpc_M
-  gpr_forward.io.wb_data    := io.in.forward.wb_data
-  gpr_forward.io.fa_ctl     := io.in.hazard.fa_ctl
-  gpr_forward.io.fb_ctl     := io.in.hazard.fb_ctl
+  gpr_forward.io.forward    := io.in.forward
+  gpr_forward.io.id_f_ctl   := io.in.hazard
   csr.io.csr_r_addr         := io.in.data.inst(31, 20)
   csr.io.csr_r_en           := csr_control.io.csr_r_en
   csr.io.csr_w_addr         := io.in.wb_data.csr_w_addr
