@@ -84,12 +84,16 @@ class IDU extends Module {
   csr_forward.io.csr_data_W := io.in.csr_forward.csr_data_W
   csr_forward.io.csr_fw_ctl := io.in.csr_hazard.csr_forward_ctl
 
-  io.out.data.imm            := imm_gen.io.imm_out
-  io.out.data.rd             := io.in.data.inst(11, 7)
-  io.out.data.src1           := gpr_forward.io.src1
-  io.out.data.src2           := gpr_forward.io.src2
-  io.out.data.pc             := io.in.data.pc
-  io.out.data.snpc           := Mux(control_unit.io.ecall_op, csr.io.tvec, Mux(control_unit.io.mret_op, csr.io.epc, io.in.data.snpc))
+  io.out.data.imm  := imm_gen.io.imm_out
+  io.out.data.rd   := io.in.data.inst(11, 7)
+  io.out.data.src1 := gpr_forward.io.src1
+  io.out.data.src2 := gpr_forward.io.src2
+  io.out.data.pc   := io.in.data.pc
+  io.out.data.snpc := Mux(
+    control_unit.io.ecall_op,
+    csr.io.tvec,
+    Mux(control_unit.io.mret_op, csr.io.epc, io.in.data.snpc)
+  )
   io.out.data.inst           := io.in.data.inst
   io.out.control.a_ctl       := control_unit.io.a_ctl
   io.out.control.b_ctl       := control_unit.io.b_ctl

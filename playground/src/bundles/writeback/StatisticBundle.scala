@@ -1,4 +1,4 @@
-package bundles
+package bundles.writeback
 
 import chisel3._
 

@@ -1,7 +1,7 @@
 package utils.writeback
 
 import chisel3._
-import bundles._
+import bundles.writeback._
 
 class StatisticIO extends Bundle {
   val in = Input(new StatisticBundle)

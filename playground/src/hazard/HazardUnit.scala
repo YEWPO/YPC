@@ -47,9 +47,6 @@ class HazardUnit extends Module {
   val not_execute_mem_out = not_execute_wb_mem || (rs1_not_hazard_execute && rs2_not_hazard_execute)
 
   /* ========== Function ========== */
-  /**
-    * rs != 0 && rs hazard
-    */
   def get_fw_rules(rs: UInt) = Seq(
     (rs.orR && io.execute.data.rd_tag && rs === io.execute.data.rd && io.execute.data.wb_ctl === ControlMacros.WB_CTL_ALU)           -> HazardMacros.F_CTL_EXE_E,
     (rs.orR && io.execute.data.rd_tag && rs === io.execute.data.rd && io.execute.data.wb_ctl === ControlMacros.WB_CTL_MEM)           -> HazardMacros.F_CTL_DEFAULT,
