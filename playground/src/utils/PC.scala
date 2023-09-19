@@ -5,21 +5,19 @@ import bundles._
 import chisel3.experimental.BundleLiterals._
 import macros._
 
-class PreIFReg extends Module {
+class PC extends Module {
   /* ========== Input and Output ========== */
-  val io = IO(new StageRegIO(new PreIFBundle))
+  val io = IO(new StageRegIO(UInt(64.W)))
 
   /* ========== Register ========== */
-  val reg = Reg(new PreIFBundle)
+  val reg = Reg(UInt(64.W))
 
   /* ========== Sequential Circuit ========== */
   when(io.control.enable) {
     reg := io.in
   }
   when(io.control.reset) {
-    reg := (new PreIFBundle).Lit(
-      _.data.pc -> CommonMacros.PC_RESET_VAL
-    )
+    reg := CommonMacros.PC_RESET_VAL
   }
 
   /* ========== Combination Circuit ========== */

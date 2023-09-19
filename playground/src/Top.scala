@@ -19,38 +19,38 @@ class Top extends Module {
   val csr_hazard = Module(new CSRHazardUnit)
 
   /* ========== Register ========== */
-  val r_pre_if = Module(new PreIFReg)
-  val r_if2id  = Module(new IF2IDReg)
-  val r_id2ex  = Module(new ID2EXReg)
-  val r_ex2ls  = Module(new EX2LSReg)
-  val r_ls2wb  = Module(new LS2WBReg)
+  val pc      = Module(new PC)
+  val r_if2id = Module(new IF2IDReg)
+  val r_id2ex = Module(new ID2EXReg)
+  val r_ex2ls = Module(new EX2LSReg)
+  val r_ls2wb = Module(new LS2WBReg)
 
   /* ========== Sequential Circuit ========== */
-  r_pre_if.io.in.data.pc := Mux(
+  pc.io.in := Mux(
     csr_hazard.io.expt_op,
     csr_hazard.io.expt_pc,
     Mux(exu.io.out.jump_ctl, exu.io.out.dnpc, ifu.io.out.data.snpc)
   )
-  r_pre_if.io.control.enable := hazard.io.pre_if_control.enable
-  r_pre_if.io.control.reset  := hazard.io.pre_if_control.reset
-  r_if2id.io.in.data         := ifu.io.out.data
-  r_if2id.io.control.enable  := hazard.io.if_id_control.enable
-  r_if2id.io.control.reset   := hazard.io.if_id_control.reset || csr_hazard.io.csr_reset
-  r_id2ex.io.in.data         := idu.io.out.data
-  r_id2ex.io.in.control      := idu.io.out.control
-  r_id2ex.io.control.enable  := hazard.io.id_ex_control.enable
-  r_id2ex.io.control.reset   := hazard.io.id_ex_control.reset
-  r_ex2ls.io.in.data         := exu.io.out.data
-  r_ex2ls.io.in.control      := exu.io.out.control
-  r_ex2ls.io.control.enable  := hazard.io.ex_ls_control.enable
-  r_ex2ls.io.control.reset   := hazard.io.ex_ls_control.reset
-  r_ls2wb.io.in.data         := lsu.io.out.data
-  r_ls2wb.io.in.control      := lsu.io.out.control
-  r_ls2wb.io.control.enable  := hazard.io.ls_wb_control.enable
-  r_ls2wb.io.control.reset   := hazard.io.ls_wb_control.reset
+  pc.io.control.enable      := hazard.io.pc.enable
+  pc.io.control.reset       := hazard.io.pc.reset
+  r_if2id.io.in.data        := ifu.io.out.data
+  r_if2id.io.control.enable := hazard.io.if_id_control.enable
+  r_if2id.io.control.reset  := hazard.io.if_id_control.reset || csr_hazard.io.csr_reset
+  r_id2ex.io.in.data        := idu.io.out.data
+  r_id2ex.io.in.control     := idu.io.out.control
+  r_id2ex.io.control.enable := hazard.io.id_ex_control.enable
+  r_id2ex.io.control.reset  := hazard.io.id_ex_control.reset
+  r_ex2ls.io.in.data        := exu.io.out.data
+  r_ex2ls.io.in.control     := exu.io.out.control
+  r_ex2ls.io.control.enable := hazard.io.ex_ls_control.enable
+  r_ex2ls.io.control.reset  := hazard.io.ex_ls_control.reset
+  r_ls2wb.io.in.data        := lsu.io.out.data
+  r_ls2wb.io.in.control     := lsu.io.out.control
+  r_ls2wb.io.control.enable := hazard.io.ls_wb_control.enable
+  r_ls2wb.io.control.reset  := hazard.io.ls_wb_control.reset
 
   /* ========== Combinational Circuit ========== */
-  ifu.io.in.data                       := r_pre_if.io.out.data
+  ifu.io.in.pc                         := pc.io.out
   idu.io.in.data                       := r_if2id.io.out.data
   idu.io.in.wb_data                    := wbu.io.out.data
   idu.io.in.forward.exe_E              := exu.io.out.data.exe_out
