@@ -7,10 +7,15 @@ import utils.instfetch._
 
 class IFUIO extends Bundle {
   val in = Input(new Bundle {
-    val pc = UInt(64.W)
+    val dnpc      = UInt(64.W)
+    val expt_pc   = UInt(64.W)
+    val expt_op   = Bool()
+    val jump_ctl  = Bool()
+    val pc_enable = Bool()
   })
   val out = Output(new Bundle {
-    val data = new IF2IDDataBundle
+    val data       = new IF2IDDataBundle
+    val inst_valid = Bool()
   })
 }
 
@@ -19,16 +24,45 @@ class IFU extends Module {
   val io = IO(new IFUIO)
 
   /* ========== Module ========== */
-  val inst_mem = Module(new InstMem)
+  val inst_ram = Module(new InstRAM)
+
+  /* ========== Register ========== */
+  val pc = RegInit(CommonMacros.PC_RESET_VAL)
+
+  /* ========== Wire ========== */
+  val snpc = pc + 4.U
+  val npc = Mux(
+    io.in.expt_op,
+    io.in.expt_pc,
+    Mux(
+      inst_ram.io.r.valid,
+      Mux(io.in.jump_ctl, io.in.dnpc, snpc),
+      pc
+    )
+  )
+
+  /* ========== Sequential Circuit ========== */
+  when(io.in.pc_enable) {
+    pc := npc
+  }
 
   /* ========== Combinational Circuit ========== */
-  inst_mem.io.addr := io.in.pc
+  inst_ram.io.ar.bits.addr := pc
+  inst_ram.io.ar.bits.prot := 0.U
+  inst_ram.io.ar.valid     := true.B
+
+  inst_ram.io.r.ready := true.B
 
   io.out.data.inst := Mux(
-    io.in.pc(2).orR,
-    CommonMacros.getWord(inst_mem.io.r_data, 1),
-    CommonMacros.getWord(inst_mem.io.r_data, 0)
+    inst_ram.io.r.valid,
+    Mux(
+      pc(2).orR,
+      CommonMacros.getWord(inst_ram.io.r.bits.data, 1),
+      CommonMacros.getWord(inst_ram.io.r.bits.data, 0)
+    ),
+    CommonMacros.INST_RESET_VAL
   )
-  io.out.data.pc   := io.in.pc
-  io.out.data.snpc := io.in.pc + 4.U
+  io.out.data.pc    := pc
+  io.out.data.snpc  := snpc
+  io.out.inst_valid := inst_ram.io.r.valid
 }

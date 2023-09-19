@@ -19,20 +19,12 @@ class Top extends Module {
   val csr_hazard = Module(new CSRHazardUnit)
 
   /* ========== Register ========== */
-  val pc      = Module(new PC)
   val r_if2id = Module(new IF2IDReg)
   val r_id2ex = Module(new ID2EXReg)
   val r_ex2ls = Module(new EX2LSReg)
   val r_ls2wb = Module(new LS2WBReg)
 
   /* ========== Sequential Circuit ========== */
-  pc.io.in := Mux(
-    csr_hazard.io.expt_op,
-    csr_hazard.io.expt_pc,
-    Mux(exu.io.out.jump_ctl, exu.io.out.dnpc, ifu.io.out.data.snpc)
-  )
-  pc.io.control.enable  := hazard.io.pc.enable
-  pc.io.control.reset   := hazard.io.pc.reset
   r_if2id.io.in.data    := ifu.io.out.data
   r_if2id.io.control    := hazard.io.if_id_control
   r_id2ex.io.in.data    := idu.io.out.data
@@ -46,7 +38,11 @@ class Top extends Module {
   r_ls2wb.io.control    := hazard.io.ls_wb_control
 
   /* ========== Combinational Circuit ========== */
-  ifu.io.in.pc                         := pc.io.out
+  ifu.io.in.dnpc                       := exu.io.out.dnpc
+  ifu.io.in.expt_pc                    := csr_hazard.io.expt_pc
+  ifu.io.in.expt_op                    := csr_hazard.io.expt_op
+  ifu.io.in.jump_ctl                   := exu.io.out.jump_ctl
+  ifu.io.in.pc_enable                  := hazard.io.pc_enable
   idu.io.in.data                       := r_if2id.io.out.data
   idu.io.in.wb_data                    := wbu.io.out.data
   idu.io.in.forward.exe_E              := exu.io.out.data.exe_out
@@ -73,6 +69,7 @@ class Top extends Module {
   hazard.io.load_store.data  := lsu.io.out.hazard
   hazard.io.write_back.data  := wbu.io.out.hazard
   hazard.io.csr_reset        := csr_hazard.io.csr_reset
+  hazard.io.ifu_inst_valid   := ifu.io.out.inst_valid
 
   csr_hazard.io.inst_decode.data := idu.io.out.csr_hazard
   csr_hazard.io.execute.data     := exu.io.out.csr_hazard

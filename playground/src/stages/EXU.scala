@@ -31,7 +31,7 @@ class EXU extends Module {
   val mul      = Module(new MulDiv)
   val csr_calc = Module(new CSRCalc)
 
-  /* ========== Wire Circuit ========== */
+  /* ========== Wire ========== */
   val w_jump_ctl = (io.in.control.jump_op & Cat(alu.io.alu_out(0), 1.U(1.W))).orR
   val w_dnpc     = Mux(io.in.control.dnpc_ctl, io.in.data.src1, io.in.data.pc) + io.in.data.imm
 

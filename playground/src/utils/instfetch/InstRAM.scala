@@ -7,8 +7,8 @@ import bundles._
 class InstRAM extends Module {
   /* ========== Input and Output ========== */
   val io = IO(new Bundle {
-    val ar = Decoupled(new AXILiteReadAddrBundle)
-    val r  = Flipped(Decoupled(new AXILiteReadDataBundle))
+    val ar = Flipped(Decoupled(new AXILiteReadAddrBundle))
+    val r  = Decoupled(new AXILiteReadDataBundle)
   })
 
   /* ========== Module ========== */
