@@ -27,6 +27,8 @@ class HazardUnitIO extends Bundle {
     val control = Input(new WBHazardControlBundle)
   }
 
+  val csr_reset = Input(Bool())
+
   val pc            = Output(new StageControlBundle)
   val if_id_control = Output(new StageControlBundle)
   val id_ex_control = Output(new StageControlBundle)
@@ -62,7 +64,7 @@ class HazardUnit extends Module {
   io.pc.enable            := not_execute_mem_out
   io.pc.reset             := reset.asBool
   io.if_id_control.enable := not_execute_mem_out
-  io.if_id_control.reset  := reset.asBool || io.execute.data.jump_sig
+  io.if_id_control.reset  := reset.asBool || io.execute.data.jump_sig || io.csr_reset
   io.id_ex_control.enable := true.B
   io.id_ex_control.reset  := io.execute.data.jump_sig || !not_execute_mem_out
   io.ex_ls_control.enable := true.B

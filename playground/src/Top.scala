@@ -31,23 +31,19 @@ class Top extends Module {
     csr_hazard.io.expt_pc,
     Mux(exu.io.out.jump_ctl, exu.io.out.dnpc, ifu.io.out.data.snpc)
   )
-  pc.io.control.enable      := hazard.io.pc.enable
-  pc.io.control.reset       := hazard.io.pc.reset
-  r_if2id.io.in.data        := ifu.io.out.data
-  r_if2id.io.control.enable := hazard.io.if_id_control.enable
-  r_if2id.io.control.reset  := hazard.io.if_id_control.reset || csr_hazard.io.csr_reset
-  r_id2ex.io.in.data        := idu.io.out.data
-  r_id2ex.io.in.control     := idu.io.out.control
-  r_id2ex.io.control.enable := hazard.io.id_ex_control.enable
-  r_id2ex.io.control.reset  := hazard.io.id_ex_control.reset
-  r_ex2ls.io.in.data        := exu.io.out.data
-  r_ex2ls.io.in.control     := exu.io.out.control
-  r_ex2ls.io.control.enable := hazard.io.ex_ls_control.enable
-  r_ex2ls.io.control.reset  := hazard.io.ex_ls_control.reset
-  r_ls2wb.io.in.data        := lsu.io.out.data
-  r_ls2wb.io.in.control     := lsu.io.out.control
-  r_ls2wb.io.control.enable := hazard.io.ls_wb_control.enable
-  r_ls2wb.io.control.reset  := hazard.io.ls_wb_control.reset
+  pc.io.control.enable  := hazard.io.pc.enable
+  pc.io.control.reset   := hazard.io.pc.reset
+  r_if2id.io.in.data    := ifu.io.out.data
+  r_if2id.io.control    := hazard.io.if_id_control
+  r_id2ex.io.in.data    := idu.io.out.data
+  r_id2ex.io.in.control := idu.io.out.control
+  r_id2ex.io.control    := hazard.io.id_ex_control
+  r_ex2ls.io.in.data    := exu.io.out.data
+  r_ex2ls.io.in.control := exu.io.out.control
+  r_ex2ls.io.control    := hazard.io.ex_ls_control
+  r_ls2wb.io.in.data    := lsu.io.out.data
+  r_ls2wb.io.in.control := lsu.io.out.control
+  r_ls2wb.io.control    := hazard.io.ls_wb_control
 
   /* ========== Combinational Circuit ========== */
   ifu.io.in.pc                         := pc.io.out
@@ -76,6 +72,7 @@ class Top extends Module {
   hazard.io.execute.data     := exu.io.out.hazard
   hazard.io.load_store.data  := lsu.io.out.hazard
   hazard.io.write_back.data  := wbu.io.out.hazard
+  hazard.io.csr_reset        := csr_hazard.io.csr_reset
 
   csr_hazard.io.inst_decode.data := idu.io.out.csr_hazard
   csr_hazard.io.execute.data     := exu.io.out.csr_hazard
