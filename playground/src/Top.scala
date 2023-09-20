@@ -19,14 +19,11 @@ class Top extends Module {
   val csr_hazard = Module(new CSRHazardUnit)
 
   /* ========== Register ========== */
-  val r_if2id = Module(new IF2IDReg)
   val r_id2ex = Module(new ID2EXReg)
   val r_ex2ls = Module(new EX2LSReg)
   val r_ls2wb = Module(new LS2WBReg)
 
   /* ========== Sequential Circuit ========== */
-  r_if2id.io.in.data    := ifu.io.out.data
-  r_if2id.io.control    := hazard.io.if_id_control
   r_id2ex.io.in.data    := idu.io.out.data
   r_id2ex.io.in.control := idu.io.out.control
   r_id2ex.io.control    := hazard.io.id_ex_control
@@ -43,7 +40,7 @@ class Top extends Module {
   ifu.io.in.expt_op                    := csr_hazard.io.expt_op
   ifu.io.in.jump_ctl                   := exu.io.out.jump_ctl
   ifu.io.in.pc_enable                  := hazard.io.pc_enable
-  idu.io.in.data                       := r_if2id.io.out.data
+  idu.io.in.data                       := ifu.io.if2id
   idu.io.in.wb_data                    := wbu.io.out.data
   idu.io.in.forward.exe_E              := exu.io.out.data.exe_out
   idu.io.in.forward.snpc_E             := exu.io.out.data.snpc
