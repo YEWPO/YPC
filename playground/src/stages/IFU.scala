@@ -54,13 +54,9 @@ class IFU extends Module {
   inst_ram.io.r.ready := true.B
 
   io.out.data.inst := Mux(
-    inst_ram.io.r.valid,
-    Mux(
-      pc(2).orR,
-      CommonMacros.getWord(inst_ram.io.r.bits.data, 1),
-      CommonMacros.getWord(inst_ram.io.r.bits.data, 0)
-    ),
-    CommonMacros.INST_RESET_VAL
+    pc(2).orR,
+    CommonMacros.getWord(inst_ram.io.r.bits.data, 1),
+    CommonMacros.getWord(inst_ram.io.r.bits.data, 0)
   )
   io.out.data.pc    := pc
   io.out.data.snpc  := snpc
