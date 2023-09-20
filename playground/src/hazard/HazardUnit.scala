@@ -27,8 +27,7 @@ class HazardUnitIO extends Bundle {
     val control = Input(new WBHazardControlBundle)
   }
 
-  val csr_reset      = Input(Bool())
-  val ifu_inst_valid = Input(Bool())
+  val csr_reset = Input(Bool())
 
   val pc_enable     = Output(Bool())
   val if_id_control = Output(new StageControlBundle)
@@ -63,13 +62,13 @@ class HazardUnit extends Module {
 
   /* ========== Combinational Circuit ========== */
   io.pc_enable            := not_execute_mem_out
-  io.if_id_control.enable := not_execute_mem_out && io.ifu_inst_valid
+  io.if_id_control.enable := not_execute_mem_out
   io.if_id_control.reset  := reset.asBool || io.execute.data.jump_sig || io.csr_reset
-  io.id_ex_control.enable := true.B && io.ifu_inst_valid
+  io.id_ex_control.enable := true.B
   io.id_ex_control.reset  := reset.asBool || io.execute.data.jump_sig || !not_execute_mem_out
-  io.ex_ls_control.enable := true.B && io.ifu_inst_valid
+  io.ex_ls_control.enable := true.B
   io.ex_ls_control.reset  := reset.asBool
-  io.ls_wb_control.enable := true.B && io.ifu_inst_valid
+  io.ls_wb_control.enable := true.B
   io.ls_wb_control.reset  := reset.asBool
 
   io.inst_decode.control.fa_ctl := Mux(

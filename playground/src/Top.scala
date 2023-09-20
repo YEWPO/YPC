@@ -69,7 +69,6 @@ class Top extends Module {
   hazard.io.load_store.data  := lsu.io.out.hazard
   hazard.io.write_back.data  := wbu.io.out.hazard
   hazard.io.csr_reset        := csr_hazard.io.csr_reset
-  hazard.io.ifu_inst_valid   := ifu.io.out.inst_valid
 
   csr_hazard.io.inst_decode.data := idu.io.out.csr_hazard
   csr_hazard.io.execute.data     := exu.io.out.csr_hazard
