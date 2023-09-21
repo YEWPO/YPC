@@ -24,6 +24,8 @@ class IFU extends Module {
 
   /* ========== Module ========== */
   val inst_mem = Module(new InstMem)
+
+  /* ========== Parameter ========== */
   val if2id_rst_val = (new IF2IDBundle).Lit(
     _.data -> (new IF2IDDataBundle).Lit(
       _.pc   -> CommonMacros.PC_RESET_VAL,
@@ -33,11 +35,15 @@ class IFU extends Module {
   )
 
   /* ========== Register ========== */
-  val pc      = RegInit(CommonMacros.PC_RESET_VAL)
-  val r_if2id = RegInit(if2id_rst_val)
+  val pc = RegInit(CommonMacros.PC_RESET_VAL)
+
   val r_valid = RegInit(false.B)
+  val r_if2id = RegInit(if2id_rst_val)
 
   /* ========== Wire ========== */
+  val valid_enable = !io.if2id.valid || io.if2id.ready
+  val valid_next   = r_valid && !io.if2id.fire
+
   val snpc = pc + 4.U
   val npc = Mux(
     io.in.expt_op,
@@ -49,8 +55,6 @@ class IFU extends Module {
     CommonMacros.getWord(inst_mem.io.r_data, 1),
     CommonMacros.getWord(inst_mem.io.r_data, 0)
   )
-  val valid_enable = !io.if2id.valid || io.if2id.ready
-  val valid_next   = r_valid && !io.if2id.ready
 
   /* ========== Sequential Circuit ========== */
   r_valid := Mux(valid_enable, true.B, valid_next)
@@ -62,8 +66,9 @@ class IFU extends Module {
   pc := Mux(io.if2id.fire, npc, pc)
 
   /* ========== Combinational Circuit ========== */
+  io.if2id.valid := r_valid
+
   inst_mem.io.addr := pc
 
-  io.if2id.valid     := r_valid
   io.if2id.bits.data := r_if2id.data
 }
