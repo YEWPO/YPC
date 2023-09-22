@@ -9,6 +9,7 @@ class ID2EXDataBundle extends Bundle {
   val rd   = UInt(5.W)
   val inst = UInt(32.W)
   val pc   = UInt(64.W)
+  val dnpc = UInt(64.W)
   val snpc = UInt(64.W)
 
   val csr_data   = UInt(64.W)
@@ -17,7 +18,7 @@ class ID2EXDataBundle extends Bundle {
 }
 
 class ID2EXControlBundle extends Bundle {
-  val a_ctl       = Bool()
+  val a_ctl       = UInt(2.W)
   val b_ctl       = Bool()
   val dnpc_ctl    = Bool()
   val alu_ctl     = UInt(5.W)
@@ -25,7 +26,6 @@ class ID2EXControlBundle extends Bundle {
   val exe_out_ctl = Bool()
   val jump_op     = UInt(2.W)
   val mem_ctl     = UInt(5.W)
-  val wb_ctl      = UInt(2.W)
   val reg_w_en    = Bool()
   val ebreak_op   = Bool()
   val invalid_op  = Bool()

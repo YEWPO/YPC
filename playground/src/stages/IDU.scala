@@ -60,6 +60,7 @@ class IDU extends Module {
     _.data -> (new ID2EXDataBundle).Lit(
       _.pc         -> CommonMacros.PC_RESET_VAL,
       _.snpc       -> CommonMacros.PC_RESET_VAL,
+      _.dnpc       -> CommonMacros.PC_RESET_VAL,
       _.inst       -> CommonMacros.INST_RESET_VAL,
       _.rd         -> 0.U,
       _.src1       -> 0.U,
@@ -78,7 +79,6 @@ class IDU extends Module {
       _.exe_out_ctl -> ControlMacros.EXE_OUT_DEFAULT,
       _.jump_op     -> ControlMacros.JUMP_OP_DEFAULT,
       _.mem_ctl     -> ControlMacros.MEM_CTL_DEFAULT,
-      _.wb_ctl      -> ControlMacros.WB_CTL_DEFAULT,
       _.reg_w_en    -> ControlMacros.REG_W_DISABLE,
       _.ebreak_op   -> ControlMacros.EBREAK_OP_NO,
       _.invalid_op  -> ControlMacros.INVALID_OP_NO,
@@ -99,19 +99,22 @@ class IDU extends Module {
   val valid_next   = r_valid && !io.id2ex.fire
   val if2id_data   = Wire(new IF2IDBundle)
 
-  /* ========== Sequential Circuit ========== */
-  r_valid := Mux(valid_enable, io.if2id.valid, valid_next)
-
-  r_id2ex.data.imm  := imm_gen.io.imm_out
-  r_id2ex.data.rd   := if2id_data.data.inst(11, 7)
-  r_id2ex.data.src1 := gpr_forward.io.src1
-  r_id2ex.data.src2 := gpr_forward.io.src2
-  r_id2ex.data.pc   := if2id_data.data.pc
-  r_id2ex.data.snpc := Mux(
+  val dnpc = Mux(
     control_unit.io.ecall_op,
     csr.io.tvec,
     Mux(control_unit.io.mret_op, csr.io.epc, if2id_data.data.snpc)
   )
+
+  /* ========== Sequential Circuit ========== */
+  r_valid := Mux(valid_enable, io.if2id.valid, valid_next)
+
+  r_id2ex.data.imm            := imm_gen.io.imm_out
+  r_id2ex.data.rd             := if2id_data.data.inst(11, 7)
+  r_id2ex.data.src1           := gpr_forward.io.src1
+  r_id2ex.data.src2           := gpr_forward.io.src2
+  r_id2ex.data.pc             := if2id_data.data.pc
+  r_id2ex.data.dnpc           := dnpc
+  r_id2ex.data.snpc           := if2id_data.data.snpc
   r_id2ex.data.inst           := if2id_data.data.inst
   r_id2ex.control.a_ctl       := control_unit.io.a_ctl
   r_id2ex.control.b_ctl       := control_unit.io.b_ctl
@@ -120,7 +123,6 @@ class IDU extends Module {
   r_id2ex.control.mul_ctl     := control_unit.io.mul_ctl
   r_id2ex.control.exe_out_ctl := control_unit.io.exe_out_ctl
   r_id2ex.control.mem_ctl     := control_unit.io.mem_ctl
-  r_id2ex.control.wb_ctl      := control_unit.io.wb_ctl
   r_id2ex.control.reg_w_en    := control_unit.io.reg_w_en
   r_id2ex.control.jump_op     := control_unit.io.jump_op
   r_id2ex.control.ebreak_op   := control_unit.io.ebreak_op

@@ -33,6 +33,7 @@ class EXU extends Module {
     _.data -> (new ID2EXDataBundle).Lit(
       _.pc         -> CommonMacros.PC_RESET_VAL,
       _.snpc       -> CommonMacros.PC_RESET_VAL,
+      _.dnpc       -> CommonMacros.PC_RESET_VAL,
       _.inst       -> CommonMacros.INST_RESET_VAL,
       _.rd         -> 0.U,
       _.src1       -> 0.U,
@@ -51,7 +52,6 @@ class EXU extends Module {
       _.exe_out_ctl -> ControlMacros.EXE_OUT_DEFAULT,
       _.jump_op     -> ControlMacros.JUMP_OP_DEFAULT,
       _.mem_ctl     -> ControlMacros.MEM_CTL_DEFAULT,
-      _.wb_ctl      -> ControlMacros.WB_CTL_DEFAULT,
       _.reg_w_en    -> ControlMacros.REG_W_DISABLE,
       _.ebreak_op   -> ControlMacros.EBREAK_OP_NO,
       _.invalid_op  -> ControlMacros.INVALID_OP_NO,
@@ -75,7 +75,6 @@ class EXU extends Module {
     ),
     _.control -> (new EX2LSControlBundle).Lit(
       _.mem_ctl    -> ControlMacros.MEM_CTL_DEFAULT,
-      _.wb_ctl     -> ControlMacros.WB_CTL_DEFAULT,
       _.reg_w_en   -> ControlMacros.REG_W_DISABLE,
       _.invalid_op -> ControlMacros.INVALID_OP_NO,
       _.ebreak_op  -> ControlMacros.EBREAK_OP_NO,
@@ -107,7 +106,6 @@ class EXU extends Module {
   r_ex2ls.data.src2          := id2ex_data.data.src2
   r_ex2ls.data.exe_out       := Mux(id2ex_data.control.exe_out_ctl, mul.io.mul_out, alu.io.alu_out)
   r_ex2ls.control.mem_ctl    := id2ex_data.control.mem_ctl
-  r_ex2ls.control.wb_ctl     := id2ex_data.control.wb_ctl
   r_ex2ls.control.reg_w_en   := id2ex_data.control.reg_w_en
   r_ex2ls.control.ebreak_op  := id2ex_data.control.ebreak_op
   r_ex2ls.control.invalid_op := id2ex_data.control.invalid_op
