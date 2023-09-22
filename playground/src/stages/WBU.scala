@@ -27,18 +27,15 @@ class WBU extends Module {
   /* ========== Parameter ========== */
   val ls2wb_rst_val = (new LS2WBBundle).Lit(
     _.data -> (new LS2WBDataBundle).Lit(
-      _.snpc       -> CommonMacros.PC_RESET_VAL,
       _.pc         -> CommonMacros.PC_RESET_VAL,
       _.dnpc       -> CommonMacros.PC_RESET_VAL,
       _.inst       -> CommonMacros.INST_RESET_VAL,
       _.rd         -> 0.U,
-      _.mem_out    -> 0.U,
-      _.exe_out    -> 0.U,
+      _.lsu_out    -> 0.U,
       _.csr_w_data -> 0.U,
       _.csr_w_addr -> 0.U
     ),
     _.control -> (new LS2WBControlBundle).Lit(
-      _.wb_ctl     -> ControlMacros.WB_CTL_DEFAULT,
       _.reg_w_en   -> ControlMacros.REG_W_DISABLE,
       _.ebreak_op  -> ControlMacros.EBREAK_OP_NO,
       _.invalid_op -> ControlMacros.INVALID_OP_NO,
@@ -75,13 +72,7 @@ class WBU extends Module {
 
   statistic.io.in := r_statistic
 
-  io.out.data.wb_data := MuxLookup(ls2wb_data.control.wb_ctl, 0.U(64.W))(
-    Seq(
-      ControlMacros.WB_CTL_ALU  -> ls2wb_data.data.exe_out,
-      ControlMacros.WB_CTL_MEM  -> ls2wb_data.data.mem_out,
-      ControlMacros.WB_CTL_SNPC -> ls2wb_data.data.snpc
-    )
-  )
+  io.out.data.wb_data  := ls2wb_data.data.lsu_out
   io.out.data.rd       := ls2wb_data.data.rd
   io.out.data.reg_w_en := ls2wb_data.control.reg_w_en
 
@@ -91,7 +82,6 @@ class WBU extends Module {
 
   io.out.hazard.rd                 := ls2wb_data.data.rd
   io.out.hazard.rd_tag             := ls2wb_data.control.reg_w_en
-  io.out.hazard.wb_ctl             := ls2wb_data.control.wb_ctl
   io.out.csr_hazard.csr_w_addr     := ls2wb_data.data.csr_w_addr
   io.out.csr_hazard.csr_w_addr_tag := ls2wb_data.control.csr_w_en
 }
