@@ -28,18 +28,16 @@ class LSU extends Module {
   val ex2ls_rst_val = (new EX2LSBundle).Lit(
     _.data -> (new EX2LSDataBundle).Lit(
       _.pc         -> CommonMacros.PC_RESET_VAL,
-      _.snpc       -> CommonMacros.PC_RESET_VAL,
       _.dnpc       -> CommonMacros.PC_RESET_VAL,
       _.inst       -> CommonMacros.INST_RESET_VAL,
       _.rd         -> 0.U,
       _.src2       -> 0.U,
-      _.exe_out    -> 0.U,
+      _.exu_out    -> 0.U,
       _.csr_w_data -> 0.U,
       _.csr_w_addr -> 0.U
     ),
     _.control -> (new EX2LSControlBundle).Lit(
       _.mem_ctl    -> ControlMacros.MEM_CTL_DEFAULT,
-      _.wb_ctl     -> ControlMacros.WB_CTL_DEFAULT,
       _.reg_w_en   -> ControlMacros.REG_W_DISABLE,
       _.invalid_op -> ControlMacros.INVALID_OP_NO,
       _.ebreak_op  -> ControlMacros.EBREAK_OP_NO,
@@ -48,18 +46,15 @@ class LSU extends Module {
   )
   val ls2wb_rst_val = (new LS2WBBundle).Lit(
     _.data -> (new LS2WBDataBundle).Lit(
-      _.snpc       -> CommonMacros.PC_RESET_VAL,
       _.pc         -> CommonMacros.PC_RESET_VAL,
       _.dnpc       -> CommonMacros.PC_RESET_VAL,
       _.inst       -> CommonMacros.INST_RESET_VAL,
       _.rd         -> 0.U,
-      _.mem_out    -> 0.U,
-      _.exe_out    -> 0.U,
+      _.lsu_out    -> 0.U,
       _.csr_w_data -> 0.U,
       _.csr_w_addr -> 0.U
     ),
     _.control -> (new LS2WBControlBundle).Lit(
-      _.wb_ctl     -> ControlMacros.WB_CTL_DEFAULT,
       _.reg_w_en   -> ControlMacros.REG_W_DISABLE,
       _.ebreak_op  -> ControlMacros.EBREAK_OP_NO,
       _.invalid_op -> ControlMacros.INVALID_OP_NO,
@@ -80,14 +75,11 @@ class LSU extends Module {
   /* ========== Sequential Circuit ========== */
   r_valid := Mux(valid_enable, io.ex2ls.valid, valid_next)
 
-  r_ls2wb.data.snpc          := ex2ls_data.data.snpc
   r_ls2wb.data.pc            := ex2ls_data.data.pc
   r_ls2wb.data.dnpc          := ex2ls_data.data.dnpc
   r_ls2wb.data.inst          := ex2ls_data.data.inst
   r_ls2wb.data.rd            := ex2ls_data.data.rd
-  r_ls2wb.data.mem_out       := data_mem.io.r_data
-  r_ls2wb.data.exe_out       := ex2ls_data.data.exe_out
-  r_ls2wb.control.wb_ctl     := ex2ls_data.control.wb_ctl
+  r_ls2wb.data.lsu_out       := Mux(ex2ls_data.control.mem_ctl(3).orR, data_mem.io.r_data, ex2ls_data.data.exu_out)
   r_ls2wb.control.reg_w_en   := ex2ls_data.control.reg_w_en
   r_ls2wb.control.ebreak_op  := ex2ls_data.control.ebreak_op
   r_ls2wb.control.invalid_op := ex2ls_data.control.invalid_op
@@ -104,13 +96,12 @@ class LSU extends Module {
 
   ex2ls_data := Mux(io.ex2ls.valid, io.ex2ls.bits, ex2ls_rst_val)
 
-  data_mem.io.addr    := ex2ls_data.data.exe_out
+  data_mem.io.addr    := ex2ls_data.data.exu_out
   data_mem.io.w_data  := ex2ls_data.data.src2
   data_mem.io.mem_ctl := ex2ls_data.control.mem_ctl
 
   io.out.hazard.rd                 := ex2ls_data.data.rd
   io.out.hazard.rd_tag             := ex2ls_data.control.reg_w_en
-  io.out.hazard.wb_ctl             := ex2ls_data.control.wb_ctl
   io.out.csr_hazard.csr_w_addr     := ex2ls_data.data.csr_w_addr
   io.out.csr_hazard.csr_w_addr_tag := ex2ls_data.control.csr_w_en
 }

@@ -64,12 +64,11 @@ class EXU extends Module {
   val ex2ls_rst_val = (new EX2LSBundle).Lit(
     _.data -> (new EX2LSDataBundle).Lit(
       _.pc         -> CommonMacros.PC_RESET_VAL,
-      _.snpc       -> CommonMacros.PC_RESET_VAL,
       _.dnpc       -> CommonMacros.PC_RESET_VAL,
       _.inst       -> CommonMacros.INST_RESET_VAL,
       _.rd         -> 0.U,
       _.src2       -> 0.U,
-      _.exe_out    -> 0.U,
+      _.exu_out    -> 0.U,
       _.csr_w_data -> 0.U,
       _.csr_w_addr -> 0.U
     ),
@@ -105,12 +104,11 @@ class EXU extends Module {
   r_dnpc := Mux(dnpc_enable, dnpc_1, r_dnpc)
 
   r_ex2ls.data.dnpc          := dnpc_1
-  r_ex2ls.data.snpc          := id2ex_data.data.snpc
   r_ex2ls.data.pc            := id2ex_data.data.pc
   r_ex2ls.data.inst          := id2ex_data.data.inst
   r_ex2ls.data.rd            := id2ex_data.data.rd
   r_ex2ls.data.src2          := id2ex_data.data.src2
-  r_ex2ls.data.exe_out       := Mux(id2ex_data.control.exe_out_ctl, mul.io.mul_out, alu.io.alu_out)
+  r_ex2ls.data.exu_out       := Mux(id2ex_data.control.exe_out_ctl, mul.io.mul_out, alu.io.alu_out)
   r_ex2ls.control.mem_ctl    := id2ex_data.control.mem_ctl
   r_ex2ls.control.reg_w_en   := id2ex_data.control.reg_w_en
   r_ex2ls.control.ebreak_op  := id2ex_data.control.ebreak_op
