@@ -9,14 +9,13 @@ class ControlUnitIO extends Bundle {
   val imm_type    = Output(UInt(3.W))
   val rs1_tag     = Output(Bool())
   val rs2_tag     = Output(Bool())
-  val a_ctl       = Output(Bool())
+  val a_ctl       = Output(UInt(2.W))
   val b_ctl       = Output(Bool())
   val dnpc_ctl    = Output(Bool())
   val alu_ctl     = Output(UInt(5.W))
   val mul_ctl     = Output(UInt(4.W))
   val exe_out_ctl = Output(Bool())
   val mem_ctl     = Output(UInt(5.W))
-  val wb_ctl      = Output(UInt(2.W))
   val reg_w_en    = Output(Bool())
   val jump_op     = Output(UInt(2.W))
   val csr_op      = Output(Bool())
@@ -37,14 +36,13 @@ object DecodeTableInfo {
   val MUL_CTL     = 7
   val EXE_OUT_CTL = 8
   val MEM_CLT     = 9
-  val WB_CTL      = 10
-  val REG_W_EN    = 11
-  val JUMP_OP     = 12
-  val CSR_OP      = 13
-  val EBREAK_OP   = 14
-  val ECALL_OP    = 15
-  val MRET_OP     = 16
-  val INVALID_OP  = 17
+  val REG_W_EN    = 10
+  val JUMP_OP     = 11
+  val CSR_OP      = 12
+  val EBREAK_OP   = 13
+  val ECALL_OP    = 14
+  val MRET_OP     = 15
+  val INVALID_OP  = 16
 }
 
 class ControlUnit extends Module {
@@ -62,7 +60,6 @@ class ControlUnit extends Module {
   io.mul_ctl     := decode_result(DecodeTableInfo.MUL_CTL)
   io.exe_out_ctl := decode_result(DecodeTableInfo.EXE_OUT_CTL)
   io.mem_ctl     := decode_result(DecodeTableInfo.MEM_CLT)
-  io.wb_ctl      := decode_result(DecodeTableInfo.WB_CTL)
   io.reg_w_en    := decode_result(DecodeTableInfo.REG_W_EN)
   io.jump_op     := decode_result(DecodeTableInfo.JUMP_OP)
   io.csr_op      := decode_result(DecodeTableInfo.CSR_OP)

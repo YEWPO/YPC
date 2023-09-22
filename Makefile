@@ -46,6 +46,12 @@ VCD_FILE = $(BUILD_DIR)/sim.vcd
 wv:
 	$(GTKWAVE) $(VCD_FILE)
 
+PYTHON = python3
+GEN_INST_SCRIPT = $(WORK_DIR)/utils/decodegen/main.py
+
+gendecode:
+	$(PYTHON) $(GEN_INST_SCRIPT)
+
 clean:
 	-rm -rf $(BUILD_DIR) test_run_dir
 	-mill clean

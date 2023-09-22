@@ -12,8 +12,8 @@ with open('docs/控制信号表.csv') as csv_file:
             decodetablegen += ','
         decodetablegen += f'\nInstList.{row[0]} -> List(\n'
         for i in range(1, ncol - 1):
-            decodetablegen += f'ControlMacro.{row[i]},\n'
-        decodetablegen += f'ControlMacro.{row[ncol - 1]}\n'
+            decodetablegen += f'ControlMacros.{row[i]},\n'
+        decodetablegen += f'ControlMacros.{row[ncol - 1]}\n'
         decodetablegen += f')'
         nrow += 1
 decodetablegen += '\n'

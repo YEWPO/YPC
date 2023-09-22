@@ -17,9 +17,10 @@ object ControlMacros {
   val RS2_VALID   = true.B
   val RS2_INVALID = false.B
 
-  val A_CTL_DEFAULT = false.B
-  val A_CTL_SRC1    = false.B
-  val A_CTL_PC      = true.B
+  val A_CTL_DEFAULT = "b00".U
+  val A_CTL_SRC1    = "b00".U
+  val A_CTL_PC      = "b01".U
+  val A_CTL_SNPC    = "b10".U
 
   val B_CTL_DEFAULT = false.B
   val B_CTL_IMM     = false.B
@@ -90,11 +91,6 @@ object ControlMacros {
 
   val REG_W_ENABLE  = true.B
   val REG_W_DISABLE = false.B
-
-  val WB_CTL_DEFAULT = "b00".U
-  val WB_CTL_ALU     = "b00".U
-  val WB_CTL_MEM     = "b01".U
-  val WB_CTL_SNPC    = "b10".U
 
   val CSR_OP_YES = true.B
   val CSR_OP_NO  = false.B
