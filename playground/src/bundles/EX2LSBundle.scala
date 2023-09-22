@@ -17,7 +17,6 @@ class EX2LSDataBundle extends Bundle {
 
 class EX2LSControlBundle extends Bundle {
   val mem_ctl    = UInt(5.W)
-  val wb_ctl     = UInt(2.W)
   val reg_w_en   = Bool()
   val ebreak_op  = Bool()
   val invalid_op = Bool()

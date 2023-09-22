@@ -86,19 +86,25 @@ class EXU extends Module {
   val r_valid = RegInit(false.B)
   val r_ex2ls = RegInit(ex2ls_rst_val)
 
+  val r_dnpc = RegInit(CommonMacros.PC_RESET_VAL)
+
   /* ========== Wire ========== */
   val ready_next   = io.id2ex.valid && !io.id2ex.ready && (!io.ex2ls.valid || io.ex2ls.ready)
   val valid_enable = io.id2ex.valid && !io.id2ex.ready && (!io.ex2ls.valid || io.ex2ls.ready)
-  val valid_next   = r_valid && !io.ex2ls.fire
   val id2ex_data   = Wire(new ID2EXBundle)
+  val valid_next   = r_valid && !io.ex2ls.fire && (r_dnpc === id2ex_data.data.pc)
 
-  val w_jump_ctl = (id2ex_data.control.jump_op & Cat(alu.io.alu_out(0), 1.U(1.W))).orR
-  val w_dnpc     = Mux(id2ex_data.control.dnpc_ctl, id2ex_data.data.src1, id2ex_data.data.pc) + id2ex_data.data.imm
+  val jump_ctl    = (id2ex_data.control.jump_op & Cat(alu.io.alu_out(0), 1.U(1.W))).orR
+  val dnpc_0      = Mux(id2ex_data.control.dnpc_ctl, id2ex_data.data.src1, id2ex_data.data.pc) + id2ex_data.data.imm
+  val dnpc_1      = Mux(jump_ctl, dnpc_0, id2ex_data.data.dnpc)
+  val dnpc_enable = r_dnpc === id2ex_data.data.pc
 
   /* ========== Sequential Circuit ========== */
   r_valid := Mux(valid_enable, io.id2ex.valid, valid_next)
 
-  r_ex2ls.data.dnpc          := Mux(w_jump_ctl, w_dnpc, id2ex_data.data.snpc)
+  r_dnpc := Mux(dnpc_enable, dnpc_1, r_dnpc)
+
+  r_ex2ls.data.dnpc          := dnpc_1
   r_ex2ls.data.snpc          := id2ex_data.data.snpc
   r_ex2ls.data.pc            := id2ex_data.data.pc
   r_ex2ls.data.inst          := id2ex_data.data.inst
@@ -125,7 +131,13 @@ class EXU extends Module {
   alu.io.src1 := Mux(
     id2ex_data.control.csr_r_en,
     id2ex_data.data.csr_data,
-    Mux(id2ex_data.control.a_ctl, id2ex_data.data.pc, id2ex_data.data.src1)
+    MuxLookup(id2ex_data.control.a_ctl, 0.U(64.W))(
+      Seq(
+        ControlMacros.A_CTL_SRC1 -> id2ex_data.data.src1,
+        ControlMacros.A_CTL_PC   -> id2ex_data.data.pc,
+        ControlMacros.A_CTL_SNPC -> id2ex_data.data.snpc
+      )
+    )
   )
   alu.io.src2            := Mux(id2ex_data.control.b_ctl, id2ex_data.data.src2, id2ex_data.data.imm)
   alu.io.alu_ctl         := id2ex_data.control.alu_ctl
@@ -136,11 +148,10 @@ class EXU extends Module {
   csr_calc.io.src        := Mux(id2ex_data.control.csr_src_ctl, id2ex_data.data.csr_uimm, id2ex_data.data.src1)
   csr_calc.io.csr_op_ctl := id2ex_data.control.csr_op_ctl
 
-  io.out.jump_ctl := w_jump_ctl
-  io.out.dnpc     := w_dnpc
+  io.out.jump_ctl := jump_ctl
+  io.out.dnpc     := dnpc_1
 
-  io.out.hazard.jump_sig           := w_jump_ctl
-  io.out.hazard.wb_ctl             := id2ex_data.control.wb_ctl
+  io.out.hazard.jump_sig           := jump_ctl
   io.out.hazard.rd                 := id2ex_data.data.rd
   io.out.hazard.rd_tag             := id2ex_data.control.reg_w_en
   io.out.csr_hazard.csr_w_addr     := id2ex_data.data.csr_w_addr
