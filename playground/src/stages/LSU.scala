@@ -72,8 +72,8 @@ class LSU extends Module {
   val r_ls2wb = RegInit(ls2wb_rst_val)
 
   /* ========== Wire ========== */
-  val ready_next   = io.ex2ls.valid && (!io.ls2wb.valid || io.ls2wb.ready)
-  val valid_enable = io.ex2ls.valid && (!io.ls2wb.valid || io.ls2wb.ready)
+  val ready_next   = io.ex2ls.valid && !io.ex2ls.ready && (!io.ls2wb.valid || io.ls2wb.ready)
+  val valid_enable = io.ex2ls.valid && !io.ex2ls.ready && (!io.ls2wb.valid || io.ls2wb.ready)
   val valid_next   = r_valid && !io.ls2wb.fire
   val ex2ls_data   = Wire(new EX2LSBundle)
 
@@ -97,16 +97,16 @@ class LSU extends Module {
   r_ls2wb.control.csr_w_en := ex2ls_data.control.csr_w_en
 
   /* ========== Combinational Circuit ========== */
-  ex2ls_data := Mux(io.ex2ls.valid, io.ex2ls.bits, ex2ls_rst_val)
-
   io.ex2ls.ready := ready_next
   io.ls2wb.valid := r_valid
+
+  io.ls2wb.bits := r_ls2wb
+
+  ex2ls_data := Mux(io.ex2ls.valid, io.ex2ls.bits, ex2ls_rst_val)
 
   data_mem.io.addr    := ex2ls_data.data.exe_out
   data_mem.io.w_data  := ex2ls_data.data.src2
   data_mem.io.mem_ctl := ex2ls_data.control.mem_ctl
-
-  io.ls2wb.bits := r_ls2wb
 
   io.out.hazard.rd                 := ex2ls_data.data.rd
   io.out.hazard.rd_tag             := ex2ls_data.control.reg_w_en

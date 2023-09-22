@@ -47,7 +47,7 @@ class WBU extends Module {
   )
 
   /* ========== Wire ========== */
-  val ready_next = io.ls2wb.valid
+  val ready_next = io.ls2wb.valid && !io.ls2wb.ready
   val ls2wb_data = Wire(new LS2WBBundle)
 
   /* ========== Register ========== */
