@@ -88,15 +88,16 @@ class EXU extends Module {
   val r_dnpc = RegInit(CommonMacros.PC_RESET_VAL)
 
   /* ========== Wire ========== */
-  val ready_next   = io.id2ex.valid && !io.id2ex.ready && (!io.ex2ls.valid || io.ex2ls.ready)
-  val valid_enable = io.id2ex.valid && !io.id2ex.ready && (!io.ex2ls.valid || io.ex2ls.ready)
-  val id2ex_data   = Wire(new ID2EXBundle)
-  val valid_next   = r_valid && !io.ex2ls.fire && (r_dnpc === id2ex_data.data.pc)
+  val ready_next    = io.id2ex.valid && !io.id2ex.ready && (!io.ex2ls.valid || io.ex2ls.ready)
+  val valid_enable  = io.id2ex.valid && !io.id2ex.ready && (!io.ex2ls.valid || io.ex2ls.ready)
+  val id2ex_data    = Wire(new ID2EXBundle)
+  val valid_next    = r_valid && !io.ex2ls.fire
+  val valid_current = io.id2ex.valid && (r_dnpc === io.id2ex.bits.data.pc)
 
   val jump_ctl    = (id2ex_data.control.jump_op & Cat(alu.io.alu_out(0), 1.U(1.W))).orR
   val dnpc_0      = Mux(id2ex_data.control.dnpc_ctl, id2ex_data.data.src1, id2ex_data.data.pc) + id2ex_data.data.imm
   val dnpc_1      = Mux(jump_ctl, dnpc_0, id2ex_data.data.dnpc)
-  val dnpc_enable = r_dnpc === id2ex_data.data.pc
+  val dnpc_enable = (r_dnpc === id2ex_data.data.pc) && ready_next
 
   /* ========== Sequential Circuit ========== */
   r_valid := Mux(valid_enable, io.id2ex.valid, valid_next)
@@ -122,7 +123,7 @@ class EXU extends Module {
   io.id2ex.ready := ready_next
   io.ex2ls.valid := r_valid
 
-  id2ex_data := Mux(io.id2ex.valid, io.id2ex.bits, id2ex_rst_val)
+  id2ex_data := Mux(valid_current, io.id2ex.bits, id2ex_rst_val)
 
   io.ex2ls.bits := r_ex2ls
 
