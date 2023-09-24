@@ -23,16 +23,9 @@ class IDUIO extends Bundle {
   val if2id = Flipped(Decoupled(new IF2IDBundle))
   val id2ex = Decoupled(new ID2EXBundle)
   val in = Input(new Bundle {
-    val wb_data     = new WB2RegBundle
-    val hazard      = new IDHazardControlBundle
-    val csr_hazard  = new IDCSRHazardControlBundle
-    val forward     = new IDForwardBundle
-    val csr_forward = new IDCSRForwardBundle
+    val wb_data = new WB2RegBundle
   })
-  val out = Output(new Bundle {
-    val hazard     = new IDHazardDataBundle
-    val csr_hazard = new IDCSRHazardDataBundle
-  })
+  val out = Output(new Bundle {})
 }
 
 class IDU extends Module {

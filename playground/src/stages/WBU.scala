@@ -10,10 +10,15 @@ import utils.writeback._
 
 class WBUIO extends Bundle {
   val ls2wb = Flipped(Decoupled(new LS2WBBundle))
+
   val out = Output(new Bundle {
-    val data       = Output(new WB2RegBundle)
-    val hazard     = Output(new WBHazardDataBundle)
-    val csr_hazard = Output(new WBCSRHazardDataBundle)
+    val wb_data = Output(new WB2RegBundle)
+    val state_info = Output(new Bundle {
+      val rd         = UInt(5.W)
+      val reg_w_data = UInt(64.W)
+      val csr_w_addr = UInt(12.W)
+      val csr_w_data = UInt(64.W)
+    })
   })
 }
 
@@ -72,16 +77,16 @@ class WBU extends Module {
 
   statistic.io.in := r_statistic
 
-  io.out.data.wb_data  := ls2wb_data.data.lsu_out
-  io.out.data.rd       := ls2wb_data.data.rd
-  io.out.data.reg_w_en := ls2wb_data.control.reg_w_en
+  io.out.wb_data.reg_w_en := ls2wb_data.data.lsu_out
+  io.out.wb_data.rd       := ls2wb_data.data.rd
+  io.out.wb_data.reg_w_en := ls2wb_data.control.reg_w_en
 
-  io.out.data.csr_w_addr := ls2wb_data.data.csr_w_addr
-  io.out.data.csr_w_data := ls2wb_data.data.csr_w_data
-  io.out.data.csr_w_en   := ls2wb_data.control.csr_w_en
+  io.out.wb_data.csr_w_addr := ls2wb_data.data.csr_w_addr
+  io.out.wb_data.csr_w_data := ls2wb_data.data.csr_w_data
+  io.out.wb_data.csr_w_en   := ls2wb_data.control.csr_w_en
 
-  io.out.hazard.rd                 := ls2wb_data.data.rd
-  io.out.hazard.rd_tag             := ls2wb_data.control.reg_w_en
-  io.out.csr_hazard.csr_w_addr     := ls2wb_data.data.csr_w_addr
-  io.out.csr_hazard.csr_w_addr_tag := ls2wb_data.control.csr_w_en
+  io.out.state_info.rd         := Mux(ls2wb_data.control.reg_w_en, ls2wb_data.data.rd, 0.U(5.W))
+  io.out.state_info.reg_w_data := ls2wb_data.data.lsu_out
+  io.out.state_info.csr_w_addr := Mux(ls2wb_data.control.csr_w_en, ls2wb_data.data.csr_w_addr, 0.U(12.W))
+  io.out.state_info.csr_w_data := ls2wb_data.data.csr_w_data
 }
