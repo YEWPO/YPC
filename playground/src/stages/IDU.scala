@@ -24,8 +24,12 @@ class IDUIO extends Bundle {
   val id2ex = Decoupled(new ID2EXBundle)
   val in = Input(new Bundle {
     val wb_data = new WB2RegBundle
+    val fw_info = new GPRForwardInfo
   })
-  val out = Output(new Bundle {})
+  val out = Output(new Bundle {
+    val expt_op = Bool()
+    val expt_pc = UInt(64.W)
+  })
 }
 
 class IDU extends Module {
@@ -144,10 +148,11 @@ class IDU extends Module {
   gpr.io.rs2              := if2id_data.data.inst(24, 20)
   gpr.io.rd               := io.in.wb_data.rd
   gpr.io.w_en             := io.in.wb_data.reg_w_en
-  gpr.io.w_data           := io.in.wb_data.wb_data
+  gpr.io.w_data           := io.in.wb_data.reg_w_data
   gpr_forward.io.data1    := gpr.io.r_data1
   gpr_forward.io.data2    := gpr.io.r_data2
-  gpr_forward.io.forward  := io.in.forward
+  gpr_forward.io.rs1      := Mux(control_unit.io.rs1_tag, if2id_data.data.inst(19, 15), 0.U(5.W))
+  gpr_forward.io.rs2      := Mux(control_unit.io.rs2_tag, if2id_data.data.inst(24, 20), 0.U(5.W))
   gpr_forward.io.fw_ctl   := io.in.hazard
   csr.io.csr_r_addr       := if2id_data.data.inst(31, 20)
   csr.io.csr_r_en         := csr_control.io.csr_r_en

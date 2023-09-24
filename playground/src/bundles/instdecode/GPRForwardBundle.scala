@@ -2,7 +2,7 @@ package bundles.instdecode
 
 import chisel3._
 
-class GRPForwardInfo extends Bundle {
+class GPRForwardInfo extends Bundle {
   val rd_E = UInt(5.W)
   val rd_M = UInt(5.W)
   val rd_W = UInt(5.W)

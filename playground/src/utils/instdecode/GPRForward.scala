@@ -11,7 +11,7 @@ class GPRForwardIO extends Bundle {
   val data1 = Input(UInt(64.W))
   val data2 = Input(UInt(64.W))
 
-  val fw_info = Input(new GRPForwardInfo)
+  val fw_info = Input(new GPRForwardInfo)
 
   val src1 = Output(UInt(64.W))
   val src2 = Output(UInt(64.W))
