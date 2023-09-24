@@ -58,9 +58,9 @@ class WBU extends Module {
 
   statistic.io.in := r_statistic
 
-  io.out.wb_data.reg_w_en := ls2wb_data.data.lsu_out
-  io.out.wb_data.rd       := ls2wb_data.data.rd
-  io.out.wb_data.reg_w_en := ls2wb_data.control.reg_w_en
+  io.out.wb_data.reg_w_data := ls2wb_data.data.lsu_out
+  io.out.wb_data.rd         := ls2wb_data.data.rd
+  io.out.wb_data.reg_w_en   := ls2wb_data.control.reg_w_en
 
   io.out.wb_data.csr_w_addr := ls2wb_data.data.csr_w_addr
   io.out.wb_data.csr_w_data := ls2wb_data.data.csr_w_data

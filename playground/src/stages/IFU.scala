@@ -9,11 +9,10 @@ import utils.instfetch._
 
 class IFUIO extends Bundle {
   val in = Input(new Bundle {
-    val dnpc      = UInt(64.W)
-    val expt_pc   = UInt(64.W)
-    val expt_op   = Bool()
-    val jump_ctl  = Bool()
-    val pc_enable = Bool()
+    val dnpc     = UInt(64.W)
+    val expt_pc  = UInt(64.W)
+    val expt_op  = Bool()
+    val jump_ctl = Bool()
   })
   val if2id = Decoupled(new IF2IDBundle)
 }
