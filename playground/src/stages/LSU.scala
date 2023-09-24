@@ -5,7 +5,6 @@ import chisel3.util._
 import chisel3.experimental.BundleLiterals._
 import macros._
 import bundles._
-import bundles.loadstore._
 import utils.loadstore._
 
 class LSUIO extends Bundle {

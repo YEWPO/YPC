@@ -4,7 +4,6 @@ import chisel3._
 import chisel3.util._
 import chisel3.experimental.BundleLiterals._
 import bundles._
-import bundles.execute._
 import utils.execute._
 import macros._
 
@@ -12,10 +11,15 @@ class EXUIO extends Bundle {
   val id2ex = Flipped(Decoupled(new ID2EXBundle))
   val ex2ls = Decoupled(new EX2LSBundle)
   val out = Output(new Bundle {
-    val hazard     = new EXHazardDataBundle
-    val csr_hazard = new EXCSRHazardDataBundle
-    val jump_ctl   = Bool()
-    val dnpc       = UInt(64.W)
+    val jump_ctl = Bool()
+    val dnpc     = UInt(64.W)
+    val state_info = Output(new Bundle {
+      val rd         = UInt(5.W)
+      val reg_w_data = UInt(64.W)
+      val csr_w_addr = UInt(12.W)
+      val csr_w_data = UInt(64.W)
+      val mem_r_op   = UInt(64.W)
+    })
   })
 }
 
@@ -98,6 +102,7 @@ class EXU extends Module {
   val dnpc_0      = Mux(id2ex_data.control.dnpc_ctl, id2ex_data.data.src1, id2ex_data.data.pc) + id2ex_data.data.imm
   val dnpc_1      = Mux(jump_ctl, dnpc_0, id2ex_data.data.dnpc)
   val dnpc_enable = (r_dnpc === id2ex_data.data.pc) && ready_next
+  val exu_out     = Mux(id2ex_data.control.exe_out_ctl, mul.io.mul_out, alu.io.alu_out)
 
   /* ========== Sequential Circuit ========== */
   r_valid := Mux(valid_enable, valid_current, valid_next)
@@ -109,7 +114,7 @@ class EXU extends Module {
   r_ex2ls.data.inst          := id2ex_data.data.inst
   r_ex2ls.data.rd            := id2ex_data.data.rd
   r_ex2ls.data.src2          := id2ex_data.data.src2
-  r_ex2ls.data.exu_out       := Mux(id2ex_data.control.exe_out_ctl, mul.io.mul_out, alu.io.alu_out)
+  r_ex2ls.data.exu_out       := exu_out
   r_ex2ls.control.mem_ctl    := id2ex_data.control.mem_ctl
   r_ex2ls.control.reg_w_en   := id2ex_data.control.reg_w_en
   r_ex2ls.control.ebreak_op  := id2ex_data.control.ebreak_op
@@ -150,9 +155,9 @@ class EXU extends Module {
   io.out.jump_ctl := jump_ctl
   io.out.dnpc     := dnpc_1
 
-  io.out.hazard.jump_sig           := jump_ctl
-  io.out.hazard.rd                 := id2ex_data.data.rd
-  io.out.hazard.rd_tag             := id2ex_data.control.reg_w_en
-  io.out.csr_hazard.csr_w_addr     := id2ex_data.data.csr_w_addr
-  io.out.csr_hazard.csr_w_addr_tag := id2ex_data.control.csr_w_en
+  io.out.state_info.rd         := Mux(id2ex_data.control.reg_w_en, id2ex_data.data.rd, 0.U(5.W))
+  io.out.state_info.reg_w_data := exu_out
+  io.out.state_info.csr_w_addr := Mux(id2ex_data.control.csr_w_en, id2ex_data.data.csr_w_addr, 0.U(12.W))
+  io.out.state_info.csr_w_data := csr_calc.io.csr_op_out
+  io.out.state_info.mem_r_op   := id2ex_data.control.mem_ctl(3)
 }
