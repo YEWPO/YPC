@@ -23,8 +23,9 @@ class IDUIO extends Bundle {
   val if2id = Flipped(Decoupled(new IF2IDBundle))
   val id2ex = Decoupled(new ID2EXBundle)
   val in = Input(new Bundle {
-    val wb_data = new WB2RegBundle
-    val fw_info = new GPRForwardInfo
+    val wb_data     = new WB2RegBundle
+    val gpr_fw_info = new GPRForwardInfo
+    val csr_fw_info = new CSRForwardInfo
   })
   val out = Output(new Bundle {
     val expt_op = Bool()
@@ -153,7 +154,7 @@ class IDU extends Module {
   gpr_forward.io.data2    := gpr.io.r_data2
   gpr_forward.io.rs1      := Mux(control_unit.io.rs1_tag, if2id_data.data.inst(19, 15), 0.U(5.W))
   gpr_forward.io.rs2      := Mux(control_unit.io.rs2_tag, if2id_data.data.inst(24, 20), 0.U(5.W))
-  gpr_forward.io.fw_ctl   := io.in.hazard
+  gpr_forward.io.fw_info  := io.in.gpr_fw_info
   csr.io.csr_r_addr       := if2id_data.data.inst(31, 20)
   csr.io.csr_r_en         := csr_control.io.csr_r_en
   csr.io.csr_w_addr       := io.in.wb_data.csr_w_addr
@@ -166,17 +167,9 @@ class IDU extends Module {
   csr_control.io.rs1      := if2id_data.data.inst(19, 15)
   csr_control.io.funct    := if2id_data.data.inst(14, 12)
   csr_forward.io.data     := csr.io.csr_r_data
-  csr_forward.io.forward  := io.in.csr_forward
-  csr_forward.io.fw_ctl   := io.in.csr_hazard.csr_forward_ctl
+  csr_forward.io.addr     := Mux(csr_control.io.csr_r_en, if2id_data.data.inst(31, 20), 0.U(12.W))
+  csr_forward.io.fw_info  := io.in.csr_fw_info
 
-  io.out.hazard.rs1                := if2id_data.data.inst(19, 15)
-  io.out.hazard.rs2                := if2id_data.data.inst(24, 20)
-  io.out.hazard.rs1_tag            := control_unit.io.rs1_tag
-  io.out.hazard.rs2_tag            := control_unit.io.rs2_tag
-  io.out.csr_hazard.csr_r_addr     := if2id_data.data.inst(31, 20)
-  io.out.csr_hazard.csr_r_addr_tag := csr_control.io.csr_r_en
-  io.out.csr_hazard.ecall_op       := control_unit.io.ecall_op
-  io.out.csr_hazard.mret_op        := control_unit.io.mret_op
-  io.out.csr_hazard.epc            := csr.io.epc
-  io.out.csr_hazard.tvec           := csr.io.tvec
+  io.out.expt_op := control_unit.io.mret_op || control_unit.io.ecall_op
+  io.out.expt_pc := Mux(control_unit.io.mret_op, csr.mepc, csr.mtvec)
 }
