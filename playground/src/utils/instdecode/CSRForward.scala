@@ -2,27 +2,30 @@ package utils.instdecode
 
 import chisel3._
 import chisel3.util._
-import macros._
 import bundles.instdecode._
 
 class CSRForwardIO extends Bundle {
-  val data    = Input(UInt(64.W))
-  val forward = Input(new IDCSRForwardBundle)
+  val addr = Input(UInt(12.W))
 
-  val fw_ctl = Input(UInt(2.W))
+  val data = Input(UInt(64.W))
+
+  val fw_info = Input(new CSRForwardInfo)
 
   val src = Output(UInt(64.W))
 }
 
 class CSRForward extends Module {
+  /* ========== Input and Output ========== */
   val io = IO(new CSRForwardIO)
 
-  val forward_map = Seq(
-    CSRHazardMacros.CSR_F_CTL_DEFAULT -> io.data,
-    CSRHazardMacros.CSR_F_CTL_EXE     -> io.forward.csr_data_E,
-    CSRHazardMacros.CSR_F_CTL_LS      -> io.forward.csr_data_M,
-    CSRHazardMacros.CSR_F_CTL_WB      -> io.forward.csr_data_W
+  /* ========== Parameter ========== */
+  val fw_rule = Seq(
+    (io.addr === io.fw_info.addr_E) -> io.fw_info.data_E,
+    (io.addr === io.fw_info.addr_M) -> io.fw_info.data_M,
+    (io.addr === io.fw_info.addr_W) -> io.fw_info.data_W,
+    true.B                          -> io.data
   )
 
-  io.src := MuxLookup(io.fw_ctl, 0.U(64.W))(forward_map)
+  /* ========== Combinational Circuit ========== */
+  io.src := Mux(io.addr.orR, PriorityMux(fw_rule), 0.U(64.W))
 }
