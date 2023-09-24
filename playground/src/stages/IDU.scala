@@ -26,6 +26,8 @@ class IDUIO extends Bundle {
     val wb_data     = new WB2RegBundle
     val gpr_fw_info = new GPRForwardInfo
     val csr_fw_info = new CSRForwardInfo
+    val mem_r_op_E  = Bool()
+    val mem_r_op_M  = Bool()
   })
   val out = Output(new Bundle {
     val expt_op = Bool()
@@ -91,6 +93,10 @@ class IDU extends Module {
   val r_valid = RegInit(false.B)
   val r_id2ex = RegInit(id2ex_rst_val)
 
+  /* ========== Function ========== */
+  def mem_r_related(rs: UInt) =
+    (rs.orR && rs === io.in.gpr_fw_info.rd_E && io.in.mem_r_op_E) || (rs.orR && rs === io.in.gpr_fw_info.rd_M && io.in.mem_r_op_M)
+
   /* ========== Wire ========== */
   val ready_next   = io.if2id.valid && !io.if2id.ready && (!io.id2ex.valid || io.id2ex.ready)
   val valid_enable = io.if2id.valid && !io.if2id.ready && (!io.id2ex.valid || io.id2ex.ready)
@@ -103,11 +109,19 @@ class IDU extends Module {
     Mux(control_unit.io.mret_op, csr.io.epc, if2id_data.data.snpc)
   )
 
+  val rs1      = if2id_data.data.inst(19, 15)
+  val rs2      = if2id_data.data.inst(24, 20)
+  val rd       = if2id_data.data.inst(11, 7)
+  val funct    = if2id_data.data.inst(14, 12)
+  val csr_addr = if2id_data.data.inst(31, 20)
+
+  val mem_r_related_op = mem_r_related(rs1) || mem_r_related(rs2)
+
   /* ========== Sequential Circuit ========== */
   r_valid := Mux(valid_enable, io.if2id.valid, valid_next)
 
   r_id2ex.data.imm            := imm_gen.io.imm_out
-  r_id2ex.data.rd             := if2id_data.data.inst(11, 7)
+  r_id2ex.data.rd             := rd
   r_id2ex.data.src1           := gpr_forward.io.src1
   r_id2ex.data.src2           := gpr_forward.io.src2
   r_id2ex.data.pc             := if2id_data.data.pc
@@ -127,16 +141,16 @@ class IDU extends Module {
   r_id2ex.control.invalid_op  := control_unit.io.invalid_op
 
   r_id2ex.data.csr_data       := csr_forward.io.src
-  r_id2ex.data.csr_w_addr     := if2id_data.data.inst(31, 20)
-  r_id2ex.data.csr_uimm       := CommonMacros.zeroExtend(if2id_data.data.inst(19, 15))
+  r_id2ex.data.csr_w_addr     := csr_addr
+  r_id2ex.data.csr_uimm       := CommonMacros.zeroExtend(rs1)
   r_id2ex.control.csr_r_en    := csr_control.io.csr_r_en
   r_id2ex.control.csr_w_en    := csr_control.io.csr_w_en
   r_id2ex.control.csr_op_ctl  := csr_control.io.csr_op_ctl
   r_id2ex.control.csr_src_ctl := csr_control.io.csr_src_ctl
 
   /* ========== Combinational Circuit ========== */
-  io.if2id.ready := ready_next
-  io.id2ex.valid := r_valid
+  io.if2id.ready := ready_next && !mem_r_related_op
+  io.id2ex.valid := r_valid && !mem_r_related_op
 
   if2id_data := Mux(io.if2id.valid, io.if2id.bits, if2id_rst_val)
 
@@ -145,17 +159,17 @@ class IDU extends Module {
   control_unit.io.inst    := if2id_data.data.inst
   imm_gen.io.in           := if2id_data.data.inst(31, 7)
   imm_gen.io.imm_type     := control_unit.io.imm_type
-  gpr.io.rs1              := if2id_data.data.inst(19, 15)
-  gpr.io.rs2              := if2id_data.data.inst(24, 20)
+  gpr.io.rs1              := rs1
+  gpr.io.rs2              := rs2
   gpr.io.rd               := io.in.wb_data.rd
   gpr.io.w_en             := io.in.wb_data.reg_w_en
   gpr.io.w_data           := io.in.wb_data.reg_w_data
   gpr_forward.io.data1    := gpr.io.r_data1
   gpr_forward.io.data2    := gpr.io.r_data2
-  gpr_forward.io.rs1      := Mux(control_unit.io.rs1_tag, if2id_data.data.inst(19, 15), 0.U(5.W))
-  gpr_forward.io.rs2      := Mux(control_unit.io.rs2_tag, if2id_data.data.inst(24, 20), 0.U(5.W))
+  gpr_forward.io.rs1      := Mux(control_unit.io.rs1_tag, rs1, 0.U(5.W))
+  gpr_forward.io.rs2      := Mux(control_unit.io.rs2_tag, rs2, 0.U(5.W))
   gpr_forward.io.fw_info  := io.in.gpr_fw_info
-  csr.io.csr_r_addr       := if2id_data.data.inst(31, 20)
+  csr.io.csr_r_addr       := csr_addr
   csr.io.csr_r_en         := csr_control.io.csr_r_en
   csr.io.csr_w_addr       := io.in.wb_data.csr_w_addr
   csr.io.csr_w_data       := io.in.wb_data.csr_w_data
@@ -163,13 +177,13 @@ class IDU extends Module {
   csr.io.expt_op          := control_unit.io.ecall_op
   csr.io.pc               := if2id_data.data.pc
   csr_control.io.zicsr_op := control_unit.io.csr_op
-  csr_control.io.rd       := if2id_data.data.inst(11, 7)
-  csr_control.io.rs1      := if2id_data.data.inst(19, 15)
-  csr_control.io.funct    := if2id_data.data.inst(14, 12)
+  csr_control.io.rd       := rd
+  csr_control.io.rs1      := rs1
+  csr_control.io.funct    := funct
   csr_forward.io.data     := csr.io.csr_r_data
-  csr_forward.io.addr     := Mux(csr_control.io.csr_r_en, if2id_data.data.inst(31, 20), 0.U(12.W))
+  csr_forward.io.addr     := Mux(csr_control.io.csr_r_en, csr_addr, 0.U(12.W))
   csr_forward.io.fw_info  := io.in.csr_fw_info
 
   io.out.expt_op := control_unit.io.mret_op || control_unit.io.ecall_op
-  io.out.expt_pc := Mux(control_unit.io.mret_op, csr.mepc, csr.mtvec)
+  io.out.expt_pc := Mux(control_unit.io.mret_op, csr.io.epc, csr.io.tvec)
 }
