@@ -29,47 +29,9 @@ class LSU extends Module {
   /* ========== Module ========== */
   val data_mem = Module(new DataMem)
 
-  /* ========== Parameter ========== */
-  val ex2ls_rst_val = (new EX2LSBundle).Lit(
-    _.data -> (new EX2LSDataBundle).Lit(
-      _.pc         -> CommonMacros.PC_RESET_VAL,
-      _.dnpc       -> CommonMacros.PC_RESET_VAL,
-      _.inst       -> CommonMacros.INST_RESET_VAL,
-      _.rd         -> 0.U,
-      _.src2       -> 0.U,
-      _.exu_out    -> 0.U,
-      _.csr_w_data -> 0.U,
-      _.csr_w_addr -> 0.U
-    ),
-    _.control -> (new EX2LSControlBundle).Lit(
-      _.mem_ctl    -> ControlMacros.MEM_CTL_DEFAULT,
-      _.reg_w_en   -> ControlMacros.REG_W_DISABLE,
-      _.invalid_op -> ControlMacros.INVALID_OP_NO,
-      _.ebreak_op  -> ControlMacros.EBREAK_OP_NO,
-      _.csr_w_en   -> false.B
-    )
-  )
-  val ls2wb_rst_val = (new LS2WBBundle).Lit(
-    _.data -> (new LS2WBDataBundle).Lit(
-      _.pc         -> CommonMacros.PC_RESET_VAL,
-      _.dnpc       -> CommonMacros.PC_RESET_VAL,
-      _.inst       -> CommonMacros.INST_RESET_VAL,
-      _.rd         -> 0.U,
-      _.lsu_out    -> 0.U,
-      _.csr_w_data -> 0.U,
-      _.csr_w_addr -> 0.U
-    ),
-    _.control -> (new LS2WBControlBundle).Lit(
-      _.reg_w_en   -> ControlMacros.REG_W_DISABLE,
-      _.ebreak_op  -> ControlMacros.EBREAK_OP_NO,
-      _.invalid_op -> ControlMacros.INVALID_OP_NO,
-      _.csr_w_en   -> false.B
-    )
-  )
-
   /* ========== Register ========== */
   val r_valid = RegInit(false.B)
-  val r_ls2wb = RegInit(ls2wb_rst_val)
+  val r_ls2wb = RegInit(LS2WBBundle.ls2wb_rst_val)
 
   /* ========== Wire ========== */
   val ready_next   = io.ex2ls.valid && !io.ex2ls.ready && (!io.ls2wb.valid || io.ls2wb.ready)
@@ -100,7 +62,7 @@ class LSU extends Module {
 
   io.ls2wb.bits := r_ls2wb
 
-  ex2ls_data := Mux(io.ex2ls.valid, io.ex2ls.bits, ex2ls_rst_val)
+  ex2ls_data := Mux(io.ex2ls.valid, io.ex2ls.bits, EX2LSBundle.ex2ls_rst_val)
 
   data_mem.io.addr    := ex2ls_data.data.exu_out
   data_mem.io.w_data  := ex2ls_data.data.src2

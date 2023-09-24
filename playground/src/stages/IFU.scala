@@ -25,20 +25,11 @@ class IFU extends Module {
   /* ========== Module ========== */
   val inst_mem = Module(new InstMem)
 
-  /* ========== Parameter ========== */
-  val if2id_rst_val = (new IF2IDBundle).Lit(
-    _.data -> (new IF2IDDataBundle).Lit(
-      _.pc   -> CommonMacros.PC_RESET_VAL,
-      _.snpc -> CommonMacros.PC_RESET_VAL,
-      _.inst -> CommonMacros.INST_RESET_VAL
-    )
-  )
-
   /* ========== Register ========== */
   val pc = RegInit(CommonMacros.PC_RESET_VAL)
 
   val r_valid = RegInit(false.B)
-  val r_if2id = RegInit(if2id_rst_val)
+  val r_if2id = RegInit(IF2IDBundle.if2id_rst_val)
 
   /* ========== Wire ========== */
   val valid_enable = !io.if2id.valid || io.if2id.ready

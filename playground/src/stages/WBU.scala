@@ -29,25 +29,6 @@ class WBU extends Module {
   /* ========== Module ========== */
   val statistic = Module(new Statistic)
 
-  /* ========== Parameter ========== */
-  val ls2wb_rst_val = (new LS2WBBundle).Lit(
-    _.data -> (new LS2WBDataBundle).Lit(
-      _.pc         -> CommonMacros.PC_RESET_VAL,
-      _.dnpc       -> CommonMacros.PC_RESET_VAL,
-      _.inst       -> CommonMacros.INST_RESET_VAL,
-      _.rd         -> 0.U,
-      _.lsu_out    -> 0.U,
-      _.csr_w_data -> 0.U,
-      _.csr_w_addr -> 0.U
-    ),
-    _.control -> (new LS2WBControlBundle).Lit(
-      _.reg_w_en   -> ControlMacros.REG_W_DISABLE,
-      _.ebreak_op  -> ControlMacros.EBREAK_OP_NO,
-      _.invalid_op -> ControlMacros.INVALID_OP_NO,
-      _.csr_w_en   -> false.B
-    )
-  )
-
   /* ========== Wire ========== */
   val ready_next = io.ls2wb.valid && !io.ls2wb.ready
   val ls2wb_data = Wire(new LS2WBBundle)
@@ -71,7 +52,7 @@ class WBU extends Module {
   r_statistic.inst       := ls2wb_data.data.inst
 
   /* ========== Combinational Circuit ========== */
-  ls2wb_data := Mux(io.ls2wb.valid, io.ls2wb.bits, ls2wb_rst_val)
+  ls2wb_data := Mux(io.ls2wb.valid, io.ls2wb.bits, LS2WBBundle.ls2wb_rst_val)
 
   io.ls2wb.ready := ready_next
 
