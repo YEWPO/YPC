@@ -11,9 +11,15 @@ import utils.loadstore._
 class LSUIO extends Bundle {
   val ex2ls = Flipped(Decoupled(new EX2LSBundle))
   val ls2wb = Decoupled(new LS2WBBundle)
+
   val out = Output(new Bundle {
-    val hazard     = new LSHazardDataBundle
-    val csr_hazard = new LSCSRHazardDataBundle
+    val state_info = Output(new Bundle {
+      val rd         = UInt(5.W)
+      val reg_w_data = UInt(64.W)
+      val csr_w_addr = UInt(12.W)
+      val csr_w_data = UInt(64.W)
+      val mem_r_op   = UInt(64.W)
+    })
   })
 }
 
@@ -71,6 +77,7 @@ class LSU extends Module {
   val valid_enable = io.ex2ls.valid && !io.ex2ls.ready && (!io.ls2wb.valid || io.ls2wb.ready)
   val valid_next   = r_valid && !io.ls2wb.fire
   val ex2ls_data   = Wire(new EX2LSBundle)
+  val lsu_out      = Mux(ex2ls_data.control.mem_ctl(3).orR, data_mem.io.r_data, ex2ls_data.data.exu_out)
 
   /* ========== Sequential Circuit ========== */
   r_valid := Mux(valid_enable, io.ex2ls.valid, valid_next)
@@ -79,7 +86,7 @@ class LSU extends Module {
   r_ls2wb.data.dnpc          := ex2ls_data.data.dnpc
   r_ls2wb.data.inst          := ex2ls_data.data.inst
   r_ls2wb.data.rd            := ex2ls_data.data.rd
-  r_ls2wb.data.lsu_out       := Mux(ex2ls_data.control.mem_ctl(3).orR, data_mem.io.r_data, ex2ls_data.data.exu_out)
+  r_ls2wb.data.lsu_out       := lsu_out
   r_ls2wb.control.reg_w_en   := ex2ls_data.control.reg_w_en
   r_ls2wb.control.ebreak_op  := ex2ls_data.control.ebreak_op
   r_ls2wb.control.invalid_op := ex2ls_data.control.invalid_op
@@ -100,8 +107,9 @@ class LSU extends Module {
   data_mem.io.w_data  := ex2ls_data.data.src2
   data_mem.io.mem_ctl := ex2ls_data.control.mem_ctl
 
-  io.out.hazard.rd                 := ex2ls_data.data.rd
-  io.out.hazard.rd_tag             := ex2ls_data.control.reg_w_en
-  io.out.csr_hazard.csr_w_addr     := ex2ls_data.data.csr_w_addr
-  io.out.csr_hazard.csr_w_addr_tag := ex2ls_data.control.csr_w_en
+  io.out.state_info.rd         := Mux(ex2ls_data.control.reg_w_en, ex2ls_data.data.rd, 0.U(5.W))
+  io.out.state_info.reg_w_data := lsu_out
+  io.out.state_info.csr_w_addr := Mux(ex2ls_data.control.csr_w_en, ex2ls_data.data.csr_w_addr, 0.U(12.W))
+  io.out.state_info.csr_w_data := ex2ls_data.data.csr_w_data
+  io.out.state_info.mem_r_op   := ex2ls_data.control.mem_ctl(3)
 }

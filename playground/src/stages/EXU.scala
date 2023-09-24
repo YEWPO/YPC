@@ -100,7 +100,7 @@ class EXU extends Module {
   val dnpc_enable = (r_dnpc === id2ex_data.data.pc) && ready_next
 
   /* ========== Sequential Circuit ========== */
-  r_valid := Mux(valid_enable, io.id2ex.valid, valid_next)
+  r_valid := Mux(valid_enable, valid_current, valid_next)
 
   r_dnpc := Mux(dnpc_enable, dnpc_1, r_dnpc)
 
