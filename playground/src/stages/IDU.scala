@@ -30,6 +30,8 @@ class IDUIO extends Bundle {
     val mem_r_op_E  = Bool()
     val mem_r_op_M  = Bool()
 
+    val jump_ctl = Bool()
+
     val cause = UInt(64.W)
     val epc   = UInt(64.W)
   })
@@ -64,6 +66,8 @@ class IDU extends Module {
   val valid_enable = io.if2id.valid && (!io.id2ex.valid || io.id2ex.ready)
   val valid_next   = r_valid && !io.id2ex.fire
   val if2id_data   = Wire(new IF2IDBundle)
+
+  val valid_current = io.if2id.valid && !io.in.jump_ctl
 
   val dnpc = Mux(control_unit.io.mret_op, csr.io.r_epc, if2id_data.data.snpc)
 
@@ -120,7 +124,7 @@ class IDU extends Module {
   io.if2id.ready := ready_next && !mem_r_related_op
   io.id2ex.valid := r_valid
 
-  if2id_data := Mux(io.if2id.valid, io.if2id.bits, IF2IDBundle.if2id_rst_val)
+  if2id_data := Mux(valid_current, io.if2id.bits, IF2IDBundle.if2id_rst_val)
 
   io.id2ex.bits := r_id2ex
 

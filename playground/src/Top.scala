@@ -51,6 +51,7 @@ class Top extends Module {
   idu.io.in.wb_data.csr_w_data  := wbu.io.out.wb_data.csr_w_data
   idu.io.in.cause               := lsu.io.out.cause
   idu.io.in.epc                 := lsu.io.out.epc
+  idu.io.in.jump_ctl            := exu.io.out.jump_ctl
 
   exu.io.in.tvec  := tvec
   exu.io.in.cause := lsu.io.out.cause
