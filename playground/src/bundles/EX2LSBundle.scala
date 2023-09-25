@@ -14,7 +14,8 @@ object EX2LSBundle {
       _.src2       -> 0.U,
       _.exu_out    -> 0.U,
       _.csr_w_data -> 0.U,
-      _.csr_w_addr -> 0.U
+      _.csr_w_addr -> 0.U,
+      _.cause      -> CommonMacros.CAUSE_RESET_VAL
     ),
     _.control -> (new EX2LSControlBundle).Lit(
       _.mem_ctl    -> ControlMacros.MEM_CTL_DEFAULT,
@@ -36,6 +37,8 @@ class EX2LSDataBundle extends Bundle {
 
   val csr_w_addr = UInt(12.W)
   val csr_w_data = UInt(64.W)
+
+  val cause = UInt(64.W)
 }
 
 class EX2LSControlBundle extends Bundle {

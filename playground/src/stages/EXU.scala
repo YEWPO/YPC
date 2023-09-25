@@ -62,6 +62,7 @@ class EXU extends Module {
   r_ex2ls.data.rd            := id2ex_data.data.rd
   r_ex2ls.data.src2          := id2ex_data.data.src2
   r_ex2ls.data.exu_out       := exu_out
+  r_ex2ls.data.cause         := id2ex_data.data.cause
   r_ex2ls.control.mem_ctl    := id2ex_data.control.mem_ctl
   r_ex2ls.control.reg_w_en   := id2ex_data.control.reg_w_en
   r_ex2ls.control.ebreak_op  := id2ex_data.control.ebreak_op

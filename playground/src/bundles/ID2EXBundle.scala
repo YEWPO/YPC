@@ -17,7 +17,8 @@ object ID2EXBundle {
       _.imm        -> 0.U,
       _.csr_data   -> 0.U,
       _.csr_uimm   -> 0.U,
-      _.csr_w_addr -> 0.U
+      _.csr_w_addr -> 0.U,
+      _.cause      -> CommonMacros.CAUSE_RESET_VAL
     ),
     _.control -> (new ID2EXControlBundle).Lit(
       _.a_ctl       -> ControlMacros.A_CTL_DEFAULT,
@@ -53,6 +54,8 @@ class ID2EXDataBundle extends Bundle {
   val csr_data   = UInt(64.W)
   val csr_w_addr = UInt(12.W)
   val csr_uimm   = UInt(64.W)
+
+  val cause = UInt(64.W)
 }
 
 class ID2EXControlBundle extends Bundle {

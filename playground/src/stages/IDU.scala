@@ -22,16 +22,19 @@ import macros._
 class IDUIO extends Bundle {
   val if2id = Flipped(Decoupled(new IF2IDBundle))
   val id2ex = Decoupled(new ID2EXBundle)
+
   val in = Input(new Bundle {
     val wb_data     = new WB2RegBundle
     val gpr_fw_info = new GPRForwardInfo
     val csr_fw_info = new CSRForwardInfo
     val mem_r_op_E  = Bool()
     val mem_r_op_M  = Bool()
+
+    val cause = UInt(64.W)
+    val epc   = UInt(64.W)
   })
   val out = Output(new Bundle {
-    val expt_op = Bool()
-    val expt_pc = UInt(64.W)
+    val tvec = UInt(64.W)
   })
 }
 
@@ -62,7 +65,7 @@ class IDU extends Module {
   val valid_next   = r_valid && !io.id2ex.fire
   val if2id_data   = Wire(new IF2IDBundle)
 
-  val dnpc = Mux(control_unit.io.mret_op, csr.io.epc, if2id_data.data.snpc)
+  val dnpc = Mux(control_unit.io.mret_op, csr.io.r_epc, if2id_data.data.snpc)
 
   val rs1      = if2id_data.data.inst(19, 15)
   val rs2      = if2id_data.data.inst(24, 20)
@@ -73,6 +76,12 @@ class IDU extends Module {
   val mem_r_related_op =
     mem_r_related(Mux(control_unit.io.rs1_tag, rs1, 0.U(5.W))) ||
       mem_r_related(Mux(control_unit.io.rs2_tag, rs2, 0.U(5.W)))
+
+  val cause = Mux(
+    if2id_data.data.cause === CommonMacros.CAUSE_RESET_VAL,
+    Mux(control_unit.io.ecall_op, "hb".U(64.W), CommonMacros.CAUSE_RESET_VAL),
+    CommonMacros.CAUSE_RESET_VAL
+  )
 
   /* ========== Sequential Circuit ========== */
   r_valid := Mux(valid_enable, io.if2id.valid, valid_next) && !mem_r_related_op
@@ -85,6 +94,7 @@ class IDU extends Module {
   r_id2ex.data.dnpc           := dnpc
   r_id2ex.data.snpc           := if2id_data.data.snpc
   r_id2ex.data.inst           := if2id_data.data.inst
+  r_id2ex.data.cause          := cause
   r_id2ex.control.a_ctl       := control_unit.io.a_ctl
   r_id2ex.control.b_ctl       := control_unit.io.b_ctl
   r_id2ex.control.dnpc_ctl    := control_unit.io.dnpc_ctl
@@ -114,6 +124,8 @@ class IDU extends Module {
 
   io.id2ex.bits := r_id2ex
 
+  io.out.tvec := csr.io.r_tvec
+
   control_unit.io.inst    := if2id_data.data.inst
   imm_gen.io.in           := if2id_data.data.inst(31, 7)
   imm_gen.io.imm_type     := control_unit.io.imm_type
@@ -132,8 +144,8 @@ class IDU extends Module {
   csr.io.csr_w_addr       := io.in.wb_data.csr_w_addr
   csr.io.csr_w_data       := io.in.wb_data.csr_w_data
   csr.io.csr_w_en         := io.in.wb_data.csr_w_en
-  csr.io.expt_op          := control_unit.io.ecall_op
-  csr.io.pc               := if2id_data.data.pc
+  csr.io.cause            := io.in.cause
+  csr.io.w_epc            := io.in.epc
   csr_control.io.zicsr_op := control_unit.io.csr_op
   csr_control.io.rd       := rd
   csr_control.io.rs1      := rs1
@@ -141,7 +153,4 @@ class IDU extends Module {
   csr_forward.io.data     := csr.io.csr_r_data
   csr_forward.io.addr     := Mux(csr_control.io.csr_r_en, csr_addr, 0.U(12.W))
   csr_forward.io.fw_info  := io.in.csr_fw_info
-
-  io.out.expt_op := control_unit.io.ecall_op
-  io.out.expt_pc := Mux(control_unit.io.ecall_op, csr.io.tvec, dnpc)
 }

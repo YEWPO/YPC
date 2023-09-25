@@ -10,8 +10,8 @@ import utils.instfetch._
 class IFUIO extends Bundle {
   val in = Input(new Bundle {
     val dnpc     = UInt(64.W)
-    val expt_pc  = UInt(64.W)
-    val expt_op  = Bool()
+    val tvec     = UInt(64.W)
+    val cause    = UInt(64.W)
     val jump_ctl = Bool()
   })
   val if2id = Decoupled(new IF2IDBundle)
@@ -38,8 +38,8 @@ class IFU extends Module {
   val npc = Mux(
     io.if2id.fire,
     Mux(
-      io.in.expt_op,
-      io.in.expt_pc,
+      io.in.cause =/= CommonMacros.CAUSE_RESET_VAL,
+      io.in.tvec,
       Mux(io.in.jump_ctl, io.in.dnpc, snpc)
     ),
     r_if2id.data.pc
@@ -53,9 +53,10 @@ class IFU extends Module {
   /* ========== Sequential Circuit ========== */
   r_valid := Mux(valid_enable, true.B, valid_next)
 
-  r_if2id.data.pc   := pc
-  r_if2id.data.snpc := snpc
-  r_if2id.data.inst := inst
+  r_if2id.data.pc    := pc
+  r_if2id.data.snpc  := snpc
+  r_if2id.data.inst  := inst
+  r_if2id.data.cause := CommonMacros.CAUSE_RESET_VAL
 
   pc := npc
 

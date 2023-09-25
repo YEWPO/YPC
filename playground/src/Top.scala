@@ -1,6 +1,7 @@
 import chisel3._
 import chisel3.experimental.BundleLiterals._
 import stages._
+import utils.instdecode.CSRAddr
 
 class Top extends Module {
   /* ========== Module ========== */
@@ -10,14 +11,21 @@ class Top extends Module {
   val lsu = Module(new LSU)
   val wbu = Module(new WBU)
 
+  /* ========== Wire ========== */
+  val tvec = Mux(
+    wbu.io.out.wb_data.csr_w_en && wbu.io.out.wb_data.csr_w_addr === CSRAddr.mtvec,
+    wbu.io.out.wb_data.csr_w_data,
+    idu.io.out.tvec
+  )
+
   /* ========== Combinational Circuit ========== */
   ifu.io.if2id <> idu.io.if2id
   idu.io.id2ex <> exu.io.id2ex
   exu.io.ex2ls <> lsu.io.ex2ls
   lsu.io.ls2wb <> wbu.io.ls2wb
 
-  ifu.io.in.expt_op  := idu.io.out.expt_op
-  ifu.io.in.expt_pc  := idu.io.out.expt_pc
+  ifu.io.in.cause    := lsu.io.out.cause
+  ifu.io.in.tvec     := tvec
   ifu.io.in.dnpc     := exu.io.out.dnpc
   ifu.io.in.jump_ctl := exu.io.out.jump_ctl
 
@@ -41,4 +49,8 @@ class Top extends Module {
   idu.io.in.wb_data.csr_w_addr  := wbu.io.out.wb_data.csr_w_addr
   idu.io.in.wb_data.csr_w_en    := wbu.io.out.wb_data.csr_w_en
   idu.io.in.wb_data.csr_w_data  := wbu.io.out.wb_data.csr_w_data
+  idu.io.in.cause               := lsu.io.out.cause
+  idu.io.in.epc                 := lsu.io.out.epc
+
+  lsu.io.in.tvec := tvec
 }

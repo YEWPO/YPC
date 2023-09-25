@@ -7,9 +7,10 @@ import macros._
 object IF2IDBundle {
   val if2id_rst_val = (new IF2IDBundle).Lit(
     _.data -> (new IF2IDDataBundle).Lit(
-      _.pc   -> CommonMacros.PC_RESET_VAL,
-      _.snpc -> CommonMacros.PC_RESET_VAL,
-      _.inst -> CommonMacros.INST_RESET_VAL
+      _.pc    -> CommonMacros.PC_RESET_VAL,
+      _.snpc  -> CommonMacros.PC_RESET_VAL,
+      _.inst  -> CommonMacros.INST_RESET_VAL,
+      _.cause -> CommonMacros.CAUSE_RESET_VAL
     )
   )
 }
@@ -18,6 +19,8 @@ class IF2IDDataBundle extends Bundle {
   val inst = UInt(32.W)
   val pc   = UInt(64.W)
   val snpc = UInt(64.W)
+
+  val cause = UInt(64.W)
 }
 
 class IF2IDControlBundle extends Bundle {}
