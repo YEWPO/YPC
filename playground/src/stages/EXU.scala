@@ -54,7 +54,7 @@ class EXU extends Module {
   val jump_ctl    = (id2ex_data.control.jump_op & Cat(alu.io.alu_out(0), 1.U(1.W))).orR
   val dnpc_0      = Mux(id2ex_data.control.dnpc_ctl, id2ex_data.data.src1, id2ex_data.data.pc) + id2ex_data.data.imm
   val dnpc_1      = Mux(jump_ctl, dnpc_0, id2ex_data.data.dnpc)
-  val dnpc_enable = (r_dnpc === id2ex_data.data.pc) && ready_next
+  val dnpc_enable = ((r_dnpc === id2ex_data.data.pc) && ready_next) || (io.in.cause =/= CommonMacros.CAUSE_RESET_VAL)
   val exu_out     = Mux(id2ex_data.control.exe_out_ctl, mul.io.mul_out, alu.io.alu_out)
 
   /* ========== Sequential Circuit ========== */

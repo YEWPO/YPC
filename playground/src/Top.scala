@@ -1,7 +1,7 @@
 import chisel3._
 import chisel3.experimental.BundleLiterals._
 import stages._
-import utils.instdecode.CSRAddr
+import utils.instdecode._
 
 class Top extends Module {
   /* ========== Module ========== */
