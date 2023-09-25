@@ -62,11 +62,7 @@ class IDU extends Module {
   val valid_next   = r_valid && !io.id2ex.fire
   val if2id_data   = Wire(new IF2IDBundle)
 
-  val dnpc = Mux(
-    control_unit.io.ecall_op,
-    csr.io.tvec,
-    Mux(control_unit.io.mret_op, csr.io.epc, if2id_data.data.snpc)
-  )
+  val dnpc = Mux(control_unit.io.mret_op, csr.io.epc, if2id_data.data.snpc)
 
   val rs1      = if2id_data.data.inst(19, 15)
   val rs2      = if2id_data.data.inst(24, 20)
@@ -100,6 +96,7 @@ class IDU extends Module {
   r_id2ex.control.jump_op     := control_unit.io.jump_op
   r_id2ex.control.ebreak_op   := control_unit.io.ebreak_op
   r_id2ex.control.invalid_op  := control_unit.io.invalid_op
+  r_id2ex.control.mret_op     := control_unit.io.mret_op
 
   r_id2ex.data.csr_data       := csr_forward.io.src
   r_id2ex.data.csr_w_addr     := csr_addr
@@ -145,6 +142,6 @@ class IDU extends Module {
   csr_forward.io.addr     := Mux(csr_control.io.csr_r_en, csr_addr, 0.U(12.W))
   csr_forward.io.fw_info  := io.in.csr_fw_info
 
-  io.out.expt_op := control_unit.io.mret_op || control_unit.io.ecall_op
-  io.out.expt_pc := Mux(control_unit.io.mret_op, csr.io.epc, csr.io.tvec)
+  io.out.expt_op := control_unit.io.ecall_op
+  io.out.expt_pc := Mux(control_unit.io.ecall_op, csr.io.tvec, dnpc)
 }

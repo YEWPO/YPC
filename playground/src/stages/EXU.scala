@@ -99,7 +99,7 @@ class EXU extends Module {
   csr_calc.io.src        := Mux(id2ex_data.control.csr_src_ctl, id2ex_data.data.csr_uimm, id2ex_data.data.src1)
   csr_calc.io.csr_op_ctl := id2ex_data.control.csr_op_ctl
 
-  io.out.jump_ctl := jump_ctl
+  io.out.jump_ctl := jump_ctl || id2ex_data.control.mret_op
   io.out.dnpc     := dnpc_1
 
   io.out.state_info.rd         := Mux(id2ex_data.control.reg_w_en, id2ex_data.data.rd, 0.U(5.W))

@@ -31,6 +31,7 @@ object ID2EXBundle {
       _.reg_w_en    -> ControlMacros.REG_W_DISABLE,
       _.ebreak_op   -> ControlMacros.EBREAK_OP_NO,
       _.invalid_op  -> ControlMacros.INVALID_OP_NO,
+      _.mret_op     -> ControlMacros.MRET_OP_NO,
       _.csr_r_en    -> false.B,
       _.csr_w_en    -> false.B,
       _.csr_src_ctl -> false.B,
@@ -66,6 +67,7 @@ class ID2EXControlBundle extends Bundle {
   val reg_w_en    = Bool()
   val ebreak_op   = Bool()
   val invalid_op  = Bool()
+  val mret_op     = Bool()
 
   val csr_r_en    = Bool()
   val csr_w_en    = Bool()
