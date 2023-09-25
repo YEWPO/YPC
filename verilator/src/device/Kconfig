@@ -69,7 +69,7 @@ endif # HAS_VGA
 
 menuconfig HAS_AUDIO
   bool "Enable audio"
-  default y
+  default n
 
 if HAS_AUDIO
 config SB_ADDR
@@ -87,7 +87,7 @@ endif # HAS_AUDIO
 
 menuconfig HAS_DISK
   bool "Enable disk"
-  default y
+  default n
 
 if HAS_DISK
 config DISK_CTL_MMIO

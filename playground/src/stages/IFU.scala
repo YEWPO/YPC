@@ -36,9 +36,13 @@ class IFU extends Module {
 
   val snpc = pc + 4.U
   val npc = Mux(
-    io.in.expt_op,
-    io.in.expt_pc,
-    Mux(io.in.jump_ctl, io.in.dnpc, snpc)
+    io.if2id.fire,
+    Mux(
+      io.in.expt_op,
+      io.in.expt_pc,
+      Mux(io.in.jump_ctl, io.in.dnpc, snpc)
+    ),
+    r_if2id.data.pc
   )
   val inst = Mux(
     pc(2).orR,
@@ -53,7 +57,7 @@ class IFU extends Module {
   r_if2id.data.snpc := snpc
   r_if2id.data.inst := inst
 
-  pc := Mux(io.if2id.fire, npc, pc)
+  pc := npc
 
   /* ========== Combinational Circuit ========== */
   io.if2id.valid := r_valid
