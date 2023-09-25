@@ -11,9 +11,6 @@ class LSUIO extends Bundle {
   val ex2ls = Flipped(Decoupled(new EX2LSBundle))
   val ls2wb = Decoupled(new LS2WBBundle)
 
-  val in = Input(new Bundle {
-    val tvec = UInt(64.W)
-  })
   val out = Output(new Bundle {
     val state_info = Output(new Bundle {
       val rd         = UInt(5.W)
@@ -38,27 +35,19 @@ class LSU extends Module {
   val r_valid = RegInit(false.B)
   val r_ls2wb = RegInit(LS2WBBundle.ls2wb_rst_val)
 
-  val r_dnpc = RegInit(CommonMacros.PC_RESET_VAL)
-
   /* ========== Wire ========== */
-  val ready_next    = io.ex2ls.valid && (!io.ls2wb.valid || io.ls2wb.ready)
-  val valid_enable  = io.ex2ls.valid && (!io.ls2wb.valid || io.ls2wb.ready)
-  val valid_next    = r_valid && !io.ls2wb.fire
-  val valid_current = io.ex2ls.valid && (r_dnpc === io.ex2ls.bits.data.pc)
-  val ex2ls_data    = Wire(new EX2LSBundle)
+  val ready_next   = io.ex2ls.valid && (!io.ls2wb.valid || io.ls2wb.ready)
+  val valid_enable = io.ex2ls.valid && (!io.ls2wb.valid || io.ls2wb.ready)
+  val valid_next   = r_valid && !io.ls2wb.fire
+  val ex2ls_data   = Wire(new EX2LSBundle)
 
   val lsu_out = Mux(ex2ls_data.control.mem_ctl(3).orR, data_mem.io.r_data, ex2ls_data.data.exu_out)
-
-  val dnpc_enable = (r_dnpc === io.ex2ls.bits.data.pc) && ready_next
-  val dnpc        = Mux(ex2ls_data.data.cause =/= CommonMacros.CAUSE_RESET_VAL, io.in.tvec, ex2ls_data.data.dnpc)
 
   /* ========== Sequential Circuit ========== */
   r_valid := Mux(valid_enable, io.ex2ls.valid, valid_next)
 
-  r_dnpc := Mux(dnpc_enable, dnpc, r_dnpc)
-
   r_ls2wb.data.pc            := ex2ls_data.data.pc
-  r_ls2wb.data.dnpc          := dnpc
+  r_ls2wb.data.dnpc          := ex2ls_data.data.dnpc
   r_ls2wb.data.inst          := ex2ls_data.data.inst
   r_ls2wb.data.rd            := ex2ls_data.data.rd
   r_ls2wb.data.lsu_out       := lsu_out
@@ -76,7 +65,7 @@ class LSU extends Module {
 
   io.ls2wb.bits := r_ls2wb
 
-  ex2ls_data := Mux(valid_current, io.ex2ls.bits, EX2LSBundle.ex2ls_rst_val)
+  ex2ls_data := Mux(io.ex2ls.valid, io.ex2ls.bits, EX2LSBundle.ex2ls_rst_val)
 
   data_mem.io.addr    := ex2ls_data.data.exu_out
   data_mem.io.w_data  := ex2ls_data.data.src2

@@ -10,6 +10,11 @@ import macros._
 class EXUIO extends Bundle {
   val id2ex = Flipped(Decoupled(new ID2EXBundle))
   val ex2ls = Decoupled(new EX2LSBundle)
+
+  val in = Input(new Bundle {
+    val cause = UInt(64.W)
+    val tvec  = UInt(64.W)
+  })
   val out = Output(new Bundle {
     val jump_ctl = Bool()
     val dnpc     = UInt(64.W)
@@ -39,11 +44,12 @@ class EXU extends Module {
   val r_dnpc = RegInit(CommonMacros.PC_RESET_VAL)
 
   /* ========== Wire ========== */
-  val ready_next    = io.id2ex.valid && (!io.ex2ls.valid || io.ex2ls.ready)
-  val valid_enable  = io.id2ex.valid && (!io.ex2ls.valid || io.ex2ls.ready)
-  val id2ex_data    = Wire(new ID2EXBundle)
-  val valid_next    = r_valid && !io.ex2ls.fire
-  val valid_current = io.id2ex.valid && (r_dnpc === io.id2ex.bits.data.pc)
+  val ready_next   = io.id2ex.valid && (!io.ex2ls.valid || io.ex2ls.ready)
+  val valid_enable = io.id2ex.valid && (!io.ex2ls.valid || io.ex2ls.ready)
+  val id2ex_data   = Wire(new ID2EXBundle)
+  val valid_next   = r_valid && !io.ex2ls.fire
+  val valid_current =
+    io.id2ex.valid && (r_dnpc === io.id2ex.bits.data.pc) && (io.in.cause === CommonMacros.CAUSE_RESET_VAL)
 
   val jump_ctl    = (id2ex_data.control.jump_op & Cat(alu.io.alu_out(0), 1.U(1.W))).orR
   val dnpc_0      = Mux(id2ex_data.control.dnpc_ctl, id2ex_data.data.src1, id2ex_data.data.pc) + id2ex_data.data.imm
@@ -54,7 +60,11 @@ class EXU extends Module {
   /* ========== Sequential Circuit ========== */
   r_valid := Mux(valid_enable, valid_current, valid_next)
 
-  r_dnpc := Mux(dnpc_enable, dnpc_1, r_dnpc)
+  r_dnpc := Mux(
+    dnpc_enable,
+    Mux(io.in.cause === CommonMacros.CAUSE_RESET_VAL, dnpc_1, io.in.tvec),
+    r_dnpc
+  )
 
   r_ex2ls.data.dnpc          := dnpc_1
   r_ex2ls.data.pc            := id2ex_data.data.pc

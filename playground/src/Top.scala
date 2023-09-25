@@ -52,5 +52,6 @@ class Top extends Module {
   idu.io.in.cause               := lsu.io.out.cause
   idu.io.in.epc                 := lsu.io.out.epc
 
-  lsu.io.in.tvec := tvec
+  exu.io.in.tvec  := tvec
+  exu.io.in.cause := lsu.io.out.cause
 }
