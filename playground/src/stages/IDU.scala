@@ -54,7 +54,7 @@ class IDU extends Module {
 
   /* ========== Function ========== */
   def mem_r_related(rs: UInt) =
-    (rs.orR && rs === io.in.gpr_fw_info.rd_E && io.in.mem_r_op_E) || (rs.orR && rs === io.in.gpr_fw_info.rd_M && io.in.mem_r_op_M)
+    (rs.orR && (rs === io.in.gpr_fw_info.rd_E) && io.in.mem_r_op_E) || (rs.orR && (rs === io.in.gpr_fw_info.rd_M) && io.in.mem_r_op_M)
 
   /* ========== Wire ========== */
   val ready_next   = io.if2id.valid && (!io.id2ex.valid || io.id2ex.ready)
@@ -79,7 +79,7 @@ class IDU extends Module {
       mem_r_related(Mux(control_unit.io.rs2_tag, rs2, 0.U(5.W)))
 
   /* ========== Sequential Circuit ========== */
-  r_valid := Mux(valid_enable, io.if2id.valid, valid_next)
+  r_valid := Mux(valid_enable, io.if2id.valid, valid_next) && !mem_r_related_op
 
   r_id2ex.data.imm            := imm_gen.io.imm_out
   r_id2ex.data.rd             := rd
@@ -111,7 +111,7 @@ class IDU extends Module {
 
   /* ========== Combinational Circuit ========== */
   io.if2id.ready := ready_next && !mem_r_related_op
-  io.id2ex.valid := r_valid && !mem_r_related_op
+  io.id2ex.valid := r_valid
 
   if2id_data := Mux(io.if2id.valid, io.if2id.bits, IF2IDBundle.if2id_rst_val)
 
