@@ -11,6 +11,9 @@ class LSUIO extends Bundle {
   val ex2ls = Flipped(Decoupled(new EX2LSBundle))
   val ls2wb = Decoupled(new LS2WBBundle)
 
+  val in = Input(new Bundle {
+    val tvec = UInt(64.W)
+  })
   val out = Output(new Bundle {
     val state_info = Output(new Bundle {
       val rd         = UInt(5.W)
@@ -43,11 +46,13 @@ class LSU extends Module {
 
   val lsu_out = Mux(ex2ls_data.control.mem_ctl(3).orR, data_mem.io.r_data, ex2ls_data.data.exu_out)
 
+  val dnpc = Mux(ex2ls_data.data.cause === CommonMacros.CAUSE_RESET_VAL, ex2ls_data.data.dnpc, io.in.tvec)
+
   /* ========== Sequential Circuit ========== */
   r_valid := Mux(valid_enable, io.ex2ls.valid, valid_next)
 
   r_ls2wb.data.pc            := ex2ls_data.data.pc
-  r_ls2wb.data.dnpc          := ex2ls_data.data.dnpc
+  r_ls2wb.data.dnpc          := dnpc
   r_ls2wb.data.inst          := ex2ls_data.data.inst
   r_ls2wb.data.rd            := ex2ls_data.data.rd
   r_ls2wb.data.lsu_out       := lsu_out
