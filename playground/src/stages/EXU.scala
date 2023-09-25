@@ -39,8 +39,8 @@ class EXU extends Module {
   val r_dnpc = RegInit(CommonMacros.PC_RESET_VAL)
 
   /* ========== Wire ========== */
-  val ready_next    = io.id2ex.valid && !io.id2ex.ready && (!io.ex2ls.valid || io.ex2ls.ready)
-  val valid_enable  = io.id2ex.valid && !io.id2ex.ready && (!io.ex2ls.valid || io.ex2ls.ready)
+  val ready_next    = io.id2ex.valid && (!io.ex2ls.valid || io.ex2ls.ready)
+  val valid_enable  = io.id2ex.valid && (!io.ex2ls.valid || io.ex2ls.ready)
   val id2ex_data    = Wire(new ID2EXBundle)
   val valid_next    = r_valid && !io.ex2ls.fire
   val valid_current = io.id2ex.valid && (r_dnpc === io.id2ex.bits.data.pc)

@@ -30,7 +30,7 @@ class WBU extends Module {
   val statistic = Module(new Statistic)
 
   /* ========== Wire ========== */
-  val ready_next = io.ls2wb.valid && !io.ls2wb.ready
+  val ready_next = io.ls2wb.valid
   val ls2wb_data = Wire(new LS2WBBundle)
 
   /* ========== Register ========== */

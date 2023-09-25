@@ -34,8 +34,8 @@ class LSU extends Module {
   val r_ls2wb = RegInit(LS2WBBundle.ls2wb_rst_val)
 
   /* ========== Wire ========== */
-  val ready_next   = io.ex2ls.valid && !io.ex2ls.ready && (!io.ls2wb.valid || io.ls2wb.ready)
-  val valid_enable = io.ex2ls.valid && !io.ex2ls.ready && (!io.ls2wb.valid || io.ls2wb.ready)
+  val ready_next   = io.ex2ls.valid && (!io.ls2wb.valid || io.ls2wb.ready)
+  val valid_enable = io.ex2ls.valid && (!io.ls2wb.valid || io.ls2wb.ready)
   val valid_next   = r_valid && !io.ls2wb.fire
   val ex2ls_data   = Wire(new EX2LSBundle)
   val lsu_out      = Mux(ex2ls_data.control.mem_ctl(3).orR, data_mem.io.r_data, ex2ls_data.data.exu_out)
