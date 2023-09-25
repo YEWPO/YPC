@@ -58,7 +58,7 @@ class LSU extends Module {
   r_dnpc := Mux(dnpc_enable, dnpc, r_dnpc)
 
   r_ls2wb.data.pc            := ex2ls_data.data.pc
-  r_ls2wb.data.dnpc          := ex2ls_data.data.dnpc
+  r_ls2wb.data.dnpc          := dnpc
   r_ls2wb.data.inst          := ex2ls_data.data.inst
   r_ls2wb.data.rd            := ex2ls_data.data.rd
   r_ls2wb.data.lsu_out       := lsu_out
