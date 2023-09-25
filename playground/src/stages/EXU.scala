@@ -18,7 +18,7 @@ class EXUIO extends Bundle {
       val reg_w_data = UInt(64.W)
       val csr_w_addr = UInt(12.W)
       val csr_w_data = UInt(64.W)
-      val mem_r_op   = UInt(64.W)
+      val mem_r_op   = Bool()
     })
   })
 }
