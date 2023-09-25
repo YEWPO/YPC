@@ -57,8 +57,8 @@ class IDU extends Module {
     (rs.orR && rs === io.in.gpr_fw_info.rd_E && io.in.mem_r_op_E) || (rs.orR && rs === io.in.gpr_fw_info.rd_M && io.in.mem_r_op_M)
 
   /* ========== Wire ========== */
-  val ready_next   = io.if2id.valid && !io.if2id.ready && (!io.id2ex.valid || io.id2ex.ready)
-  val valid_enable = io.if2id.valid && !io.if2id.ready && (!io.id2ex.valid || io.id2ex.ready)
+  val ready_next   = io.if2id.valid && (!io.id2ex.valid || io.id2ex.ready)
+  val valid_enable = io.if2id.valid && (!io.id2ex.valid || io.id2ex.ready)
   val valid_next   = r_valid && !io.id2ex.fire
   val if2id_data   = Wire(new IF2IDBundle)
 
@@ -74,7 +74,9 @@ class IDU extends Module {
   val funct    = if2id_data.data.inst(14, 12)
   val csr_addr = if2id_data.data.inst(31, 20)
 
-  val mem_r_related_op = mem_r_related(rs1) || mem_r_related(rs2)
+  val mem_r_related_op =
+    mem_r_related(Mux(control_unit.io.rs1_tag, rs1, 0.U(5.W))) ||
+      mem_r_related(Mux(control_unit.io.rs2_tag, rs2, 0.U(5.W)))
 
   /* ========== Sequential Circuit ========== */
   r_valid := Mux(valid_enable, io.if2id.valid, valid_next)
