@@ -171,9 +171,10 @@ static void exec_one(Decode *s) {
 #endif
 }
 
-static void check_inst(uint64_t &n) {
+static void check_inst(uint64_t &n, uint64_t &g_inst_cycle) {
   if (test_inst_avail()) {
     n--;
+    g_inst_cycle = 0;
     Decode s;
     exec_one(&s);
     g_nr_guest_inst++;
@@ -182,13 +183,21 @@ static void check_inst(uint64_t &n) {
 }
 
 static void step_inst(uint64_t n) {
+  uint64_t g_inst_cycle = 0;
+
   while (n) {
-    check_inst(n);
+    if (g_inst_cycle > 50) {
+      npc_state.state = NPC_ABORT;
+      return;
+    }
+    g_inst_cycle++;
+
+    check_inst(n, g_inst_cycle);
 
     step_one();
 
     if (npc_state.state != NPC_RUNNING) {
-      check_inst(n);
+      check_inst(n, g_inst_cycle);
       break;
     }
 
