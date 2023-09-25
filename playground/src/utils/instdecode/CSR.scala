@@ -20,7 +20,7 @@ class CSRIO extends Bundle {
 
   val csr_w_data = Input(UInt(64.W))
 
-  val cause = Input(Bool())
+  val cause = Input(UInt(64.W))
   val w_epc = Input(UInt(64.W))
 
   val r_tvec = Output(UInt(64.W))
