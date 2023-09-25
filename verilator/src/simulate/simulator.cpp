@@ -171,8 +171,9 @@ static void exec_one(Decode *s) {
 #endif
 }
 
-static void check_inst() {
+static void check_inst(uint64_t &n) {
   if (test_inst_avail()) {
+    n--;
     Decode s;
     exec_one(&s);
     g_nr_guest_inst++;
@@ -180,14 +181,14 @@ static void check_inst() {
   }
 }
 
-static void step_clock(uint64_t n) {
-  while (n--) {
-    check_inst();
+static void step_inst(uint64_t n) {
+  while (n) {
+    check_inst(n);
 
     step_one();
 
     if (npc_state.state != NPC_RUNNING) {
-      check_inst();
+      check_inst(n);
       break;
     }
 
@@ -221,7 +222,7 @@ void cpu_exec(uint64_t n) {
 
   uint64_t start_time = get_time();
 
-  step_clock(n);
+  step_inst(n);
 
   uint64_t end_time = get_time();
 
