@@ -28,6 +28,7 @@ class Top extends Module {
   ifu.io.in.tvec     := tvec
   ifu.io.in.dnpc     := exu.io.out.dnpc
   ifu.io.in.jump_ctl := exu.io.out.jump_ctl
+  ifu.io.in.mem_r_op := idu.io.out.mem_r_op
 
   idu.io.in.gpr_fw_info.rd_E    := exu.io.out.state_info.rd
   idu.io.in.gpr_fw_info.rd_M    := lsu.io.out.state_info.rd
