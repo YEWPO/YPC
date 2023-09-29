@@ -67,7 +67,8 @@ class IDU extends Module {
   val valid_next   = r_valid && !io.id2ex.fire
   val if2id_data   = Wire(new IF2IDBundle)
 
-  val valid_current = io.if2id.valid && !io.in.jump_ctl
+  val valid_current =
+    io.if2id.valid && !io.in.jump_ctl && (io.in.cause === CommonMacros.CAUSE_RESET_VAL)
 
   val dnpc = Mux(control_unit.io.mret_op, csr.io.r_epc, if2id_data.data.snpc)
 
@@ -88,7 +89,7 @@ class IDU extends Module {
   )
 
   /* ========== Sequential Circuit ========== */
-  r_valid := Mux(valid_enable, io.if2id.valid, valid_next) && !mem_r_related_op
+  r_valid := Mux(valid_enable, valid_current, valid_next) && !mem_r_related_op
 
   r_id2ex.data.imm            := imm_gen.io.imm_out
   r_id2ex.data.rd             := rd

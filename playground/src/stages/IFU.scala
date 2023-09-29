@@ -31,18 +31,15 @@ class IFU extends Module {
   val r_if2id = RegInit(IF2IDBundle.if2id_rst_val)
 
   /* ========== Wire ========== */
-  val valid_enable = !io.if2id.valid || io.if2id.ready
-  val valid_next   = r_valid && !io.if2id.fire
+  val valid_enable  = !io.if2id.valid || io.if2id.ready
+  val valid_next    = r_valid && !io.if2id.fire
+  val valid_current = !io.in.jump_ctl && (io.in.cause === CommonMacros.CAUSE_RESET_VAL)
 
   val snpc = pc + 4.U
   val npc = Mux(
-    io.if2id.fire,
-    Mux(
-      io.in.cause =/= CommonMacros.CAUSE_RESET_VAL,
-      io.in.tvec,
-      Mux(io.in.jump_ctl, io.in.dnpc, snpc)
-    ),
-    r_if2id.data.pc
+    io.in.cause =/= CommonMacros.CAUSE_RESET_VAL,
+    io.in.tvec,
+    Mux(io.in.jump_ctl, io.in.dnpc, snpc)
   )
   val inst = Mux(
     pc(2).orR,
@@ -51,11 +48,11 @@ class IFU extends Module {
   )
 
   /* ========== Sequential Circuit ========== */
-  r_valid := Mux(valid_enable, true.B, valid_next)
+  r_valid := Mux(valid_enable, valid_current, valid_next)
 
-  r_if2id.data.pc    := pc
-  r_if2id.data.snpc  := snpc
-  r_if2id.data.inst  := inst
+  r_if2id.data.pc    := Mux(valid_enable, pc, r_if2id.data.pc)
+  r_if2id.data.snpc  := Mux(valid_enable, snpc, r_if2id.data.snpc)
+  r_if2id.data.inst  := Mux(valid_enable, inst, r_if2id.data.inst)
   r_if2id.data.cause := CommonMacros.CAUSE_RESET_VAL
 
   pc := npc
