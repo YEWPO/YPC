@@ -13,7 +13,8 @@ object LS2WBBundle {
       _.rd         -> 0.U,
       _.lsu_out    -> 0.U,
       _.csr_w_data -> 0.U,
-      _.csr_w_addr -> 0.U
+      _.csr_w_addr -> 0.U,
+      _.cause      -> CommonMacros.CAUSE_RESET_VAL
     ),
     _.control -> (new LS2WBControlBundle).Lit(
       _.reg_w_en   -> ControlMacros.REG_W_DISABLE,
@@ -33,6 +34,8 @@ class LS2WBDataBundle extends Bundle {
 
   val csr_w_addr = UInt(12.W)
   val csr_w_data = UInt(64.W)
+
+  val cause = UInt(64.W)
 }
 
 class LS2WBControlBundle extends Bundle {

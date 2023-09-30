@@ -11,21 +11,14 @@ class Top extends Module {
   val lsu = Module(new LSU)
   val wbu = Module(new WBU)
 
-  /* ========== Wire ========== */
-  val tvec = Mux(
-    wbu.io.out.wb_data.csr_w_en && wbu.io.out.wb_data.csr_w_addr === CSRAddr.mtvec,
-    wbu.io.out.wb_data.csr_w_data,
-    idu.io.out.tvec
-  )
-
   /* ========== Combinational Circuit ========== */
   ifu.io.if2id <> idu.io.if2id
   idu.io.id2ex <> exu.io.id2ex
   exu.io.ex2ls <> lsu.io.ex2ls
   lsu.io.ls2wb <> wbu.io.ls2wb
 
-  ifu.io.in.cause    := lsu.io.out.cause
-  ifu.io.in.tvec     := tvec
+  ifu.io.in.cause    := wbu.io.out.cause
+  ifu.io.in.tvec     := idu.io.out.tvec
   ifu.io.in.dnpc     := exu.io.out.dnpc
   ifu.io.in.jump_ctl := exu.io.out.jump_ctl
   ifu.io.in.mem_r_op := idu.io.out.mem_r_op
@@ -50,12 +43,14 @@ class Top extends Module {
   idu.io.in.wb_data.csr_w_addr  := wbu.io.out.wb_data.csr_w_addr
   idu.io.in.wb_data.csr_w_en    := wbu.io.out.wb_data.csr_w_en
   idu.io.in.wb_data.csr_w_data  := wbu.io.out.wb_data.csr_w_data
-  idu.io.in.cause               := lsu.io.out.cause
-  idu.io.in.epc                 := lsu.io.out.epc
+  idu.io.in.cause               := wbu.io.out.cause
+  idu.io.in.epc                 := wbu.io.out.epc
   idu.io.in.jump_ctl            := exu.io.out.jump_ctl
 
-  exu.io.in.tvec  := tvec
-  exu.io.in.cause := lsu.io.out.cause
+  exu.io.in.tvec  := idu.io.out.tvec
+  exu.io.in.cause := wbu.io.out.cause
 
-  lsu.io.in.tvec := tvec
+  lsu.io.in.cause := wbu.io.out.cause
+
+  wbu.io.in.tvec := idu.io.out.tvec
 }

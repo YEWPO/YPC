@@ -12,7 +12,7 @@ class LSUIO extends Bundle {
   val ls2wb = Decoupled(new LS2WBBundle)
 
   val in = Input(new Bundle {
-    val tvec = UInt(64.W)
+    val cause = UInt(64.W)
   })
   val out = Output(new Bundle {
     val state_info = Output(new Bundle {
@@ -22,8 +22,6 @@ class LSUIO extends Bundle {
       val csr_w_data = UInt(64.W)
       val mem_r_op   = Bool()
     })
-    val cause = UInt(64.W)
-    val epc   = UInt(64.W)
   })
 }
 
@@ -39,23 +37,23 @@ class LSU extends Module {
   val r_ls2wb = RegInit(LS2WBBundle.ls2wb_rst_val)
 
   /* ========== Wire ========== */
-  val ready_next   = io.ex2ls.valid && (!io.ls2wb.valid || io.ls2wb.ready)
-  val valid_enable = io.ex2ls.valid && (!io.ls2wb.valid || io.ls2wb.ready)
-  val valid_next   = r_valid && !io.ls2wb.fire
-  val ex2ls_data   = Wire(new EX2LSBundle)
+  val ready_next    = io.ex2ls.valid && (!io.ls2wb.valid || io.ls2wb.ready)
+  val valid_enable  = io.ex2ls.valid && (!io.ls2wb.valid || io.ls2wb.ready)
+  val valid_next    = r_valid && !io.ls2wb.fire
+  val ex2ls_data    = Wire(new EX2LSBundle)
+  val valid_current = io.in.cause === CommonMacros.CAUSE_RESET_VAL
 
   val lsu_out = Mux(ex2ls_data.control.mem_ctl(3).orR, data_mem.io.r_data, ex2ls_data.data.exu_out)
-
-  val dnpc = Mux(ex2ls_data.data.cause === CommonMacros.CAUSE_RESET_VAL, ex2ls_data.data.dnpc, io.in.tvec)
 
   /* ========== Sequential Circuit ========== */
   r_valid := Mux(valid_enable, io.ex2ls.valid, valid_next)
 
   r_ls2wb.data.pc            := ex2ls_data.data.pc
-  r_ls2wb.data.dnpc          := dnpc
+  r_ls2wb.data.dnpc          := ex2ls_data.data.dnpc
   r_ls2wb.data.inst          := ex2ls_data.data.inst
   r_ls2wb.data.rd            := ex2ls_data.data.rd
   r_ls2wb.data.lsu_out       := lsu_out
+  r_ls2wb.data.cause         := ex2ls_data.data.cause
   r_ls2wb.control.reg_w_en   := ex2ls_data.control.reg_w_en
   r_ls2wb.control.ebreak_op  := ex2ls_data.control.ebreak_op
   r_ls2wb.control.invalid_op := ex2ls_data.control.invalid_op
@@ -70,7 +68,7 @@ class LSU extends Module {
 
   io.ls2wb.bits := r_ls2wb
 
-  ex2ls_data := Mux(io.ex2ls.valid, io.ex2ls.bits, EX2LSBundle.ex2ls_rst_val)
+  ex2ls_data := Mux(valid_current, io.ex2ls.bits, EX2LSBundle.ex2ls_rst_val)
 
   data_mem.io.addr    := ex2ls_data.data.exu_out
   data_mem.io.w_data  := ex2ls_data.data.src2
@@ -81,7 +79,4 @@ class LSU extends Module {
   io.out.state_info.csr_w_addr := Mux(ex2ls_data.control.csr_w_en, ex2ls_data.data.csr_w_addr, 0.U(12.W))
   io.out.state_info.csr_w_data := ex2ls_data.data.csr_w_data
   io.out.state_info.mem_r_op   := ex2ls_data.control.mem_ctl(3)
-
-  io.out.cause := ex2ls_data.data.cause
-  io.out.epc   := ex2ls_data.data.pc
 }
