@@ -36,8 +36,7 @@ class IDUIO extends Bundle {
     val epc   = UInt(64.W)
   })
   val out = Output(new Bundle {
-    val tvec     = UInt(64.W)
-    val mem_r_op = Bool()
+    val tvec = UInt(64.W)
   })
 }
 
@@ -130,8 +129,7 @@ class IDU extends Module {
 
   io.id2ex.bits := r_id2ex
 
-  io.out.tvec     := csr.io.r_tvec
-  io.out.mem_r_op := mem_r_related_op
+  io.out.tvec := csr.io.r_tvec
 
   control_unit.io.inst    := if2id_data.data.inst
   imm_gen.io.in           := if2id_data.data.inst(31, 7)

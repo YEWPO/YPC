@@ -13,7 +13,6 @@ class IFUIO extends Bundle {
     val tvec     = UInt(64.W)
     val cause    = UInt(64.W)
     val jump_ctl = Bool()
-    val mem_r_op = Bool()
   })
   val if2id = Decoupled(new IF2IDBundle)
 }
@@ -35,7 +34,7 @@ class IFU extends Module {
   val valid_enable  = !io.if2id.valid || io.if2id.ready
   val valid_next    = r_valid && !io.if2id.fire
   val valid_current = !io.in.jump_ctl && (io.in.cause === CommonMacros.CAUSE_RESET_VAL)
-  val stall_state   = io.in.mem_r_op
+  val pc_enable     = !r_valid || io.if2id.fire
 
   val snpc = pc + 4.U
   val npc = Mux(
@@ -57,7 +56,7 @@ class IFU extends Module {
   r_if2id.data.inst  := Mux(valid_enable, inst, r_if2id.data.inst)
   r_if2id.data.cause := CommonMacros.CAUSE_RESET_VAL
 
-  pc := Mux(stall_state, pc, npc)
+  pc := Mux(pc_enable, npc, pc)
 
   /* ========== Combinational Circuit ========== */
   io.if2id.valid := r_valid
