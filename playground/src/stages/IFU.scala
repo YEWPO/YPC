@@ -33,19 +33,29 @@ class IFU extends Module {
   val r_ar_valid = RegInit(false.B)
   val r_ar_addr  = RegInit(CommonMacros.PC_RESET_VAL)
 
+  val r_dnpc        = RegInit(CommonMacros.PC_RESET_VAL)
+  val r_dnpc_valid  = RegInit(false.B)
+  val r_cause       = RegInit(CommonMacros.CAUSE_RESET_VAL)
+  val r_cause_valid = RegInit(false.B)
+
   /* ========== Wire ========== */
+  val dnpc        = Mux(r_dnpc_valid, r_dnpc, io.in.dnpc)
+  val dnpc_valid  = r_dnpc_valid || io.in.jump_ctl
+  val cause       = Mux(r_cause_valid, r_cause, io.in.cause)
+  val cause_valid = r_cause_valid || (io.in.cause =/= CommonMacros.CAUSE_RESET_VAL)
+
   val valid_enable  = (!io.if2id.valid || io.if2id.ready) && inst_ram.io.r.fire
   val valid_next    = r_valid && !io.if2id.fire
-  val valid_current = !io.in.jump_ctl && (io.in.cause === CommonMacros.CAUSE_RESET_VAL)
+  val valid_current = !dnpc_valid && !cause_valid
 
   val inst_req      = (!r_ar_valid && !inst_ram.io.r.valid) || inst_ram.io.r.fire
   val ar_valid_next = r_ar_valid && !inst_ram.io.ar.ready
 
   val snpc = pc + 4.U
   val npc = Mux(
-    io.in.cause =/= CommonMacros.CAUSE_RESET_VAL,
+    cause_valid,
     io.in.tvec,
-    Mux(io.in.jump_ctl, io.in.dnpc, snpc)
+    Mux(dnpc_valid, dnpc, snpc)
   )
   val inst = Mux(
     pc(2).orR,
@@ -54,6 +64,11 @@ class IFU extends Module {
   )
 
   /* ========== Sequential Circuit ========== */
+  r_dnpc_valid  := Mux(inst_req, false.B, io.in.jump_ctl)
+  r_dnpc        := Mux(r_dnpc_valid, r_dnpc, io.in.dnpc)
+  r_cause_valid := Mux(inst_req, false.B, io.in.cause =/= CommonMacros.CAUSE_RESET_VAL)
+  r_cause       := Mux(r_cause_valid, r_cause, io.in.cause)
+
   r_valid := Mux(valid_enable, valid_current, valid_next)
 
   r_if2id.data.pc    := Mux(valid_enable, pc, r_if2id.data.pc)

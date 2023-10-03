@@ -6,7 +6,7 @@
 
 #define NR_INST_POOL 8
 #define NEXT_POOL_IDX(x) ((x + 1) % NR_INST_POOL)
-#define FAR_NEXT_POOL_IDX(x) ((x + 2) % NR_INST_POOL)
+#define FAR_NEXT_POOL_IDX(x) ((x + 1) % NR_INST_POOL)
 
 InstExeInfo inst_exe_pool[NR_INST_POOL];
 
