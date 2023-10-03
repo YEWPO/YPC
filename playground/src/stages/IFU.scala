@@ -22,7 +22,7 @@ class IFU extends Module {
   val io = IO(new IFUIO)
 
   /* ========== Module ========== */
-  val inst_mem = Module(new InstMem)
+  val inst_ram = Module(new InstRAM)
 
   /* ========== Register ========== */
   val pc = RegInit(CommonMacros.PC_RESET_VAL)
@@ -30,11 +30,16 @@ class IFU extends Module {
   val r_valid = RegInit(false.B)
   val r_if2id = RegInit(IF2IDBundle.if2id_rst_val)
 
+  val r_ar_valid = RegInit(false.B)
+  val r_ar_addr  = RegInit(CommonMacros.PC_RESET_VAL)
+
   /* ========== Wire ========== */
-  val valid_enable  = !io.if2id.valid || io.if2id.ready
+  val valid_enable  = (!io.if2id.valid || io.if2id.ready) && inst_ram.io.r.fire
   val valid_next    = r_valid && !io.if2id.fire
   val valid_current = !io.in.jump_ctl && (io.in.cause === CommonMacros.CAUSE_RESET_VAL)
-  val pc_enable     = !r_valid || io.if2id.fire
+
+  val inst_req      = (!r_ar_valid && !inst_ram.io.r.valid) || inst_ram.io.r.fire
+  val ar_valid_next = r_ar_valid && !inst_ram.io.ar.ready
 
   val snpc = pc + 4.U
   val npc = Mux(
@@ -44,8 +49,8 @@ class IFU extends Module {
   )
   val inst = Mux(
     pc(2).orR,
-    CommonMacros.getWord(inst_mem.io.r_data, 1),
-    CommonMacros.getWord(inst_mem.io.r_data, 0)
+    CommonMacros.getWord(inst_ram.io.r.bits.data, 1),
+    CommonMacros.getWord(inst_ram.io.r.bits.data, 0)
   )
 
   /* ========== Sequential Circuit ========== */
@@ -56,12 +61,19 @@ class IFU extends Module {
   r_if2id.data.inst  := Mux(valid_enable, inst, r_if2id.data.inst)
   r_if2id.data.cause := CommonMacros.CAUSE_RESET_VAL
 
-  pc := Mux(pc_enable, npc, pc)
+  pc := Mux(inst_req, npc, pc)
+
+  r_ar_valid := Mux(inst_req, true.B, ar_valid_next)
+  r_ar_addr  := Mux(inst_req, npc, r_ar_addr)
 
   /* ========== Combinational Circuit ========== */
-  io.if2id.valid := r_valid
+  inst_ram.io.ar.bits.addr := r_ar_addr
+  inst_ram.io.ar.bits.prot := 0.U(3.W)
+  inst_ram.io.ar.valid     := r_ar_valid
 
-  inst_mem.io.addr := pc
+  inst_ram.io.r.ready := inst_ram.io.r.valid && (!io.if2id.valid || io.if2id.ready)
+
+  io.if2id.valid := r_valid
 
   io.if2id.bits.data := r_if2id.data
 }

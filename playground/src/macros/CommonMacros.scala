@@ -5,7 +5,7 @@ import chisel3.util._
 
 object CommonMacros {
   val NORMAL_RESET_VAL = 0.U
-  val PC_RESET_VAL     = "h8000_0000".U(64.W)
+  val PC_RESET_VAL     = "h7fff_fffc".U(64.W)
   val INST_RESET_VAL   = "h13".U(32.W) // NOP instruction
   val CAUSE_RESET_VAL  = "hffff_ffff_ffff_ffff".U(64.W)
 
