@@ -4,16 +4,18 @@ import chisel3._
 import chisel3.util._
 import macros._
 
-class DataMemIO extends Bundle {
+class LSHandlerIO extends Bundle {
   val addr    = Input(UInt(64.W))
   val w_data  = Input(UInt(64.W))
   val mem_ctl = Input(UInt(5.W))
 
   val r_data = Output(UInt(64.W))
+
+  val fin = Output(Bool())
 }
 
-class DataMem extends Module {
-  val io = IO(new DataMemIO)
+class LSHandler extends Module {
+  val io = IO(new LSHandlerIO)
 
   val mem_read  = Module(new MemRead)
   val mem_write = Module(new MemWrite)
@@ -116,4 +118,6 @@ class DataMem extends Module {
     ControlMacros.MEM_CTL_LWU -> CommonMacros.zeroExtend(lw_data)
   )
   io.r_data := MuxLookup(io.mem_ctl, 0.U(64.W))(r_data_map)
+
+  io.fin := true.B
 }

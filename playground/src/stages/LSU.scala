@@ -30,20 +30,20 @@ class LSU extends Module {
   val io = IO(new LSUIO)
 
   /* ========== Module ========== */
-  val data_mem = Module(new DataMem)
+  val ls_handler = Module(new LSHandler)
 
   /* ========== Register ========== */
   val r_valid = RegInit(false.B)
   val r_ls2wb = RegInit(LS2WBBundle.ls2wb_rst_val)
 
   /* ========== Wire ========== */
-  val ready_next    = io.ex2ls.valid && (!io.ls2wb.valid || io.ls2wb.ready)
-  val valid_enable  = io.ex2ls.valid && (!io.ls2wb.valid || io.ls2wb.ready)
+  val ready_next    = io.ex2ls.valid && (!io.ls2wb.valid || io.ls2wb.ready) && ls_handler.io.fin
+  val valid_enable  = io.ex2ls.valid && (!io.ls2wb.valid || io.ls2wb.ready) && ls_handler.io.fin
   val valid_next    = r_valid && !io.ls2wb.fire
   val ex2ls_data    = Wire(new EX2LSBundle)
   val valid_current = io.in.cause === CommonMacros.CAUSE_RESET_VAL
 
-  val lsu_out = Mux(ex2ls_data.control.mem_ctl(3).orR, data_mem.io.r_data, ex2ls_data.data.exu_out)
+  val lsu_out = Mux(ex2ls_data.control.mem_ctl(3).orR, ls_handler.io.r_data, ex2ls_data.data.exu_out)
 
   /* ========== Sequential Circuit ========== */
   r_valid := Mux(valid_enable, io.ex2ls.valid, valid_next)
@@ -70,9 +70,9 @@ class LSU extends Module {
 
   ex2ls_data := Mux(valid_current, io.ex2ls.bits, EX2LSBundle.ex2ls_rst_val)
 
-  data_mem.io.addr    := ex2ls_data.data.exu_out
-  data_mem.io.w_data  := ex2ls_data.data.src2
-  data_mem.io.mem_ctl := ex2ls_data.control.mem_ctl
+  ls_handler.io.addr    := ex2ls_data.data.exu_out
+  ls_handler.io.w_data  := ex2ls_data.data.src2
+  ls_handler.io.mem_ctl := ex2ls_data.control.mem_ctl
 
   io.out.state_info.rd         := Mux(ex2ls_data.control.reg_w_en, ex2ls_data.data.rd, 0.U(5.W))
   io.out.state_info.reg_w_data := lsu_out
