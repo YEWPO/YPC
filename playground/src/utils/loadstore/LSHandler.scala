@@ -17,8 +17,8 @@ class LSHandlerIO extends Bundle {
 class LSHandler extends Module {
   val io = IO(new LSHandlerIO)
 
-  val mem_read  = Module(new MemRead)
-  val mem_write = Module(new MemWrite)
+  /* ========== Module ========== */
+  val data_ram = Module(new DataRAM)
 
   val r_en = io.mem_ctl(3).orR
   val w_en = io.mem_ctl(4).orR
@@ -72,14 +72,52 @@ class LSHandler extends Module {
   )
   val w_data = MuxLookup(io.mem_ctl, io.w_data)(w_data_map)
 
+  /* ========== Register ========== */
+  val r_arvalid = RegInit(false.B)
+  val r_araddr  = RegInit(0.U(64.W))
+
+  val r_awvalid = RegInit(false.B)
+  val r_awaddr  = RegInit(0.U(64.W))
+  val r_wvalid  = RegInit(false.B)
+  val r_wdata   = RegInit(0.U(64.W))
+  val r_wstrb   = RegInit(0.U(8.W))
+
+  /* ========== Wire ========== */
+  val arvalid_next = r_arvalid && !data_ram.io.ar.fire
+  val awvalid_next = r_awvalid && !data_ram.io.aw.fire
+  val wvalid_next  = r_wvalid && !data_ram.io.w.fire
+
   // write to memory
-  mem_write.io.addr   := io.addr
-  mem_write.io.w_data := w_data
-  mem_write.io.mask   := mask
+  val w_req = w_en && ((!r_awvalid && !r_wvalid && !data_ram.io.b.valid) || data_ram.io.b.fire)
+
+  r_awvalid := Mux(w_req, true.B, awvalid_next)
+  r_awaddr  := Mux(w_req, io.addr, r_awaddr)
+  r_wvalid  := Mux(w_req, true.B, wvalid_next)
+  r_wdata   := Mux(w_req, w_data, r_wdata)
+  r_wstrb   := Mux(w_req, mask, r_wstrb)
+
+  data_ram.io.aw.valid     := r_awvalid
+  data_ram.io.aw.bits.addr := r_awaddr
+  data_ram.io.aw.bits.prot := 0.U(3.W)
+  data_ram.io.w.valid      := r_wvalid
+  data_ram.io.w.bits.data  := r_wdata
+  data_ram.io.w.bits.strb  := r_wstrb
+
+  data_ram.io.b.ready := data_ram.io.b.valid
 
   // read from memory
-  mem_read.io.addr := io.addr
-  val r_data = mem_read.io.r_data
+  val r_req = r_en && ((!r_arvalid && !data_ram.io.r.valid) || data_ram.io.r.fire)
+
+  r_arvalid := Mux(r_req, true.B, arvalid_next)
+  r_araddr  := Mux(r_req, io.addr, r_araddr)
+
+  data_ram.io.ar.valid     := r_arvalid
+  data_ram.io.ar.bits.addr := r_araddr
+  data_ram.io.ar.bits.prot := 0.U(3.W)
+
+  data_ram.io.r.ready := data_ram.io.r.valid
+
+  val r_data = data_ram.io.r.bits.data
 
   // handle read data
   val lb_data_map = Seq(
@@ -119,5 +157,5 @@ class LSHandler extends Module {
   )
   io.r_data := MuxLookup(io.mem_ctl, 0.U(64.W))(r_data_map)
 
-  io.fin := true.B
+  io.fin := (!r_en && !w_en) || (r_en && data_ram.io.r.fire) || (w_en && data_ram.io.b.fire)
 }

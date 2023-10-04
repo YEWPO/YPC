@@ -48,13 +48,14 @@ class DataRAM extends Module {
 
   io.ar.ready := io.ar.valid && (!io.r.valid || io.r.ready)
 
-  io.r.bits.resp := 0.U(2.W)
   io.r.valid     := r_rvalid
   io.r.bits.data := r_rdata
+  io.r.bits.resp := 0.U(2.W)
 
   io.aw.ready := io.aw.valid && io.w.valid && (!io.b.valid || io.b.ready)
 
   io.w.ready := io.aw.valid && io.w.valid && (!io.b.valid || io.b.ready)
 
   io.b.valid := r_bvalid
+  io.b.bits.resp := 0.U(2.W)
 }
