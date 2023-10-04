@@ -49,19 +49,19 @@ class LSU extends Module {
   /* ========== Sequential Circuit ========== */
   r_valid := Mux(valid_enable, io.ex2ls.valid, valid_next)
 
-  r_ls2wb.data.pc            := ex2ls_data.data.pc
-  r_ls2wb.data.dnpc          := ex2ls_data.data.dnpc
-  r_ls2wb.data.inst          := ex2ls_data.data.inst
-  r_ls2wb.data.rd            := ex2ls_data.data.rd
-  r_ls2wb.data.lsu_out       := lsu_out
-  r_ls2wb.data.cause         := ex2ls_data.data.cause
-  r_ls2wb.control.reg_w_en   := ex2ls_data.control.reg_w_en
-  r_ls2wb.control.ebreak_op  := ex2ls_data.control.ebreak_op
-  r_ls2wb.control.invalid_op := ex2ls_data.control.invalid_op
+  r_ls2wb.data.pc            := Mux(valid_enable, ex2ls_data.data.pc, r_ls2wb.data.pc)
+  r_ls2wb.data.dnpc          := Mux(valid_enable, ex2ls_data.data.dnpc, r_ls2wb.data.dnpc)
+  r_ls2wb.data.inst          := Mux(valid_enable, ex2ls_data.data.inst, r_ls2wb.data.inst)
+  r_ls2wb.data.rd            := Mux(valid_enable, ex2ls_data.data.rd, r_ls2wb.data.rd)
+  r_ls2wb.data.lsu_out       := Mux(valid_enable, lsu_out, r_ls2wb.data.lsu_out)
+  r_ls2wb.data.cause         := Mux(valid_enable, ex2ls_data.data.cause, r_ls2wb.data.cause)
+  r_ls2wb.control.reg_w_en   := Mux(valid_enable, ex2ls_data.control.reg_w_en, r_ls2wb.control.reg_w_en)
+  r_ls2wb.control.ebreak_op  := Mux(valid_enable, ex2ls_data.control.ebreak_op, r_ls2wb.control.ebreak_op)
+  r_ls2wb.control.invalid_op := Mux(valid_enable, ex2ls_data.control.invalid_op, r_ls2wb.control.invalid_op)
 
-  r_ls2wb.data.csr_w_addr  := ex2ls_data.data.csr_w_addr
-  r_ls2wb.data.csr_w_data  := ex2ls_data.data.csr_w_data
-  r_ls2wb.control.csr_w_en := ex2ls_data.control.csr_w_en
+  r_ls2wb.data.csr_w_addr  := Mux(valid_enable, ex2ls_data.data.csr_w_addr, r_ls2wb.data.csr_w_addr)
+  r_ls2wb.data.csr_w_data  := Mux(valid_enable, ex2ls_data.data.csr_w_data, r_ls2wb.data.csr_w_data)
+  r_ls2wb.control.csr_w_en := Mux(valid_enable, ex2ls_data.control.csr_w_en, r_ls2wb.control.csr_w_en)
 
   /* ========== Combinational Circuit ========== */
   io.ex2ls.ready := ready_next

@@ -91,35 +91,35 @@ class IDU extends Module {
   /* ========== Sequential Circuit ========== */
   r_valid := Mux(valid_enable, valid_current, valid_next) && !mem_r_related_op
 
-  r_id2ex.data.imm            := imm_gen.io.imm_out
-  r_id2ex.data.rd             := rd
-  r_id2ex.data.src1           := gpr_forward.io.src1
-  r_id2ex.data.src2           := gpr_forward.io.src2
-  r_id2ex.data.pc             := if2id_data.data.pc
-  r_id2ex.data.dnpc           := dnpc
-  r_id2ex.data.snpc           := if2id_data.data.snpc
-  r_id2ex.data.inst           := if2id_data.data.inst
-  r_id2ex.data.cause          := cause
-  r_id2ex.control.a_ctl       := control_unit.io.a_ctl
-  r_id2ex.control.b_ctl       := control_unit.io.b_ctl
-  r_id2ex.control.dnpc_ctl    := control_unit.io.dnpc_ctl
-  r_id2ex.control.alu_ctl     := control_unit.io.alu_ctl
-  r_id2ex.control.mul_ctl     := control_unit.io.mul_ctl
-  r_id2ex.control.exe_out_ctl := control_unit.io.exe_out_ctl
-  r_id2ex.control.mem_ctl     := control_unit.io.mem_ctl
-  r_id2ex.control.reg_w_en    := control_unit.io.reg_w_en
-  r_id2ex.control.jump_op     := control_unit.io.jump_op
-  r_id2ex.control.ebreak_op   := control_unit.io.ebreak_op
-  r_id2ex.control.invalid_op  := control_unit.io.invalid_op
-  r_id2ex.control.mret_op     := control_unit.io.mret_op
+  r_id2ex.data.imm            := Mux(valid_enable, imm_gen.io.imm_out, r_id2ex.data.imm)
+  r_id2ex.data.rd             := Mux(valid_enable, rd, r_id2ex.data.rd)
+  r_id2ex.data.src1           := Mux(valid_enable, gpr_forward.io.src1, r_id2ex.data.src1)
+  r_id2ex.data.src2           := Mux(valid_enable, gpr_forward.io.src2, r_id2ex.data.src2)
+  r_id2ex.data.pc             := Mux(valid_enable, if2id_data.data.pc, r_id2ex.data.pc)
+  r_id2ex.data.dnpc           := Mux(valid_enable, dnpc, r_id2ex.data.dnpc)
+  r_id2ex.data.snpc           := Mux(valid_enable, if2id_data.data.snpc, r_id2ex.data.snpc)
+  r_id2ex.data.inst           := Mux(valid_enable, if2id_data.data.inst, r_id2ex.data.inst)
+  r_id2ex.data.cause          := Mux(valid_enable, cause, r_id2ex.data.cause)
+  r_id2ex.control.a_ctl       := Mux(valid_enable, control_unit.io.a_ctl, r_id2ex.control.a_ctl)
+  r_id2ex.control.b_ctl       := Mux(valid_enable, control_unit.io.b_ctl, r_id2ex.control.b_ctl)
+  r_id2ex.control.dnpc_ctl    := Mux(valid_enable, control_unit.io.dnpc_ctl, r_id2ex.control.dnpc_ctl)
+  r_id2ex.control.alu_ctl     := Mux(valid_enable, control_unit.io.alu_ctl, r_id2ex.control.alu_ctl)
+  r_id2ex.control.mul_ctl     := Mux(valid_enable, control_unit.io.mul_ctl, r_id2ex.control.mul_ctl)
+  r_id2ex.control.exe_out_ctl := Mux(valid_enable, control_unit.io.exe_out_ctl, r_id2ex.control.exe_out_ctl)
+  r_id2ex.control.mem_ctl     := Mux(valid_enable, control_unit.io.mem_ctl, r_id2ex.control.mem_ctl)
+  r_id2ex.control.reg_w_en    := Mux(valid_enable, control_unit.io.reg_w_en, r_id2ex.control.reg_w_en)
+  r_id2ex.control.jump_op     := Mux(valid_enable, control_unit.io.jump_op, r_id2ex.control.jump_op)
+  r_id2ex.control.ebreak_op   := Mux(valid_enable, control_unit.io.ebreak_op, r_id2ex.control.ebreak_op)
+  r_id2ex.control.invalid_op  := Mux(valid_enable, control_unit.io.invalid_op, r_id2ex.control.invalid_op)
+  r_id2ex.control.mret_op     := Mux(valid_enable, control_unit.io.mret_op, r_id2ex.control.mret_op)
 
-  r_id2ex.data.csr_data       := csr_forward.io.src
-  r_id2ex.data.csr_w_addr     := csr_addr
-  r_id2ex.data.csr_uimm       := CommonMacros.zeroExtend(rs1)
-  r_id2ex.control.csr_r_en    := csr_control.io.csr_r_en
-  r_id2ex.control.csr_w_en    := csr_control.io.csr_w_en
-  r_id2ex.control.csr_op_ctl  := csr_control.io.csr_op_ctl
-  r_id2ex.control.csr_src_ctl := csr_control.io.csr_src_ctl
+  r_id2ex.data.csr_data       := Mux(valid_enable, csr_forward.io.src, r_id2ex.data.csr_data)
+  r_id2ex.data.csr_w_addr     := Mux(valid_enable, csr_addr, r_id2ex.data.csr_w_addr)
+  r_id2ex.data.csr_uimm       := Mux(valid_enable, CommonMacros.zeroExtend(rs1), r_id2ex.data.csr_uimm)
+  r_id2ex.control.csr_r_en    := Mux(valid_enable, csr_control.io.csr_r_en, r_id2ex.control.csr_r_en)
+  r_id2ex.control.csr_w_en    := Mux(valid_enable, csr_control.io.csr_w_en, r_id2ex.control.csr_w_en)
+  r_id2ex.control.csr_op_ctl  := Mux(valid_enable, csr_control.io.csr_op_ctl, r_id2ex.control.csr_op_ctl)
+  r_id2ex.control.csr_src_ctl := Mux(valid_enable, csr_control.io.csr_src_ctl, r_id2ex.control.csr_src_ctl)
 
   /* ========== Combinational Circuit ========== */
   io.if2id.ready := ready_next && !mem_r_related_op

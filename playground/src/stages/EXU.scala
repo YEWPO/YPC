@@ -57,21 +57,21 @@ class EXU extends Module {
   /* ========== Sequential Circuit ========== */
   r_valid := Mux(valid_enable, valid_current, valid_next)
 
-  r_ex2ls.data.dnpc          := dnpc_1
-  r_ex2ls.data.pc            := id2ex_data.data.pc
-  r_ex2ls.data.inst          := id2ex_data.data.inst
-  r_ex2ls.data.rd            := id2ex_data.data.rd
-  r_ex2ls.data.src2          := id2ex_data.data.src2
-  r_ex2ls.data.exu_out       := exu_out
-  r_ex2ls.data.cause         := id2ex_data.data.cause
-  r_ex2ls.control.mem_ctl    := id2ex_data.control.mem_ctl
-  r_ex2ls.control.reg_w_en   := id2ex_data.control.reg_w_en
-  r_ex2ls.control.ebreak_op  := id2ex_data.control.ebreak_op
-  r_ex2ls.control.invalid_op := id2ex_data.control.invalid_op
+  r_ex2ls.data.dnpc          := Mux(valid_enable, dnpc_1, r_ex2ls.data.dnpc)
+  r_ex2ls.data.pc            := Mux(valid_enable, id2ex_data.data.pc, r_ex2ls.data.pc)
+  r_ex2ls.data.inst          := Mux(valid_enable, id2ex_data.data.inst, r_ex2ls.data.inst)
+  r_ex2ls.data.rd            := Mux(valid_enable, id2ex_data.data.rd, r_ex2ls.data.rd)
+  r_ex2ls.data.src2          := Mux(valid_enable, id2ex_data.data.src2, r_ex2ls.data.src2)
+  r_ex2ls.data.exu_out       := Mux(valid_enable, exu_out, r_ex2ls.data.exu_out)
+  r_ex2ls.data.cause         := Mux(valid_enable, id2ex_data.data.cause, r_ex2ls.data.cause)
+  r_ex2ls.control.mem_ctl    := Mux(valid_enable, id2ex_data.control.mem_ctl, r_ex2ls.control.mem_ctl)
+  r_ex2ls.control.reg_w_en   := Mux(valid_enable, id2ex_data.control.reg_w_en, r_ex2ls.control.reg_w_en)
+  r_ex2ls.control.ebreak_op  := Mux(valid_enable, id2ex_data.control.ebreak_op, r_ex2ls.control.ebreak_op)
+  r_ex2ls.control.invalid_op := Mux(valid_enable, id2ex_data.control.invalid_op, r_ex2ls.control.invalid_op)
 
-  r_ex2ls.data.csr_w_addr  := id2ex_data.data.csr_w_addr
-  r_ex2ls.data.csr_w_data  := csr_calc.io.csr_op_out
-  r_ex2ls.control.csr_w_en := id2ex_data.control.csr_w_en
+  r_ex2ls.data.csr_w_addr  := Mux(valid_enable, id2ex_data.data.csr_w_addr, r_ex2ls.data.csr_w_addr)
+  r_ex2ls.data.csr_w_data  := Mux(valid_enable, csr_calc.io.csr_op_out, r_ex2ls.data.csr_w_data)
+  r_ex2ls.control.csr_w_en := Mux(valid_enable, id2ex_data.control.csr_w_en, r_ex2ls.control.csr_w_en)
 
   /* ========== Combinational Circuit ========== */
   io.id2ex.ready := ready_next
