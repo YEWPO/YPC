@@ -1,10 +1,10 @@
-package utils.loadstore
+package utils.sram
 
 import chisel3._
 import bundles._
 import chisel3.util._
 
-class DataRAMIO extends Bundle {
+class SRAMIO extends Bundle {
   val ar = Flipped(Decoupled(new AXILiteReadAddrBundle))
   val r  = Decoupled(new AXILiteReadDataBundle)
   val aw = Flipped(Decoupled(new AXILiteWriteAddrBundle))
@@ -12,9 +12,9 @@ class DataRAMIO extends Bundle {
   val b  = Decoupled(new AXILiteWriteRespBundle)
 }
 
-class DataRAM extends Module {
+class SRAM extends Module {
   /* ========== Input and Output ========== */
-  val io = IO(new DataRAMIO)
+  val io = IO(new SRAMIO)
 
   /* ========== Module ========== */
   val mem_read  = Module(new MemRead)
