@@ -86,6 +86,7 @@ class LSHandler extends Module {
   val arvalid_next = r_arvalid && !data_ram.io.ar.fire
   val awvalid_next = r_awvalid && !data_ram.io.aw.fire
   val wvalid_next  = r_wvalid && !data_ram.io.w.fire
+  val wstrb_next = Mux(data_ram.io.w.fire, 0.U(8.W), r_wstrb)
 
   // write to memory
   val w_req = w_en && (!r_awvalid && !r_wvalid && !data_ram.io.b.valid)
@@ -94,7 +95,7 @@ class LSHandler extends Module {
   r_awaddr  := Mux(w_req, io.addr, r_awaddr)
   r_wvalid  := Mux(w_req, true.B, wvalid_next)
   r_wdata   := Mux(w_req, w_data, r_wdata)
-  r_wstrb   := Mux(w_req, mask, r_wstrb)
+  r_wstrb   := Mux(w_req, mask, wstrb_next)
 
   data_ram.io.aw.valid     := r_awvalid
   data_ram.io.aw.bits.addr := r_awaddr
