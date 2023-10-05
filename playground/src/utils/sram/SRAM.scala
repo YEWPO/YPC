@@ -29,13 +29,14 @@ class SRAM extends Module {
   /* ========== Wire ========== */
   val rvalid_enable = io.ar.valid && (!io.r.valid || io.r.ready)
   val rvalid_next   = r_rvalid && !io.r.ready
+  val rdata_next    = Mux(io.r.fire, 0.U(64.W), r_rdata)
 
   val bvalid_enable = io.aw.valid && io.w.valid && (!io.b.valid || io.b.ready)
   val bvalid_next   = r_bvalid && !io.b.ready
 
   /* ========== Sequential Cicuit ========== */
   r_rvalid := Mux(rvalid_enable, true.B, rvalid_next)
-  r_rdata  := mem_read.io.r_data
+  r_rdata  := Mux(rvalid_enable, mem_read.io.r_data, rdata_next)
 
   r_bvalid := Mux(bvalid_enable, true.B, bvalid_next)
 
