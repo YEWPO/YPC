@@ -2,16 +2,30 @@ import chisel3._
 import chisel3.experimental.BundleLiterals._
 import stages._
 import utils.instdecode._
+import utils.sram._
 
 class Top extends Module {
   /* ========== Module ========== */
-  val ifu = Module(new IFU)
-  val idu = Module(new IDU)
-  val exu = Module(new EXU)
-  val lsu = Module(new LSU)
-  val wbu = Module(new WBU)
+  val ifu          = Module(new IFU)
+  val idu          = Module(new IDU)
+  val exu          = Module(new EXU)
+  val lsu          = Module(new LSU)
+  val wbu          = Module(new WBU)
+  val sram_arbiter = Module(new SRAMArbiter)
+  val sram         = Module(new SRAM)
 
   /* ========== Combinational Circuit ========== */
+  sram.io <> sram_arbiter.io.out
+
+  sram_arbiter.io.ifu.ar <> ifu.io.ar
+  sram_arbiter.io.ifu.r  <> ifu.io.r
+
+  sram_arbiter.io.lsu.ar <> lsu.io.ar
+  sram_arbiter.io.lsu.r  <> lsu.io.r
+  sram_arbiter.io.lsu.aw <> lsu.io.aw
+  sram_arbiter.io.lsu.w  <> lsu.io.w
+  sram_arbiter.io.lsu.b  <> lsu.io.b
+
   ifu.io.if2id <> idu.io.if2id
   idu.io.id2ex <> exu.io.id2ex
   exu.io.ex2ls <> lsu.io.ex2ls
