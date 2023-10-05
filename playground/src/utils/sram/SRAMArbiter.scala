@@ -71,8 +71,8 @@ class SRAMArbiter extends Module {
     )
   )
 
-  io.ifu.ar.ready := Mux(r_client === c_ifu, io.out.ar.ready, false.B)
-  io.lsu.ar.ready := Mux(r_client === c_lsu, io.out.ar.ready, false.B)
+  io.ifu.ar.ready := Mux(client_req(0) && !client_req(1), io.out.ar.ready, false.B)
+  io.lsu.ar.ready := Mux(client_req(1), io.out.ar.ready, false.B)
 
   io.ifu.r.valid     := Mux(r_client === c_ifu, io.out.r.valid, false.B)
   io.ifu.r.bits.data := Mux(r_client === c_ifu, io.out.r.bits.data, 0.U(64.W))
