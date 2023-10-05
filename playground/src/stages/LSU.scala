@@ -46,6 +46,8 @@ class LSU extends Module {
 
   val lsu_out = Mux(ex2ls_data.control.mem_ctl(3).orR, ls_handler.io.r_data, ex2ls_data.data.exu_out)
 
+  val device_op = ex2ls_data.control.mem_ctl(4, 3).orR && (ex2ls_data.data.exu_out(63, 28) =/= "h0000_0000_8".U)
+
   /* ========== Sequential Circuit ========== */
   r_valid := Mux(valid_enable, io.ex2ls.valid, valid_next)
 
@@ -58,6 +60,7 @@ class LSU extends Module {
   r_ls2wb.control.reg_w_en   := Mux(valid_enable, ex2ls_data.control.reg_w_en, r_ls2wb.control.reg_w_en)
   r_ls2wb.control.ebreak_op  := Mux(valid_enable, ex2ls_data.control.ebreak_op, r_ls2wb.control.ebreak_op)
   r_ls2wb.control.invalid_op := Mux(valid_enable, ex2ls_data.control.invalid_op, r_ls2wb.control.invalid_op)
+  r_ls2wb.control.device_op  := Mux(valid_enable, device_op, r_ls2wb.control.device_op)
 
   r_ls2wb.data.csr_w_addr  := Mux(valid_enable, ex2ls_data.data.csr_w_addr, r_ls2wb.data.csr_w_addr)
   r_ls2wb.data.csr_w_data  := Mux(valid_enable, ex2ls_data.data.csr_w_data, r_ls2wb.data.csr_w_data)

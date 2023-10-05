@@ -20,6 +20,7 @@ object LS2WBBundle {
       _.reg_w_en   -> ControlMacros.REG_W_DISABLE,
       _.ebreak_op  -> ControlMacros.EBREAK_OP_NO,
       _.invalid_op -> ControlMacros.INVALID_OP_NO,
+      _.device_op  -> false.B,
       _.csr_w_en   -> false.B
     )
   )
@@ -42,6 +43,7 @@ class LS2WBControlBundle extends Bundle {
   val reg_w_en   = Bool()
   val ebreak_op  = Bool()
   val invalid_op = Bool()
+  val device_op  = Bool()
 
   val csr_w_en = Bool()
 }

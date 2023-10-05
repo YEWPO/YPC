@@ -20,7 +20,8 @@ class Statistic extends Module {
   except.io.invalid_op := io.in.invalid_op
   except.io.pc         := io.in.pc
 
-  debug_info.io.pc   := io.in.pc
-  debug_info.io.inst := io.in.inst
-  debug_info.io.dnpc := io.in.dnpc
+  debug_info.io.pc        := io.in.pc
+  debug_info.io.inst      := io.in.inst
+  debug_info.io.dnpc      := io.in.dnpc
+  debug_info.io.device_op := io.in.device_op
 }

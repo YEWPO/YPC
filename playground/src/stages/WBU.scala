@@ -51,6 +51,7 @@ class WBU extends Module {
   /* ========== Sequential Circuit ========== */
   r_statistic.ebreak_op  := ls2wb_data.control.ebreak_op
   r_statistic.invalid_op := ls2wb_data.control.invalid_op
+  r_statistic.device_op  := ls2wb_data.control.device_op
   r_statistic.pc         := ls2wb_data.data.pc
   r_statistic.dnpc       := Mux(ls2wb_data.data.cause === CommonMacros.CAUSE_RESET_VAL, ls2wb_data.data.dnpc, io.in.tvec)
   r_statistic.inst       := ls2wb_data.data.inst

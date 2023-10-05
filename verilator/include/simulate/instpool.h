@@ -10,7 +10,7 @@ typedef struct {
   bool skip_diff;
 } InstExeInfo;
 
-void push_inst(const long long pc, const int inst, const long long dnpc);
+void push_inst(const long long pc, const int inst, const long long dnpc, const bool device_op);
 void skip_difftest();
 InstExeInfo *pop_inst();
 bool test_inst_avail();

@@ -45,11 +45,11 @@ void invalid(const long long pc) {
   npc_state.halt_pc = pc;
 }
 
-void inst_finish(const long long pc, const int inst, const long long dnpc) {
+void inst_finish(const long long pc, const int inst, const long long dnpc, const svLogic device_op) {
   if (top->reset == false) g_nr_guest_cycle++;
 #define NOP 0x13
   if (top->reset == true || inst == NOP) return;
-  push_inst(pc, inst, dnpc);
+  push_inst(pc, inst, dnpc, device_op);
 }
 
 static void step_one();
