@@ -52,23 +52,34 @@ class SRAMArbiter extends Module {
 
   /* ========== Combinational Circuit ========== */
   io.out.ar.valid := client_req.orR
-  io.out.ar.bits := Mux(
+  io.out.ar.bits.addr := Mux(
     client_req(1),
-    io.lsu.ar.bits,
+    io.lsu.ar.bits.addr,
     Mux(
       client_req(0),
-      io.ifu.ar.bits,
-      0.U
+      io.ifu.ar.bits.addr,
+      0.U(64.W)
+    )
+  )
+  io.out.ar.bits.prot := Mux(
+    client_req(1),
+    io.lsu.ar.bits.prot,
+    Mux(
+      client_req(0),
+      io.ifu.ar.bits.prot,
+      0.U(3.W)
     )
   )
 
   io.ifu.ar.ready := Mux(r_client === c_ifu, io.out.ar.ready, false.B)
   io.lsu.ar.ready := Mux(r_client === c_lsu, io.out.ar.ready, false.B)
 
-  io.ifu.r.valid := Mux(r_client === c_ifu, io.out.r.valid, false.B)
-  io.ifu.r.bits  := Mux(r_client === c_ifu, io.out.r.bits, 0.U)
-  io.lsu.r.valid := Mux(r_client === c_lsu, io.out.r.valid, false.B)
-  io.lsu.r.bits  := Mux(r_client === c_lsu, io.out.r.bits, 0.U)
+  io.ifu.r.valid     := Mux(r_client === c_ifu, io.out.r.valid, false.B)
+  io.ifu.r.bits.data := Mux(r_client === c_ifu, io.out.r.bits.data, 0.U(64.W))
+  io.ifu.r.bits.resp := Mux(r_client === c_ifu, io.out.r.bits.resp, 0.U(2.W))
+  io.lsu.r.valid     := Mux(r_client === c_lsu, io.out.r.valid, false.B)
+  io.lsu.r.bits.data := Mux(r_client === c_lsu, io.out.r.bits.data, 0.U(64.W))
+  io.lsu.r.bits.resp := Mux(r_client === c_lsu, io.out.r.bits.resp, 0.U(2.W))
 
   io.out.r.ready := MuxLookup(r_client, false.B)(
     Seq(
