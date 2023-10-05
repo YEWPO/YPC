@@ -14,11 +14,11 @@ class LSHandlerIO extends Bundle {
 
   val fin = Output(Bool())
 
-  val ar = Flipped(Decoupled(new AXILiteReadAddrBundle))
-  val r  = Decoupled(new AXILiteReadDataBundle)
-  val aw = Flipped(Decoupled(new AXILiteWriteAddrBundle))
-  val w  = Flipped(Decoupled(new AXILiteWriteDataBundle))
-  val b  = Decoupled(new AXILiteWriteRespBundle)
+  val ar = Decoupled(new AXILiteReadAddrBundle)
+  val r  = Flipped(Decoupled(new AXILiteReadDataBundle))
+  val aw = Decoupled(new AXILiteWriteAddrBundle)
+  val w  = Decoupled(new AXILiteWriteDataBundle)
+  val b  = Flipped(Decoupled(new AXILiteWriteRespBundle))
 }
 
 class LSHandler extends Module {
