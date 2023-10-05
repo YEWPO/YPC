@@ -89,7 +89,7 @@ class IDU extends Module {
   )
 
   /* ========== Sequential Circuit ========== */
-  r_valid := Mux(valid_enable, valid_current, valid_next) && !mem_r_related_op
+  r_valid := Mux(valid_enable, valid_current && !mem_r_related_op, valid_next)
 
   r_id2ex.data.imm            := Mux(valid_enable, imm_gen.io.imm_out, r_id2ex.data.imm)
   r_id2ex.data.rd             := Mux(valid_enable, rd, r_id2ex.data.rd)

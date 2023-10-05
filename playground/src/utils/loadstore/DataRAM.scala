@@ -56,6 +56,6 @@ class DataRAM extends Module {
 
   io.w.ready := io.aw.valid && io.w.valid && (!io.b.valid || io.b.ready)
 
-  io.b.valid := r_bvalid
+  io.b.valid     := r_bvalid
   io.b.bits.resp := 0.U(2.W)
 }
