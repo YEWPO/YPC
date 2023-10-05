@@ -23,6 +23,12 @@ class LSUIO extends Bundle {
       val mem_r_op   = Bool()
     })
   })
+
+  val ar = Flipped(Decoupled(new AXILiteReadAddrBundle))
+  val r  = Decoupled(new AXILiteReadDataBundle)
+  val aw = Flipped(Decoupled(new AXILiteWriteAddrBundle))
+  val w  = Flipped(Decoupled(new AXILiteWriteDataBundle))
+  val b  = Decoupled(new AXILiteWriteRespBundle)
 }
 
 class LSU extends Module {
@@ -77,6 +83,11 @@ class LSU extends Module {
   ls_handler.io.addr    := ex2ls_data.data.exu_out
   ls_handler.io.w_data  := ex2ls_data.data.src2
   ls_handler.io.mem_ctl := ex2ls_data.control.mem_ctl
+  ls_handler.io.ar      <> io.ar
+  ls_handler.io.r       <> io.r
+  ls_handler.io.aw      <> io.aw
+  ls_handler.io.w       <> io.w
+  ls_handler.io.b       <> io.b
 
   io.out.state_info.rd         := Mux(ex2ls_data.control.reg_w_en, ex2ls_data.data.rd, 0.U(5.W))
   io.out.state_info.reg_w_data := lsu_out
