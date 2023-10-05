@@ -15,14 +15,14 @@ class IFUIO extends Bundle {
     val jump_ctl = Bool()
   })
   val if2id = Decoupled(new IF2IDBundle)
+
+  val ar = Decoupled(new AXILiteReadAddrBundle)
+  val r  = Flipped(Decoupled(new AXILiteReadDataBundle))
 }
 
 class IFU extends Module {
   /* ========== Input and Output ========== */
   val io = IO(new IFUIO)
-
-  /* ========== Module ========== */
-  val inst_ram = Module(new InstRAM)
 
   /* ========== Register ========== */
   val pc = RegInit(CommonMacros.PC_RESET_VAL)
@@ -44,12 +44,12 @@ class IFU extends Module {
   val cause       = Mux(r_cause_valid, r_cause, io.in.cause)
   val cause_valid = r_cause_valid || (io.in.cause =/= CommonMacros.CAUSE_RESET_VAL)
 
-  val valid_enable  = (!io.if2id.valid || io.if2id.ready) && inst_ram.io.r.fire
+  val valid_enable  = (!io.if2id.valid || io.if2id.ready) && io.r.fire
   val valid_next    = r_valid && !io.if2id.fire
   val valid_current = !dnpc_valid && !cause_valid
 
-  val inst_req     = (!r_arvalid && !inst_ram.io.r.valid) || inst_ram.io.r.fire
-  val arvalid_next = r_arvalid && !inst_ram.io.ar.ready
+  val inst_req     = (!r_arvalid && !io.r.valid) || io.r.fire
+  val arvalid_next = r_arvalid && !io.ar.ready
 
   val snpc = pc + 4.U
   val npc = Mux(
@@ -59,8 +59,8 @@ class IFU extends Module {
   )
   val inst = Mux(
     pc(2).orR,
-    CommonMacros.getWord(inst_ram.io.r.bits.data, 1),
-    CommonMacros.getWord(inst_ram.io.r.bits.data, 0)
+    CommonMacros.getWord(io.r.bits.data, 1),
+    CommonMacros.getWord(io.r.bits.data, 0)
   )
 
   /* ========== Sequential Circuit ========== */
@@ -82,11 +82,11 @@ class IFU extends Module {
   r_araddr  := Mux(inst_req, npc, r_araddr)
 
   /* ========== Combinational Circuit ========== */
-  inst_ram.io.ar.bits.addr := r_araddr
-  inst_ram.io.ar.bits.prot := 0.U(3.W)
-  inst_ram.io.ar.valid     := r_arvalid
+  io.ar.bits.addr := r_araddr
+  io.ar.bits.prot := 0.U(3.W)
+  io.ar.valid     := r_arvalid
 
-  inst_ram.io.r.ready := inst_ram.io.r.valid && (!io.if2id.valid || io.if2id.ready)
+  io.r.ready := io.r.valid && (!io.if2id.valid || io.if2id.ready)
 
   io.if2id.valid := r_valid
 
