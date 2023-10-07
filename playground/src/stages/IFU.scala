@@ -5,7 +5,6 @@ import chisel3.util._
 import chisel3.experimental.BundleLiterals._
 import bundles._
 import macros._
-import utils.instfetch._
 
 class IFUIO extends Bundle {
   val in = Input(new Bundle {
