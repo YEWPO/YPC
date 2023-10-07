@@ -75,17 +75,17 @@ class IFU extends Module {
   r_if2id.data.inst  := Mux(valid_enable, inst, r_if2id.data.inst)
   r_if2id.data.cause := CommonMacros.CAUSE_RESET_VAL
 
-  pc := Mux(inst_req, npc, pc)
+  pc := Mux(inst_req, Mux(io.r.valid && io.if2id.valid && !io.if2id.ready, pc, npc), pc)
 
   r_arvalid := Mux(inst_req, true.B, arvalid_next)
-  r_araddr  := Mux(inst_req, npc, r_araddr)
+  r_araddr  := Mux(inst_req, Mux(io.r.valid && io.if2id.valid && !io.if2id.ready, pc, npc), r_araddr)
 
   /* ========== Combinational Circuit ========== */
   io.ar.bits.addr := r_araddr
   io.ar.bits.prot := 0.U(3.W)
   io.ar.valid     := r_arvalid
 
-  io.r.ready := io.r.valid && (!io.if2id.valid || io.if2id.ready)
+  io.r.ready := io.r.valid
 
   io.if2id.valid := r_valid
 
