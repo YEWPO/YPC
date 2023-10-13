@@ -15,7 +15,8 @@
 !build.sc
 !.clangd
 !Kconfig
-!firtool*
+!firtool
+!om-linker
 !*.py
 
 #docs
