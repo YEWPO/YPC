@@ -24,6 +24,9 @@ class IFU extends Module {
   val io = IO(new IFUIO)
 
   /* ========== Register ========== */
+  val r_idle :: r_wait_ready :: r_wait_data :: Nil = Enum(3)
+
+  /* ========== Register ========== */
   val pc = RegInit(CommonMacros.PC_RESET_VAL)
 
   val r_valid = RegInit(false.B)
@@ -35,8 +38,7 @@ class IFU extends Module {
   val r_cause_valid = RegInit(false.B)
 
   // axi read
-  val r_idle :: r_wait_ready :: Nil = Enum(2)
-  val r_state                       = RegInit(r_idle)
+  val r_state = RegInit(r_idle)
 
   /* ========== Wire ========== */
   val dnpc        = Mux(r_dnpc_valid, r_dnpc, io.in.dnpc)
@@ -76,16 +78,17 @@ class IFU extends Module {
   r_state := MuxLookup(r_state, r_idle)(
     Seq(
       r_idle       -> r_wait_ready,
-      r_wait_ready -> Mux(io.ar.ready, r_idle, r_wait_ready)
+      r_wait_ready -> Mux(io.ar.ready, r_idle, r_wait_ready),
+      r_wait_data  -> Mux(io.r.valid, r_idle, r_wait_data)
     )
   )
 
   pc := Mux(r_state === r_idle, Mux(io.r.valid && io.if2id.valid && !io.if2id.ready, pc, npc), pc)
 
   /* ========== Combinational Circuit ========== */
-  io.ar.bits.addr := Mux(io.r.valid && io.if2id.valid && !io.if2id.ready, pc, npc)
+  io.ar.bits.addr := Mux(r_state === r_idle, Mux(io.r.valid && io.if2id.valid && !io.if2id.ready, pc, npc), pc)
   io.ar.bits.prot := 0.U(3.W)
-  io.ar.valid     := true.B
+  io.ar.valid     := Mux((r_state === r_idle) || (r_state === r_wait_ready), true.B, false.B)
 
   io.r.ready := io.r.valid
 
