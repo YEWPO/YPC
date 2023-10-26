@@ -29,13 +29,14 @@ class IFU extends Module {
   val r_valid = RegInit(false.B)
   val r_if2id = RegInit(IF2IDBundle.if2id_rst_val)
 
-  val r_arvalid = RegInit(false.B)
-  val r_araddr  = RegInit(CommonMacros.PC_RESET_VAL)
-
   val r_dnpc        = RegInit(CommonMacros.PC_RESET_VAL)
   val r_dnpc_valid  = RegInit(false.B)
   val r_cause       = RegInit(CommonMacros.CAUSE_RESET_VAL)
   val r_cause_valid = RegInit(false.B)
+
+  // axi read
+  val r_idle :: r_wait_ready :: Nil = Enum(2)
+  val r_state                       = RegInit(r_idle)
 
   /* ========== Wire ========== */
   val dnpc        = Mux(r_dnpc_valid, r_dnpc, io.in.dnpc)
@@ -46,9 +47,6 @@ class IFU extends Module {
   val valid_enable  = (!io.if2id.valid || io.if2id.ready) && io.r.fire
   val valid_next    = r_valid && !io.if2id.fire
   val valid_current = !dnpc_valid && !cause_valid
-
-  val inst_req     = (!r_arvalid && !io.r.valid) || io.r.fire
-  val arvalid_next = r_arvalid && !io.ar.ready
 
   val snpc = pc + 4.U
   val npc = Mux(
@@ -63,9 +61,9 @@ class IFU extends Module {
   )
 
   /* ========== Sequential Circuit ========== */
-  r_dnpc_valid  := Mux(inst_req, false.B, io.in.jump_ctl)
+  r_dnpc_valid  := Mux(r_state === r_idle, false.B, io.in.jump_ctl)
   r_dnpc        := Mux(r_dnpc_valid, r_dnpc, io.in.dnpc)
-  r_cause_valid := Mux(inst_req, false.B, io.in.cause =/= CommonMacros.CAUSE_RESET_VAL)
+  r_cause_valid := Mux(r_state === r_idle, false.B, io.in.cause =/= CommonMacros.CAUSE_RESET_VAL)
   r_cause       := Mux(r_cause_valid, r_cause, io.in.cause)
 
   r_valid := Mux(valid_enable, valid_current, valid_next)
@@ -75,15 +73,19 @@ class IFU extends Module {
   r_if2id.data.inst  := Mux(valid_enable, inst, r_if2id.data.inst)
   r_if2id.data.cause := CommonMacros.CAUSE_RESET_VAL
 
-  pc := Mux(inst_req, Mux(io.r.valid && io.if2id.valid && !io.if2id.ready, pc, npc), pc)
+  r_state := MuxLookup(r_state, r_idle)(
+    Seq(
+      r_idle       -> r_wait_ready,
+      r_wait_ready -> Mux(io.ar.ready, r_idle, r_wait_ready)
+    )
+  )
 
-  r_arvalid := Mux(inst_req, true.B, arvalid_next)
-  r_araddr  := Mux(inst_req, Mux(io.r.valid && io.if2id.valid && !io.if2id.ready, pc, npc), r_araddr)
+  pc := Mux(r_state === r_idle, Mux(io.r.valid && io.if2id.valid && !io.if2id.ready, pc, npc), pc)
 
   /* ========== Combinational Circuit ========== */
-  io.ar.bits.addr := r_araddr
+  io.ar.bits.addr := Mux(io.r.valid && io.if2id.valid && !io.if2id.ready, pc, npc)
   io.ar.bits.prot := 0.U(3.W)
-  io.ar.valid     := r_arvalid
+  io.ar.valid     := true.B
 
   io.r.ready := io.r.valid
 

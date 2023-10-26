@@ -21,7 +21,7 @@ class SRAM extends Module {
   val mem_write = Module(new MemWrite)
 
   /* ========== Register ========== */
-  val r_araddr = RegInit(0.U(64.W))
+  val r_araddr  = RegInit(0.U(64.W))
   val r_arready = RegInit(false.B)
 
   val r_rvalid = RegInit(false.B)
@@ -32,14 +32,14 @@ class SRAM extends Module {
   /* ========== Wire ========== */
   val r_en = io.ar.valid && r_arready && !r_rvalid
 
-  val rvalid_next   = r_rvalid && !io.r.ready
-  val rdata_next    = Mux(io.r.fire, 0.U(64.W), r_rdata)
+  val rvalid_next = r_rvalid && !io.r.ready
+  val rdata_next  = Mux(io.r.fire, 0.U(64.W), r_rdata)
 
   val bvalid_enable = io.aw.valid && io.w.valid && (!io.b.valid || io.b.ready)
   val bvalid_next   = r_bvalid && !io.b.ready
 
   /* ========== Sequential Cicuit ========== */
-  r_araddr := Mux(io.ar.valid && !r_arready, io.ar.bits.addr, r_araddr)
+  r_araddr  := Mux(io.ar.valid && !r_arready, io.ar.bits.addr, r_araddr)
   r_arready := Mux(io.ar.valid && !r_arready, true.B, false.B);
 
   r_rvalid := Mux(r_en, true.B, rvalid_next)
