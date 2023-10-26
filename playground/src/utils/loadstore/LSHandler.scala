@@ -76,9 +76,11 @@ class LSHandler extends Module {
   )
   val w_data = MuxLookup(io.mem_ctl, io.w_data)(w_data_map)
 
+  /* ========== Parameter ========== */
+  val r_idle :: r_wait_ready :: r_wait_data :: Nil = Enum(3)
+
   /* ========== Register ========== */
-  val r_arvalid = RegInit(false.B)
-  val r_araddr  = RegInit(0.U(64.W))
+  val r_state = RegInit(r_idle)
 
   val r_awvalid = RegInit(false.B)
   val r_awaddr  = RegInit(0.U(64.W))
@@ -87,8 +89,6 @@ class LSHandler extends Module {
   val r_wstrb   = RegInit(0.U(8.W))
 
   /* ========== Wire ========== */
-  val arvalid_next = r_arvalid && !io.ar.fire
-  val araddr_next  = Mux(io.ar.fire, 0.U(64.W), r_araddr)
   val awvalid_next = r_awvalid && !io.aw.fire
   val awaddr_next  = Mux(io.aw.fire, 0.U(64.W), r_awaddr)
   val wvalid_next  = r_wvalid && !io.w.fire
@@ -114,13 +114,18 @@ class LSHandler extends Module {
   io.b.ready := io.b.valid
 
   // read from memory
-  val r_req = r_en && (!r_arvalid && !io.r.valid)
+  val r_req = r_en && (r_state === r_idle)
 
-  r_arvalid := Mux(r_req, true.B, arvalid_next)
-  r_araddr  := Mux(r_req, io.addr, araddr_next)
+  r_state := MuxLookup(r_state, r_idle)(
+    Seq(
+      r_idle       -> Mux(r_req, r_wait_ready, r_idle),
+      r_wait_ready -> Mux(io.ar.ready, r_wait_data, r_wait_ready),
+      r_wait_data  -> Mux(io.r.valid, r_idle, r_wait_data)
+    )
+  )
 
-  io.ar.valid     := r_arvalid
-  io.ar.bits.addr := r_araddr
+  io.ar.valid     := Mux(r_req || (r_state === r_wait_ready), true.B, false.B)
+  io.ar.bits.addr := io.addr
   io.ar.bits.prot := 0.U(3.W)
 
   io.r.ready := io.r.valid
