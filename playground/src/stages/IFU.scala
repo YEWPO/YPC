@@ -34,7 +34,6 @@ class IFU extends Module {
 
   val r_dnpc        = RegInit(CommonMacros.PC_RESET_VAL)
   val r_dnpc_valid  = RegInit(false.B)
-  val r_cause       = RegInit(CommonMacros.CAUSE_RESET_VAL)
   val r_cause_valid = RegInit(false.B)
 
   // axi read
@@ -43,7 +42,6 @@ class IFU extends Module {
   /* ========== Wire ========== */
   val dnpc        = Mux(r_dnpc_valid, r_dnpc, io.in.dnpc)
   val dnpc_valid  = r_dnpc_valid || io.in.jump_ctl
-  val cause       = Mux(r_cause_valid, r_cause, io.in.cause)
   val cause_valid = r_cause_valid || (io.in.cause =/= CommonMacros.CAUSE_RESET_VAL)
 
   val valid_enable  = (!io.if2id.valid || io.if2id.ready) && io.r.fire
@@ -63,10 +61,13 @@ class IFU extends Module {
   )
 
   /* ========== Sequential Circuit ========== */
-  r_dnpc_valid  := Mux(r_state === r_idle, false.B, io.in.jump_ctl)
-  r_dnpc        := Mux(r_dnpc_valid, r_dnpc, io.in.dnpc)
-  r_cause_valid := Mux(r_state === r_idle, false.B, io.in.cause =/= CommonMacros.CAUSE_RESET_VAL)
-  r_cause       := Mux(r_cause_valid, r_cause, io.in.cause)
+  r_dnpc_valid := Mux(r_state === r_idle, false.B, Mux(!r_dnpc_valid, io.in.jump_ctl, r_dnpc_valid))
+  r_dnpc       := Mux(r_dnpc_valid, r_dnpc, io.in.dnpc)
+  r_cause_valid := Mux(
+    r_state === r_idle,
+    false.B,
+    Mux(!r_cause_valid, io.in.cause =/= CommonMacros.CAUSE_RESET_VAL, r_cause_valid)
+  )
 
   r_valid := Mux(valid_enable, valid_current, valid_next)
 
