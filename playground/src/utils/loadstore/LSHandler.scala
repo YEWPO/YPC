@@ -78,38 +78,29 @@ class LSHandler extends Module {
 
   /* ========== Parameter ========== */
   val r_idle :: r_wait_ready :: r_wait_data :: Nil = Enum(3)
+  val w_idle :: w_wait_ready :: w_wait_resp :: Nil = Enum(3)
 
   /* ========== Register ========== */
   val r_state = RegInit(r_idle)
-
-  val r_awvalid = RegInit(false.B)
-  val r_awaddr  = RegInit(0.U(64.W))
-  val r_wvalid  = RegInit(false.B)
-  val r_wdata   = RegInit(0.U(64.W))
-  val r_wstrb   = RegInit(0.U(8.W))
-
-  /* ========== Wire ========== */
-  val awvalid_next = r_awvalid && !io.aw.fire
-  val awaddr_next  = Mux(io.aw.fire, 0.U(64.W), r_awaddr)
-  val wvalid_next  = r_wvalid && !io.w.fire
-  val wdata_next   = Mux(io.w.fire, 0.U(64.W), r_wdata)
-  val wstrb_next   = Mux(io.w.fire, 0.U(8.W), r_wstrb)
+  val w_state = RegInit(w_idle)
 
   // write to memory
-  val w_req = w_en && (!r_awvalid && !r_wvalid && !io.b.valid)
+  val w_req = w_en && (w_state === w_idle)
 
-  r_awvalid := Mux(w_req, true.B, awvalid_next)
-  r_awaddr  := Mux(w_req, io.addr, awaddr_next)
-  r_wvalid  := Mux(w_req, true.B, wvalid_next)
-  r_wdata   := Mux(w_req, w_data, wdata_next)
-  r_wstrb   := Mux(w_req, mask, wstrb_next)
+  w_state := MuxLookup(w_state, w_idle)(
+    Seq(
+      w_idle       -> Mux(w_req, w_wait_ready, w_idle),
+      w_wait_ready -> Mux(io.aw.ready && io.w.ready, w_wait_resp, w_wait_ready),
+      w_wait_resp  -> Mux(io.b.valid, w_idle, w_wait_resp)
+    )
+  )
 
-  io.aw.valid     := r_awvalid
-  io.aw.bits.addr := r_awaddr
+  io.aw.valid     := w_req || (w_state === w_wait_ready)
+  io.aw.bits.addr := io.addr
   io.aw.bits.prot := 0.U(3.W)
-  io.w.valid      := r_wvalid
-  io.w.bits.data  := r_wdata
-  io.w.bits.strb  := r_wstrb
+  io.w.valid      := w_req || (w_state === w_wait_ready)
+  io.w.bits.data  := w_data
+  io.w.bits.strb  := mask
 
   io.b.ready := io.b.valid
 
@@ -124,7 +115,7 @@ class LSHandler extends Module {
     )
   )
 
-  io.ar.valid     := Mux(r_req || (r_state === r_wait_ready), true.B, false.B)
+  io.ar.valid     := r_req || (r_state === r_wait_ready)
   io.ar.bits.addr := io.addr
   io.ar.bits.prot := 0.U(3.W)
 

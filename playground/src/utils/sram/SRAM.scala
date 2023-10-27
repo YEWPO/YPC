@@ -27,32 +27,44 @@ class SRAM extends Module {
   val r_rvalid = RegInit(false.B)
   val r_rdata  = RegInit(0.U(64.W))
 
+  val r_awaddr  = RegInit(0.U(64.W))
+  val r_awready = RegInit(false.B)
+
+  val r_wdata  = RegInit(0.U(64.W))
+  val r_wready = RegInit(false.B)
+
   val r_bvalid = RegInit(false.B)
 
   /* ========== Wire ========== */
   val r_en = io.ar.valid && r_arready && !r_rvalid
+  val w_en = io.aw.valid && r_awready && io.w.valid && r_wready && !r_bvalid
 
   val rvalid_next = r_rvalid && !io.r.ready
   val rdata_next  = Mux(io.r.fire, 0.U(64.W), r_rdata)
 
-  val bvalid_enable = io.aw.valid && io.w.valid && (!io.b.valid || io.b.ready)
-  val bvalid_next   = r_bvalid && !io.b.ready
+  val bvalid_next = r_bvalid && !io.b.ready
 
   /* ========== Sequential Cicuit ========== */
   r_araddr  := Mux(io.ar.valid && !r_arready, io.ar.bits.addr, r_araddr)
-  r_arready := Mux(io.ar.valid && !r_arready, true.B, false.B);
+  r_arready := io.ar.valid && !r_arready
 
   r_rvalid := Mux(r_en, true.B, rvalid_next)
   r_rdata  := Mux(r_en, mem_read.io.r_data, rdata_next)
 
-  r_bvalid := Mux(bvalid_enable, true.B, bvalid_next)
+  r_awaddr  := Mux(io.aw.valid && !r_awready && io.w.valid, io.aw.bits.addr, r_awaddr)
+  r_awready := io.aw.valid && !r_awready && io.w.valid
+
+  r_wdata  := Mux(io.w.valid && !r_wready && io.aw.valid, io.w.bits.data, r_wdata)
+  r_wready := io.w.valid && !r_wready && io.aw.valid
+
+  r_bvalid := Mux(w_en, true.B, bvalid_next)
 
   /* ========== Combinational Cicuit ========== */
   mem_read.io.addr := r_araddr
 
-  mem_write.io.addr   := io.aw.bits.addr
-  mem_write.io.mask   := io.w.bits.strb
-  mem_write.io.w_data := io.w.bits.data
+  mem_write.io.addr   := r_awaddr
+  mem_write.io.mask   := Mux(w_en, io.w.bits.strb, 0.U(8.W))
+  mem_write.io.w_data := r_wdata
 
   io.ar.ready := r_arready
 
@@ -60,9 +72,9 @@ class SRAM extends Module {
   io.r.bits.data := r_rdata
   io.r.bits.resp := 0.U(2.W)
 
-  io.aw.ready := io.aw.valid && io.w.valid && (!io.b.valid || io.b.ready)
+  io.aw.ready := r_awready
 
-  io.w.ready := io.aw.valid && io.w.valid && (!io.b.valid || io.b.ready)
+  io.w.ready := r_wready
 
   io.b.valid     := r_bvalid
   io.b.bits.resp := 0.U(2.W)
