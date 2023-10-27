@@ -7,6 +7,8 @@ NPC
 
 `RISC-V`五级流水线处理器，支持`RISCV64IMZicsr`指令集。
 
+访存接口支持`AXI-Lite`总线协议。
+
 ## 开始
 
 首先，你需要根据 [此处](https://com-lihaoyi.github.io/mill)安装`mill`.
