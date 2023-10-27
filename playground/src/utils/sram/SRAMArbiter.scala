@@ -28,18 +28,19 @@ class SRAMArbiterIO extends Bundle {
 }
 
 class SRAMArbiter extends Module {
-  /* ========== Input and Output ========== */
+  // ========== Input and Output ==========
   val io = IO(new SRAMArbiterIO)
 
-  /* ========== Parameter ========== */
-  val c_idle :: c_ifu :: c_lsu :: Nil = Enum(3)
+  // ========== Parameter ==========
+  val c_idle :: c_ifu :: c_lsu :: Nil              = Enum(3)
+  val r_idle :: r_wait_ready :: r_wait_data :: Nil = Enum(3)
 
-  /* ========== Register ========== */
+  // ========== Register ==========
   val r_client = RegInit(c_idle)
+  val r_state  = RegInit(r_idle)
 
-  /* ========== Wire ========== */
-  val client_req    = Cat(io.lsu.ar.valid, io.ifu.ar.valid)
-  val client_enable = !io.out.r.valid || io.out.r.fire
+  // ========== Wire ==========
+  val client_req = Cat(io.lsu.ar.valid, io.ifu.ar.valid)
   val client_selector = Seq(
     "b11".U -> c_lsu,
     "b10".U -> c_lsu,
@@ -47,40 +48,39 @@ class SRAMArbiter extends Module {
     "b00".U -> c_idle
   )
 
-  /* ========== Sequential Circuit ========== */
-  r_client := Mux(client_enable, MuxLookup(client_req, c_idle)(client_selector), r_client)
+  // ========== Sequential Circuit ==========
+  r_client := MuxLookup(r_client, c_idle)(
+    Seq(
+      c_idle -> MuxLookup(client_req, c_idle)(client_selector),
+      c_ifu  -> Mux(io.out.r.valid, c_idle, c_ifu),
+      c_lsu  -> Mux(io.out.r.valid, c_idle, c_lsu)
+    )
+  )
+  r_state := MuxLookup(r_state, r_idle)(
+    Seq(
+      r_idle       -> Mux(client_req.orR, r_wait_ready, r_idle),
+      r_wait_ready -> Mux(io.out.ar.ready, r_wait_data, r_wait_ready),
+      r_wait_data  -> Mux(io.out.r.valid, r_idle, r_wait_data)
+    )
+  )
 
-  /* ========== Combinational Circuit ========== */
-  io.out.ar.valid := client_req.orR
+  // ========== Combinational Circuit ==========
+  io.out.ar.valid     := Mux(r_state === r_idle, client_req.orR, r_state === r_wait_ready)
+  io.ifu.ar.ready     := Mux(r_client === c_ifu, io.out.ar.ready, false.B)
+  io.lsu.ar.ready     := Mux(r_client === c_lsu, io.out.ar.ready, false.B)
+  io.out.ar.bits.prot := 0.U(3.W)
   io.out.ar.bits.addr := Mux(
-    client_req(1),
-    io.lsu.ar.bits.addr,
-    Mux(
-      client_req(0),
-      io.ifu.ar.bits.addr,
-      0.U(64.W)
-    )
+    r_client === c_idle,
+    Mux(client_req(1), io.lsu.ar.bits.addr, io.ifu.ar.bits.addr),
+    Mux(r_client === c_lsu, io.lsu.ar.bits.addr, io.ifu.ar.bits.addr)
   )
-  io.out.ar.bits.prot := Mux(
-    client_req(1),
-    io.lsu.ar.bits.prot,
-    Mux(
-      client_req(0),
-      io.ifu.ar.bits.prot,
-      0.U(3.W)
-    )
-  )
-
-  io.ifu.ar.ready := Mux(client_req(0) && !client_req(1), io.out.ar.ready, false.B)
-  io.lsu.ar.ready := Mux(client_req(1), io.out.ar.ready, false.B)
 
   io.ifu.r.valid     := Mux(r_client === c_ifu, io.out.r.valid, false.B)
-  io.ifu.r.bits.data := Mux(r_client === c_ifu, io.out.r.bits.data, 0.U(64.W))
-  io.ifu.r.bits.resp := Mux(r_client === c_ifu, io.out.r.bits.resp, 0.U(2.W))
   io.lsu.r.valid     := Mux(r_client === c_lsu, io.out.r.valid, false.B)
+  io.ifu.r.bits.data := Mux(r_client === c_ifu, io.out.r.bits.data, 0.U(64.W))
   io.lsu.r.bits.data := Mux(r_client === c_lsu, io.out.r.bits.data, 0.U(64.W))
-  io.lsu.r.bits.resp := Mux(r_client === c_lsu, io.out.r.bits.resp, 0.U(2.W))
-
+  io.ifu.r.bits.resp := 0.U(2.W)
+  io.lsu.r.bits.resp := 0.U(2.W)
   io.out.r.ready := MuxLookup(r_client, false.B)(
     Seq(
       c_idle -> false.B,
