@@ -20,12 +20,15 @@ class SRAM extends Module {
   val mem_read  = Module(new MemRead)
   val mem_write = Module(new MemWrite)
 
+  // ========== Parameter ==========
+  val r_wait_addr :: r_prepare_data :: r_wait_rready :: Nil = Enum(3)
+
   /* ========== Register ========== */
+  val r_state = RegInit(r_wait_addr)
+
   val r_araddr  = RegInit(0.U(64.W))
   val r_arready = RegInit(false.B)
-
-  val r_rvalid = RegInit(false.B)
-  val r_rdata  = RegInit(0.U(64.W))
+  val r_rdata   = RegInit(0.U(64.W))
 
   val r_awaddr  = RegInit(0.U(64.W))
   val r_awready = RegInit(false.B)
@@ -36,20 +39,25 @@ class SRAM extends Module {
   val r_bvalid = RegInit(false.B)
 
   /* ========== Wire ========== */
-  val r_en = io.ar.valid && r_arready && !r_rvalid
   val w_en = io.aw.valid && r_awready && io.w.valid && r_wready && !r_bvalid
 
-  val rvalid_next = r_rvalid && !io.r.ready
-  val rdata_next  = Mux(io.r.fire, 0.U(64.W), r_rdata)
+  val update_addr =
+    ((r_state === r_wait_addr) && io.ar.valid) || ((r_state === r_wait_rready) && io.r.ready && io.ar.valid)
 
   val bvalid_next = r_bvalid && !io.b.ready
 
   /* ========== Sequential Cicuit ========== */
-  r_araddr  := Mux(io.ar.valid && !r_arready, io.ar.bits.addr, r_araddr)
-  r_arready := io.ar.valid && !r_arready
+  r_state := MuxLookup(r_state, r_wait_addr)(
+    Seq(
+      r_wait_addr    -> Mux(io.ar.valid, r_prepare_data, r_wait_addr),
+      r_prepare_data -> r_wait_rready,
+      r_wait_rready  -> Mux(io.r.ready && io.ar.valid, r_prepare_data, Mux(io.r.ready, r_wait_addr, r_wait_rready))
+    )
+  )
 
-  r_rvalid := Mux(r_en, true.B, rvalid_next)
-  r_rdata  := Mux(r_en, mem_read.io.r_data, rdata_next)
+  r_araddr  := Mux(update_addr, io.ar.bits.addr, r_araddr)
+  r_arready := update_addr
+  r_rdata   := Mux(r_state === r_prepare_data, mem_read.io.r_data, r_rdata)
 
   r_awaddr  := Mux(io.aw.valid && !r_awready && io.w.valid, io.aw.bits.addr, r_awaddr)
   r_awready := io.aw.valid && !r_awready && io.w.valid
@@ -68,7 +76,7 @@ class SRAM extends Module {
 
   io.ar.ready := r_arready
 
-  io.r.valid     := r_rvalid
+  io.r.valid     := r_state === r_wait_rready
   io.r.bits.data := r_rdata
   io.r.bits.resp := 0.U(2.W)
 

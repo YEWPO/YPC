@@ -37,7 +37,6 @@ class SRAMArbiter extends Module {
 
   // ========== Register ==========
   val r_client = RegInit(c_idle)
-  val r_state  = RegInit(r_idle)
 
   // ========== Wire ==========
   val client_req = Cat(io.lsu.ar.valid, io.ifu.ar.valid)
@@ -56,21 +55,14 @@ class SRAMArbiter extends Module {
       c_lsu  -> Mux(io.out.r.valid, MuxLookup(client_req, c_idle)(client_selector), c_lsu)
     )
   )
-  r_state := MuxLookup(r_state, r_idle)(
-    Seq(
-      r_idle       -> Mux(client_req.orR, r_wait_ready, r_idle),
-      r_wait_ready -> Mux(io.out.ar.ready, r_wait_data, r_wait_ready),
-      r_wait_data  -> Mux(io.out.r.valid && client_req.orR, r_wait_ready, Mux(io.out.r.valid, r_idle, r_wait_data))
-    )
-  )
 
   // ========== Combinational Circuit ==========
-  io.out.ar.valid     := Mux(r_state === r_idle, client_req.orR, r_state === r_wait_ready)
+  io.out.ar.valid     := client_req.orR
   io.ifu.ar.ready     := Mux(r_client === c_ifu, io.out.ar.ready, false.B)
   io.lsu.ar.ready     := Mux(r_client === c_lsu, io.out.ar.ready, false.B)
   io.out.ar.bits.prot := 0.U(3.W)
   io.out.ar.bits.addr := Mux(
-    r_client === c_idle,
+    (r_client === c_idle) || io.out.r.valid,
     Mux(client_req(1), io.lsu.ar.bits.addr, io.ifu.ar.bits.addr),
     Mux(r_client === c_lsu, io.lsu.ar.bits.addr, io.ifu.ar.bits.addr)
   )

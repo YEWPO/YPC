@@ -44,7 +44,7 @@ GTKWAVE = gtkwave
 VCD_FILE = $(BUILD_DIR)/sim.vcd
 
 wv:
-	$(GTKWAVE) $(VCD_FILE)
+	$(GTKWAVE) $(VCD_FILE) &
 
 PYTHON = python3
 GEN_INST_SCRIPT = $(WORK_DIR)/utils/decodegen/main.py

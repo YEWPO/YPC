@@ -87,7 +87,7 @@ class IFU extends Module {
   /* ========== Combinational Circuit ========== */
   io.ar.bits.addr := Mux(update_state, Mux(io.r.valid && io.if2id.valid && !io.if2id.ready, pc, npc), pc)
   io.ar.bits.prot := 0.U(3.W)
-  io.ar.valid     := Mux(update_state || (r_state === r_wait_ready), true.B, false.B)
+  io.ar.valid     := update_state || (r_state === r_wait_ready)
 
   io.r.ready := io.r.valid
 
