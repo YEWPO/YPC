@@ -52,15 +52,15 @@ class SRAMArbiter extends Module {
   r_client := MuxLookup(r_client, c_idle)(
     Seq(
       c_idle -> MuxLookup(client_req, c_idle)(client_selector),
-      c_ifu  -> Mux(io.out.r.valid, c_idle, c_ifu),
-      c_lsu  -> Mux(io.out.r.valid, c_idle, c_lsu)
+      c_ifu  -> Mux(io.out.r.valid, MuxLookup(client_req, c_idle)(client_selector), c_ifu),
+      c_lsu  -> Mux(io.out.r.valid, MuxLookup(client_req, c_idle)(client_selector), c_lsu)
     )
   )
   r_state := MuxLookup(r_state, r_idle)(
     Seq(
       r_idle       -> Mux(client_req.orR, r_wait_ready, r_idle),
       r_wait_ready -> Mux(io.out.ar.ready, r_wait_data, r_wait_ready),
-      r_wait_data  -> Mux(io.out.r.valid, r_idle, r_wait_data)
+      r_wait_data  -> Mux(io.out.r.valid && client_req.orR, r_wait_ready, Mux(io.out.r.valid, r_idle, r_wait_data))
     )
   )
 

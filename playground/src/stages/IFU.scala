@@ -48,6 +48,8 @@ class IFU extends Module {
   val valid_next    = r_valid && !io.if2id.fire
   val valid_current = !dnpc_valid && !cause_valid
 
+  val update_state = ((r_state === r_wait_data) && io.r.valid) || (r_state === r_idle)
+
   val snpc = pc + 4.U
   val npc = Mux(
     cause_valid,
@@ -61,13 +63,9 @@ class IFU extends Module {
   )
 
   /* ========== Sequential Circuit ========== */
-  r_dnpc_valid := Mux(r_state === r_idle, false.B, Mux(!r_dnpc_valid, io.in.jump_ctl, r_dnpc_valid))
-  r_dnpc       := Mux(r_dnpc_valid, r_dnpc, io.in.dnpc)
-  r_cause_valid := Mux(
-    r_state === r_idle,
-    false.B,
-    Mux(!r_cause_valid, io.in.cause =/= CommonMacros.CAUSE_RESET_VAL, r_cause_valid)
-  )
+  r_dnpc_valid  := !update_state && Mux(!r_dnpc_valid, io.in.jump_ctl, r_dnpc_valid)
+  r_dnpc        := Mux(r_dnpc_valid, r_dnpc, io.in.dnpc)
+  r_cause_valid := !update_state && Mux(!r_cause_valid, io.in.cause =/= CommonMacros.CAUSE_RESET_VAL, r_cause_valid)
 
   r_valid := Mux(valid_enable, valid_current, valid_next)
 
@@ -80,16 +78,16 @@ class IFU extends Module {
     Seq(
       r_idle       -> r_wait_ready,
       r_wait_ready -> Mux(io.ar.ready, r_wait_data, r_wait_ready),
-      r_wait_data  -> Mux(io.r.valid, r_idle, r_wait_data)
+      r_wait_data  -> Mux(io.r.valid, r_wait_ready, r_wait_data)
     )
   )
 
-  pc := Mux(r_state === r_idle, Mux(io.r.valid && io.if2id.valid && !io.if2id.ready, pc, npc), pc)
+  pc := Mux(update_state, Mux(io.r.valid && io.if2id.valid && !io.if2id.ready, pc, npc), pc)
 
   /* ========== Combinational Circuit ========== */
-  io.ar.bits.addr := Mux(r_state === r_idle, Mux(io.r.valid && io.if2id.valid && !io.if2id.ready, pc, npc), pc)
+  io.ar.bits.addr := Mux(update_state, Mux(io.r.valid && io.if2id.valid && !io.if2id.ready, pc, npc), pc)
   io.ar.bits.prot := 0.U(3.W)
-  io.ar.valid     := Mux((r_state === r_idle) || (r_state === r_wait_ready), true.B, false.B)
+  io.ar.valid     := Mux(update_state || (r_state === r_wait_ready), true.B, false.B)
 
   io.r.ready := io.r.valid
 
