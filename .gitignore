@@ -32,8 +32,6 @@ verilator/include/generated
 
 # mill
 out/
-.bsp/
-.idea/
-.idea_modules/
 test_run_dir/
 .metals/
+.bloop/
