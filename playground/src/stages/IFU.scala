@@ -79,7 +79,7 @@ class IFU extends Module {
   r_state := MuxLookup(r_state, r_idle)(
     Seq(
       r_idle       -> r_wait_ready,
-      r_wait_ready -> Mux(io.ar.ready, r_idle, r_wait_ready),
+      r_wait_ready -> Mux(io.ar.ready, r_wait_data, r_wait_ready),
       r_wait_data  -> Mux(io.r.valid, r_idle, r_wait_data)
     )
   )
