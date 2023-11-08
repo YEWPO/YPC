@@ -8,8 +8,8 @@ import java.util.Random
 object MulTest extends ChiselUtestTester {
   val tests = Tests {
     test("gen part summand") {
-      def testGenPartSummand(xlen: Int, src: Int, booth: Int) : Unit = {
-        print("xlen: " + xlen + ", src: " + src + ", booth: " + booth)
+      def testGenPartSummand(len: Int, src: Int, booth: Int) : Unit = {
+        print("len: " + len + ", src: " + src + ", booth: " + booth)
 
         var ans = booth match {
           case 0 => 0
@@ -23,11 +23,11 @@ object MulTest extends ChiselUtestTester {
           case _: Int => 0
         }
 
-        ans = ans & ((1 << xlen) - 1)
+        ans = ans & ((1 << len) - 1)
 
         val carry = (booth >= 4) && (booth < 7)
 
-        testCircuit(new GenPartSummand(xlen)) { dut =>
+        testCircuit(new GenPartSummand(len)) { dut =>
           dut.io.src.poke(src.U)
           dut.io.booth.poke(booth.U)
           dut.clock.step()
@@ -41,10 +41,10 @@ object MulTest extends ChiselUtestTester {
       val rand = new Random
 
       for (i <- 1 to 100) {
-        val xlen = rand.nextInt(31) + 1
-        val src = rand.nextInt((1 << xlen) - 1)
+        val len = rand.nextInt(16) + 1
+        val src = rand.nextInt((1 << len) - 1)
         val booth = rand.nextInt(8)
-        testGenPartSummand(xlen, src, booth)
+        testGenPartSummand(len, src, booth)
       }
     }
   }
