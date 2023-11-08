@@ -39,14 +39,15 @@ class GenPartSummandsIO(len: Int) extends Bundle {
   val multiplier   = Input(UInt(len.W))
 
   val summands = Output(Vec(len / 2, UInt((2 * len).W)))
-  val carrys   = Output(Vec(len / 2, Bool()))
+  val carrys   = Output(UInt((len / 2).W))
 }
 
 class GenPartSummands(len: Int) extends Module {
   val io = IO(new GenPartSummandsIO(len))
 
   val multiplicand = Cat(Fill(len, io.multiplicand(len - 1)), io.multiplicand)
-  val multiplier = Cat(io.multiplier, 0.U(1.W))
+  val multiplier   = Cat(io.multiplier, 0.U(1.W))
+  val carrys       = Wire(Vec(len / 2, Bool()))
 
   for (i <- len - 1 to 1 by -2) {
     val genPartSummand = Module(new GenPartSummand(2 * len))
@@ -55,7 +56,28 @@ class GenPartSummands(len: Int) extends Module {
     genPartSummand.io.booth := multiplier(i + 1, i - 1)
 
     io.summands((i - 1) / 2) := genPartSummand.io.summand
-    io.carrys((i - 1) / 2)   := genPartSummand.io.carry
+    carrys((i - 1) / 2)      := genPartSummand.io.carry
+  }
+
+  io.carrys := carrys.asUInt
+}
+
+class SummandsSwitchIO(len: Int) extends Bundle {
+  val summands      = Input(Vec(len / 2, UInt((2 * len).W)))
+  val wallaceInputs = Output(Vec(2 * len, UInt((len / 2).W)))
+}
+
+class SummandsSwitch(len: Int) extends Module {
+  val io = IO(new SummandsSwitchIO(len))
+
+  val wallaceInputs = Wire(Vec(2 * len, Vec(len / 2, UInt(1.W))))
+
+  for (i <- 0 until 2 * len) {
+    for (j <- 0 until len / 2) {
+      wallaceInputs(i)(j) := io.summands(j)(i)
+    }
+
+    io.wallaceInputs(i) := wallaceInputs(i).asUInt
   }
 }
 
@@ -66,6 +88,17 @@ class MulIO(len: Int) extends Bundle {
   val answer = Output(UInt((2 * len).W))
 }
 
-class Mul(len: Int) extends Module {
+class Mul(len: Int = 64) extends Module {
   val io = IO(new MulIO(len))
+
+  // ========== Modules ==========
+  val genPartSummands = Module(new GenPartSummands(len))
+  val summandsSwitch  = Module(new SummandsSwitch(len))
+
+  genPartSummands.io.multiplicand := io.multiplicand
+  genPartSummands.io.multiplier   := io.multiplier
+
+  summandsSwitch.io.summands := genPartSummands.io.summands
+
+  io.answer := DontCare
 }
