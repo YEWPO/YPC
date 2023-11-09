@@ -243,10 +243,9 @@ class MulIO(len: Int) extends Bundle {
   val answer = Output(UInt((2 * len).W))
 }
 
-class Mul(len: Int = 64) extends Module {
+class Mul(len: Int = 65) extends Module {
   val io = IO(new MulIO(len))
 
-  // ========== Modules ==========
   val genPartSummands = Module(new GenPartSummands(len))
   val summandsSwitch  = Module(new SummandsSwitch(len))
 
@@ -255,5 +254,23 @@ class Mul(len: Int = 64) extends Module {
 
   summandsSwitch.io.summands := genPartSummands.io.summands
 
-  io.answer := DontCare
+  val wallaceTreesCarrys = Wire(Vec(len * 2, UInt((len / 2 - 2).W)))
+  val src1               = Wire(Vec(len * 2, UInt(1.W)))
+  val src2               = Wire(Vec(len * 2, UInt(1.W)))
+
+  wallaceTreesCarrys(0) := genPartSummands.io.carrys(len / 2 - 3, 0)
+  src1(0)               := genPartSummands.io.carrys(len / 2 - 2)
+
+  for (i <- 0 until len * 2) {
+    val wallaceTree = Module(new WallaceTree)
+    wallaceTree.io.inputs   := summandsSwitch.io.wallaceInputs(i)
+    wallaceTree.io.carrysIn := wallaceTreesCarrys(i)
+    if (i + 1 < len * 2) {
+      wallaceTreesCarrys(i + 1) := wallaceTree.io.carrysOut
+      src1(i + 1)               := wallaceTree.io.carryOut
+    }
+    src2(i) := wallaceTree.io.output
+  }
+
+  io.answer := src1.asUInt + src2.asUInt + genPartSummands.io.carrys(len / 2 - 1)
 }

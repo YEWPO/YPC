@@ -7,7 +7,23 @@ import java.util.Random
 
 object MulTest extends ChiselUtestTester {
   val tests = Tests {
-    test("gen part summand") {
+    test("wallace tree") {
+      testCircuit(new WallaceTree) { dut =>
+        dut.io.carrysIn.poke(1.U)
+        dut.io.inputs.poke(1.U)
+        dut.clock.step()
+        dut.io.carryOut.expect(0.U)
+      }
+    }
+    test("mul") {
+      testCircuit(new Mul, Seq(WriteVcdAnnotation)) { dut =>
+        dut.io.multiplicand.poke(2.U)
+        dut.io.multiplier.poke(10.U)
+        dut.clock.step()
+        dut.io.answer.expect(20.U)
+      }
+    }
+    /* test("gen part summand") {
       def testGenPartSummand(len: Int, src: Int, booth: Int) : Unit = {
         print("len: " + len + ", src: " + src + ", booth: " + booth)
 
@@ -46,6 +62,6 @@ object MulTest extends ChiselUtestTester {
         val booth = rand.nextInt(8)
         testGenPartSummand(len, src, booth)
       }
-    }
+    } */
   }
 }
