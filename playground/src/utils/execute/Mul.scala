@@ -81,6 +81,161 @@ class SummandsSwitch(len: Int) extends Module {
   }
 }
 
+/**
+  * ============================
+  * for 32 summands
+  * ============================
+  */
+class WallaceTreeIO extends Bundle {
+  val inputs   = Input(UInt(32.W))
+  val carrysIn = Input(UInt(30.W))
+
+  val output    = Output(UInt(1.W))
+  val carryOut  = Output(UInt(1.W))
+  val carrysOut = Output(UInt(30.W))
+}
+
+class WallaceTree extends Module {
+  val io = IO(new WallaceTreeIO)
+
+  def pseudoadder(a: UInt, b: UInt, c: UInt): Tuple2[UInt, UInt] = (
+    (!a & !b & c) | (!a & b & !c) | (a & !b & !c) | (a & b & c),
+    (a & b) | (b & c) | (a & c)
+  )
+
+  val carrysOut      = Wire(Vec(30, UInt(1.W)))
+  var carrysInIndex  = 0
+  var carrysOutIndex = 0
+
+  /**
+    * ============================
+    * level 1
+    * ============================
+    */
+  val level1Inputs = Wire(Vec(33, UInt(1.W)))
+  for (i <- 0 until 32) {
+    level1Inputs(i) := io.inputs(i)
+  }
+  level1Inputs(32) := 0.U(1.W)
+  val level1Outputs =
+    for (i <- 0 until 33 by 3) yield pseudoadder(level1Inputs(i), level1Inputs(i + 1), level1Inputs(i + 2))
+  for (i <- 0 until 11) {
+    carrysOut(carrysOutIndex) := level1Outputs(i)._2
+    carrysOutIndex = carrysOutIndex + 1
+  }
+
+  /**
+    * ============================
+    * level 2
+    * ============================
+    */
+  val level2Inputs = Wire(Vec(21, UInt(1.W)))
+  for (i <- 0 until 11) {
+    level2Inputs(i) := level1Outputs(i)._1
+  }
+  for (i <- 11 until 21) {
+    level2Inputs(i) := io.carrysIn(carrysInIndex)
+    carrysInIndex = carrysInIndex + 1
+  }
+  val level2Outputs =
+    for (i <- 0 until 21 by 3) yield pseudoadder(level2Inputs(i), level2Inputs(i + 1), level2Inputs(i + 2))
+  for (i <- 0 until 7) {
+    carrysOut(carrysOutIndex) := level2Outputs(i)._2
+    carrysOutIndex = carrysOutIndex + 1
+  }
+
+  /**
+    * ============================
+    * level 3
+    * ============================
+    */
+  val level3Inputs = Wire(Vec(15, UInt(1.W)))
+  for (i <- 0 until 7) {
+    level3Inputs(i) := level2Outputs(i)._1
+  }
+  for (i <- 7 until 15) {
+    level3Inputs(i) := io.carrysIn(carrysInIndex)
+    carrysInIndex = carrysInIndex + 1
+  }
+  val level3Outputs =
+    for (i <- 0 until 15 by 3) yield pseudoadder(level3Inputs(i), level3Inputs(i + 1), level3Inputs(i + 2))
+  for (i <- 0 until 5) {
+    carrysOut(carrysOutIndex) := level3Outputs(i)._2
+    carrysOutIndex = carrysOutIndex + 1
+  }
+
+  /**
+    * ============================
+    * level 4
+    * ============================
+    */
+  val level4Inputs = Wire(Vec(9, UInt(1.W)))
+  for (i <- 0 until 5) {
+    level4Inputs(i) := level3Outputs(i)._1
+  }
+  for (i <- 5 until 9) {
+    level4Inputs(i) := io.carrysIn(carrysInIndex)
+    carrysInIndex = carrysInIndex + 1
+  }
+  val level4Outputs =
+    for (i <- 0 until 9 by 3) yield pseudoadder(level4Inputs(i), level4Inputs(i + 1), level4Inputs(i + 2))
+  for (i <- 0 until 3) {
+    carrysOut(carrysOutIndex) := level4Outputs(i)._2
+    carrysOutIndex = carrysOutIndex + 1
+  }
+
+  /**
+    * ============================
+    * level 5
+    * ============================
+    */
+  val level5Inputs = Wire(Vec(6, UInt(1.W)))
+  for (i <- 0 until 3) {
+    level5Inputs(i) := level4Outputs(i)._1
+  }
+  for (i <- 3 until 6) {
+    level5Inputs(i) := io.carrysIn(carrysInIndex)
+    carrysInIndex = carrysInIndex + 1
+  }
+  val level5Outputs =
+    for (i <- 0 until 6 by 3) yield pseudoadder(level5Inputs(i), level5Inputs(i + 1), level5Inputs(i + 2))
+  for (i <- 0 until 2) {
+    carrysOut(carrysOutIndex) := level5Outputs(i)._2
+    carrysOutIndex = carrysOutIndex + 1
+  }
+
+  /**
+    * ============================
+    * level 6
+    * ============================
+    */
+  val level6Output = pseudoadder(level5Outputs(0)._1, level5Outputs(1)._1, io.carrysIn(carrysInIndex))
+  carrysInIndex = carrysInIndex + 1
+  carrysOut(carrysOutIndex) := level6Output._2
+  carrysOutIndex = carrysOutIndex + 1
+
+  /**
+    * ============================
+    * level 7
+    * ============================
+    */
+  val level7Output = pseudoadder(level6Output._1, io.carrysIn(carrysInIndex), io.carrysIn(carrysInIndex + 1))
+  carrysInIndex = carrysInIndex + 2
+  carrysOut(carrysOutIndex) := level7Output._2
+  carrysOutIndex = carrysOutIndex + 1
+
+  /**
+    * ============================
+    * level 8
+    * ============================
+    */
+  val level8Output = pseudoadder(level7Output._1, io.carrysIn(carrysInIndex), io.carrysIn(carrysInIndex + 1))
+
+  io.output    := level8Output._1
+  io.carryOut  := level8Output._2
+  io.carrysOut := carrysOut.asUInt
+}
+
 class MulIO(len: Int) extends Bundle {
   val multiplicand = Input(UInt(len.W))
   val multiplier   = Input(UInt(len.W))
