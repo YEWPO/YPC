@@ -39,7 +39,7 @@ class GenPartSummandsIO(len: Int) extends Bundle {
   val multiplier   = Input(UInt(len.W))
 
   val summands = Output(Vec((len + 1) / 2, UInt((2 * len).W)))
-  val carrys   = Output(UInt((len / 2).W))
+  val carrys   = Output(UInt(((len + 1) / 2).W))
 }
 
 class GenPartSummands(len: Int) extends Module {
@@ -47,7 +47,7 @@ class GenPartSummands(len: Int) extends Module {
 
   val multiplicand = Cat(Fill(len + 1, io.multiplicand(len - 1)), io.multiplicand, 0.U((len - 2).W))
   val multiplier   = Cat(io.multiplier, 0.U(2.W))
-  val carrys       = Wire(Vec(len / 2, Bool()))
+  val carrys       = Wire(Vec((len + 1) / 2, Bool()))
 
   for (i <- len - 1 to 0 by -2) {
     val genPartSummand = Module(new GenPartSummand(2 * len))
@@ -64,17 +64,17 @@ class GenPartSummands(len: Int) extends Module {
 }
 
 class SummandsSwitchIO(len: Int) extends Bundle {
-  val summands      = Input(Vec(len / 2, UInt((2 * len).W)))
-  val wallaceInputs = Output(Vec(2 * len, UInt((len / 2).W)))
+  val summands      = Input(Vec((len + 1) / 2, UInt((2 * len).W)))
+  val wallaceInputs = Output(Vec(2 * len, UInt(((len + 1) / 2).W)))
 }
 
 class SummandsSwitch(len: Int) extends Module {
   val io = IO(new SummandsSwitchIO(len))
 
-  val wallaceInputs = Wire(Vec(2 * len, Vec(len / 2, UInt(1.W))))
+  val wallaceInputs = Wire(Vec(2 * len, Vec((len + 1) / 2, UInt(1.W))))
 
   for (i <- 0 until 2 * len) {
-    for (j <- 0 until len / 2) {
+    for (j <- 0 until (len + 1) / 2) {
       wallaceInputs(i)(j) := io.summands(j)(i)
     }
 
@@ -88,12 +88,12 @@ class SummandsSwitch(len: Int) extends Module {
   * ============================
   */
 class WallaceTreeIO extends Bundle {
-  val inputs   = Input(UInt(32.W))
-  val carrysIn = Input(UInt(30.W))
+  val inputs   = Input(UInt(33.W))
+  val carrysIn = Input(UInt(31.W))
 
   val output    = Output(UInt(1.W))
   val carryOut  = Output(UInt(1.W))
-  val carrysOut = Output(UInt(30.W))
+  val carrysOut = Output(UInt(31.W))
 }
 
 class WallaceTree extends Module {
@@ -104,7 +104,7 @@ class WallaceTree extends Module {
     (a & b) | (b & c) | (a & c)
   )
 
-  val carrysOut      = Wire(Vec(30, UInt(1.W)))
+  val carrysOut      = Wire(Vec(31, UInt(1.W)))
   var carrysInIndex  = 0
   var carrysOutIndex = 0
 
@@ -114,10 +114,9 @@ class WallaceTree extends Module {
     * ============================
     */
   val level1Inputs = Wire(Vec(33, UInt(1.W)))
-  for (i <- 0 until 32) {
+  for (i <- 0 until 33) {
     level1Inputs(i) := io.inputs(i)
   }
-  level1Inputs(32) := 0.U(1.W)
   val level1Outputs =
     for (i <- 0 until 33 by 3) yield pseudoadder(level1Inputs(i), level1Inputs(i + 1), level1Inputs(i + 2))
   for (i <- 0 until 11) {
@@ -210,18 +209,29 @@ class WallaceTree extends Module {
     * level 6
     * ============================
     */
-  val level6Output = pseudoadder(level5Outputs(0)._1, level5Outputs(1)._1, io.carrysIn(carrysInIndex))
-  carrysInIndex = carrysInIndex + 1
-  carrysOut(carrysOutIndex) := level6Output._2
-  carrysOutIndex = carrysOutIndex + 1
+  val level6Inputs = Wire(Vec(6, UInt(1.W)))
+  for (i <- 0 until 2) {
+    level6Inputs(i) := level5Outputs(i)._1
+  }
+  for (i <- 2 until 5) {
+    level6Inputs(i) := io.carrysIn(carrysInIndex)
+    carrysInIndex = carrysInIndex + 1
+  }
+  level6Inputs(5) := 0.U(1.W)
+  val level6Outputs =
+    for (i <- 0 until 6 by 3) yield pseudoadder(level6Inputs(i), level6Inputs(i + 1), level6Inputs(i + 2))
+  for (i <- 0 until 2) {
+    carrysOut(carrysOutIndex) := level6Outputs(i)._2
+    carrysOutIndex = carrysOutIndex + 1
+  }
 
   /**
     * ============================
     * level 7
     * ============================
     */
-  val level7Output = pseudoadder(level6Output._1, io.carrysIn(carrysInIndex), io.carrysIn(carrysInIndex + 1))
-  carrysInIndex = carrysInIndex + 2
+  val level7Output = pseudoadder(level6Outputs(0)._1, level6Outputs(1)._1, io.carrysIn(carrysInIndex))
+  carrysInIndex = carrysInIndex + 1
   carrysOut(carrysOutIndex) := level7Output._2
   carrysOutIndex = carrysOutIndex + 1
 
