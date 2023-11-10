@@ -38,25 +38,26 @@ class GenPartSummandsIO(len: Int) extends Bundle {
   val multiplicand = Input(UInt(len.W))
   val multiplier   = Input(UInt(len.W))
 
-  val summands = Output(Vec(len / 2, UInt((2 * len).W)))
+  val summands = Output(Vec((len + 1) / 2, UInt((2 * len).W)))
   val carrys   = Output(UInt((len / 2).W))
 }
 
 class GenPartSummands(len: Int) extends Module {
   val io = IO(new GenPartSummandsIO(len))
 
-  val multiplicand = Cat(Fill(len, io.multiplicand(len - 1)), io.multiplicand)
-  val multiplier   = Cat(io.multiplier, 0.U(1.W))
+  val multiplicand = Cat(Fill(len + 1, io.multiplicand(len - 1)), io.multiplicand, 0.U((len - 2).W))
+  val multiplier   = Cat(io.multiplier, 0.U(2.W))
   val carrys       = Wire(Vec(len / 2, Bool()))
 
-  for (i <- len - 1 to 1 by -2) {
+  for (i <- len - 1 to 0 by -2) {
     val genPartSummand = Module(new GenPartSummand(2 * len))
 
-    genPartSummand.io.src   := multiplicand
-    genPartSummand.io.booth := multiplier(i + 1, i - 1)
+    val pos = len - 1 - i
+    genPartSummand.io.src   := multiplicand(pos + 2 * len - 1, pos)
+    genPartSummand.io.booth := multiplier(i + 2, i)
 
-    io.summands((i - 1) / 2) := genPartSummand.io.summand
-    carrys((i - 1) / 2)      := genPartSummand.io.carry
+    io.summands(i / 2) := genPartSummand.io.summand
+    carrys(i / 2)      := genPartSummand.io.carry
   }
 
   io.carrys := carrys.asUInt
