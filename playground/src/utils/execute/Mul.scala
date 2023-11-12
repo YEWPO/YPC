@@ -4,7 +4,7 @@ import chisel3._
 import chisel3.util._
 
 class GenPartSummandIO(len: Int) extends Bundle {
-  val src     = Input(UInt(len.W))
+  val src     = Input(UInt((len + 1).W))
   val booth   = Input(UInt(3.W))
   val summand = Output(UInt(len.W))
   val carry   = Output(Bool())
@@ -12,8 +12,6 @@ class GenPartSummandIO(len: Int) extends Bundle {
 
 class GenPartSummand(len: Int) extends Module {
   val io = IO(new GenPartSummandIO(len))
-
-  val src = Cat(io.src, 0.U(1.W))
 
   val addOnce    = ~io.booth(2) & (io.booth(1) ^ io.booth(0))
   val minusOnce  = io.booth(2) & (io.booth(1) ^ io.booth(0))
@@ -23,10 +21,10 @@ class GenPartSummand(len: Int) extends Module {
   val summand = Wire(Vec(len, UInt(1.W)))
 
   for (i <- 0 until len) {
-    summand(i) := (addOnce & src(i + 1)) |
-      (minusOnce & ~src(i + 1)) |
-      (addTwice & src(i)) |
-      (minusTwice & ~src(i))
+    summand(i) := (addOnce & io.src(i + 1)) |
+      (minusOnce & ~io.src(i + 1)) |
+      (addTwice & io.src(i)) |
+      (minusTwice & ~io.src(i))
   }
 
   io.summand := summand.asUInt
@@ -45,7 +43,7 @@ class GenPartSummandsIO(len: Int) extends Bundle {
 class GenPartSummands(len: Int) extends Module {
   val io = IO(new GenPartSummandsIO(len))
 
-  val multiplicand = Cat(Fill(len + 1, io.multiplicand(len - 1)), io.multiplicand, 0.U((len - 2).W))
+  val multiplicand = Cat(Fill(len + 1, io.multiplicand(len - 1)), io.multiplicand, 0.U((len - 1).W))
   val multiplier   = Cat(io.multiplier, 0.U(2.W))
   val carrys       = Wire(Vec((len + 1) / 2, Bool()))
 
@@ -53,7 +51,7 @@ class GenPartSummands(len: Int) extends Module {
     val genPartSummand = Module(new GenPartSummand(2 * len))
 
     val pos = len - 1 - i
-    genPartSummand.io.src   := multiplicand(pos + 2 * len - 1, pos)
+    genPartSummand.io.src   := multiplicand(pos + 2 * len, pos)
     genPartSummand.io.booth := multiplier(i + 2, i)
 
     io.summands(i / 2) := genPartSummand.io.summand
