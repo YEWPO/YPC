@@ -265,12 +265,12 @@ class Mul(len: Int = 65) extends Module {
 
   summandsSwitch.io.summands := genPartSummands.io.summands
 
-  val wallaceTreesCarrys = Wire(Vec(len * 2, UInt((len / 2 - 2).W)))
+  val wallaceTreesCarrys = Wire(Vec(len * 2, UInt(((len + 1) / 2 - 2).W)))
   val src1               = Wire(Vec(len * 2, UInt(1.W)))
   val src2               = Wire(Vec(len * 2, UInt(1.W)))
 
-  wallaceTreesCarrys(0) := genPartSummands.io.carrys(len / 2 - 3, 0)
-  src1(0)               := genPartSummands.io.carrys(len / 2 - 2)
+  wallaceTreesCarrys(0) := genPartSummands.io.carrys((len + 1) / 2 - 3, 0)
+  src1(0)               := genPartSummands.io.carrys((len + 1) / 2 - 2)
 
   for (i <- 0 until len * 2) {
     val wallaceTree = Module(new WallaceTree)
@@ -283,5 +283,5 @@ class Mul(len: Int = 65) extends Module {
     src2(i) := wallaceTree.io.output
   }
 
-  io.answer := src1.asUInt + src2.asUInt + genPartSummands.io.carrys(len / 2 - 1)
+  io.answer := src1.asUInt + src2.asUInt + genPartSummands.io.carrys((len + 1) / 2 - 1)
 }
