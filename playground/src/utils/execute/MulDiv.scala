@@ -48,7 +48,7 @@ class MulDiv extends Module {
 
   val mul_out = MuxLookup(io.mul_ctl, 0.U(64.W))(mul_map)
 
-  val spec_map = Array(
+  val spec_map = Seq(
     // div, divu, divw, divuw
     (io.mul_ctl(2, 1) === "b10".U && io.src2 === 0.U) -> "hffff_ffff_ffff_ffff".U,
     // rem, remu

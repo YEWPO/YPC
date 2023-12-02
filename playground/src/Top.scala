@@ -1,7 +1,5 @@
 import chisel3._
-import chisel3.experimental.BundleLiterals._
 import stages._
-import utils.instdecode._
 import utils.sram._
 
 class Top extends Module {
