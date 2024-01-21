@@ -6,7 +6,6 @@
 #include <verilated_vcd_c.h>
 
 #include "common.h"
-#include "simulate/instpool.h"
 #include "simulate/simulator.h"
 #include "utils/cpu.h"
 #include "utils/systime.h"
@@ -29,27 +28,72 @@ VerilatedContext *context;
 VerilatedVcdC *vcd;
 VTop *top;
 
-void ebreak(const long long pc) {
+struct EbreakCall {
+  bool enable;
+  long long pc;
+};
+
+struct InvalidCall {
+  bool enable;
+  long long pc;
+};
+
+struct InstFinishCall {
+  bool enable;
+  long long pc;
+  int inst;
+  long long dnpc;
+  bool device_op;
+};
+
+static EbreakCall ebreak_call;
+static InvalidCall invalid_call;
+static InstFinishCall inst_finish_call;
+
+static void ebreak_handler() {
+  if (!ebreak_call.enable) return;
+
   Log(ANSI_FMT("EBREAK", ANSI_FG_RED));
   difftest_skip_ref();
-  npc_state.halt_pc = pc;
+  npc_state.halt_pc = ebreak_call.pc;
   npc_state.halt_ret = cpu.gpr[10];
   npc_state.state = NPC_END;
+
+  ebreak_call.enable = false;
 }
 
-void invalid(const long long pc) {
+static void invalid_handler() {
+  if (!invalid_call.enable) return;
+
   Log(ANSI_FMT("INVALID", ANSI_FG_RED));
   difftest_skip_ref();
   npc_state.state = NPC_ABORT;
   npc_state.halt_ret = -1;
-  npc_state.halt_pc = pc;
+  npc_state.halt_pc = invalid_call.pc;
+
+  ebreak_call.enable = false;
+}
+
+void ebreak(const long long pc) {
+  ebreak_call.enable = true;
+  ebreak_call.pc = pc;
+}
+
+void invalid(const long long pc) {
+  invalid_call.enable = true;
+  invalid_call.pc = pc;
 }
 
 void inst_finish(const long long pc, const int inst, const long long dnpc, const svLogic device_op) {
   if (top->reset == false) g_nr_guest_cycle++;
 #define NOP 0x13
   if (top->reset == true || inst == NOP) return;
-  push_inst(pc, inst, dnpc, device_op);
+
+  inst_finish_call.enable = true;
+  inst_finish_call.pc = pc;
+  inst_finish_call.inst = inst;
+  inst_finish_call.dnpc = dnpc;
+  inst_finish_call.device_op = device_op;
 }
 
 static void step_one();
@@ -116,7 +160,7 @@ void iring_print();
 void add2iring(Decode *_this);
 #endif
 
-static void trace_and_difftest(Decode *_this) {
+static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 #ifdef CONFIG_ITRACE_COND
   add2iring(_this);
 #endif
@@ -128,7 +172,7 @@ static void trace_and_difftest(Decode *_this) {
   log_write("%s\n", _this->logbuf);
 #endif
   if (g_print_step) { IFDEF(CONFIG_ITRACE, puts(_this->logbuf)); }
-  IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, _this->dnpc));
+  IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
 
 #ifdef CONFIG_WATCHPOINT
   bool newtag;
@@ -139,16 +183,32 @@ static void trace_and_difftest(Decode *_this) {
 #endif
 }
 
-static void exec_one(Decode *s) {
-  InstExeInfo *cur = pop_inst();
-  s->pc = cur->pc;
-  s->snpc = s->pc + 4;
-  s->inst = cur->inst;
-  cpu.pc = cur->dnpc;
-  if (cur->skip_diff) {
-    difftest_skip_ref();
-    cur->skip_diff = false;
-  }
+static bool inst_finish_handler() {
+  if (!inst_finish_call.enable) return false;
+
+  inst_finish_call.enable = false;
+
+  return true;
+}
+
+static bool dpi_c_handler() {
+  ebreak_handler();
+  invalid_handler();
+  return inst_finish_handler();
+}
+
+static void exec_one(Decode *s, vaddr_t pc) {
+  s->pc = pc;
+  s->snpc = pc;
+
+  do {
+    step_one();
+  } while (!dpi_c_handler());
+  Assert(pc != inst_finish_call.pc, "NPC pc is wrong!");
+
+  s->inst = inst_finish_call.inst;
+  s->dnpc = inst_finish_call.dnpc;
+  cpu.pc = s->dnpc;
 #ifdef CONFIG_ITRACE
   char *p = s->logbuf;
   p += snprintf(p, sizeof(s->logbuf), FMT_WORD ":", s->pc);
@@ -171,36 +231,13 @@ static void exec_one(Decode *s) {
 #endif
 }
 
-static void check_inst(uint64_t &n, uint64_t &g_inst_cycle) {
-  if (test_inst_avail()) {
-    n--;
-    g_inst_cycle = 0;
-    Decode s;
-    exec_one(&s);
-    g_nr_guest_inst++;
-    trace_and_difftest(&s);
-  }
-}
-
-static void step_inst(uint64_t n) {
-  uint64_t g_inst_cycle = 0;
-
-  while (n) {
-    if (g_inst_cycle > 50) {
-      npc_state.state = NPC_ABORT;
-      return;
-    }
-    g_inst_cycle++;
-
-    check_inst(n, g_inst_cycle);
-
-    step_one();
-
-    if (npc_state.state != NPC_RUNNING) {
-      check_inst(n, g_inst_cycle);
-      break;
-    }
-
+static void execute(uint64_t n) {
+  Decode s;
+  for (;n > 0; n --) {
+    exec_one(&s, cpu.pc);
+    g_nr_guest_inst ++;
+    trace_and_difftest(&s, cpu.pc);
+    if (npc_state.state != NPC_RUNNING) break;
     IFDEF(CONFIG_DEVICE, device_update());
   }
 }
@@ -231,7 +268,7 @@ void cpu_exec(uint64_t n) {
 
   uint64_t start_time = get_time();
 
-  step_inst(n);
+  execute(n);
 
   uint64_t end_time = get_time();
 
