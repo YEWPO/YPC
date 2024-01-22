@@ -204,8 +204,9 @@ static void exec_one(Decode *s, vaddr_t pc) {
   do {
     step_one();
   } while (!dpi_c_handler());
-  Assert(pc != inst_finish_call.pc, "NPC pc is wrong!");
+  Assert(pc == inst_finish_call.pc, "NPC pc is wrong!");
 
+  s->snpc +=4;
   s->inst = inst_finish_call.inst;
   s->dnpc = inst_finish_call.dnpc;
   cpu.pc = s->dnpc;
