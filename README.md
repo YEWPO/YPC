@@ -1,6 +1,8 @@
 NPC
 =======================
 
+**永久移走到YEWPO/Yprocessor**
+
 > New Process Core
 >
 > Writen by Chisel
